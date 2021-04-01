@@ -1,0 +1,19 @@
+decl max (a:Int, bInt):Int
+
+def max (a:Int, b:Int):Int {if a > b {retun a;}return b;}
+
+df max (a:Int, b:Int):Int {
+    if a > b {
+        return a;
+    }
+    return b;
+    }
+
+decl max (a:int, bInt):Int
+
+def max (a:Int, b:Int):Void {
+    if a > b {
+        return a;
+    }
+    return b;
+    }
