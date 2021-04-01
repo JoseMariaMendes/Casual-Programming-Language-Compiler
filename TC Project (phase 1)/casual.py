@@ -167,10 +167,14 @@ def p_types(t):
 
 def p_declaration(t):
     '''declaration : NAME LPAR dargument RPAR COLON types
-                    | NAME LPAR dargument RPAR COLON VOID '''
+                    | NAME LPAR dargument RPAR COLON VOID 
+                    | NAME LPAR RPAR COLON types 
+                    | NAME LPAR RPAR COLON VOID '''
 
 def p_definition(t):
     '''definition : NAME LPAR dargument RPAR COLON types block
+                    | NAME LPAR RPAR COLON types block
+                    | NAME LPAR RPAR COLON VOID block
                     | NAME LPAR dargument RPAR COLON VOID block '''
 
 def p_d_argument(t):

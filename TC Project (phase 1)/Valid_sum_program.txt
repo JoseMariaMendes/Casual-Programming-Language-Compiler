@@ -1,0 +1,5 @@
+decl sum (a:Int, b:Float):Int
+
+def sum (a:Int, b:Float):Int{
+    return a + b;
+}
