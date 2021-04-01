@@ -1,0 +1,2 @@
+1º step - Run setup.sh, that automatically installs all dependencies on an ubuntu-based linux 
+2º step - run the command .\run.sh 'codefile'
