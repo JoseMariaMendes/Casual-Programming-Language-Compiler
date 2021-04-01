@@ -41,3 +41,9 @@ Expressions represent values. They can be:
     -Variables, which start with a letter or understore and are followed by any number of letters, underscores or numbers.
     -index access, (a[0] or get_array()[i+1])
     -function invocation (function(arg1, arg2)) where arguments can be expressions
+
+# Phse Description
+
+1º Phase - Syntactic Errors:
+
+    The compiler detects errors in the input files. In the case of a unexpected character, it prints it along with its line and column.
