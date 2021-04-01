@@ -22,6 +22,7 @@ A definition has the same contents, but also has a block, corresponding to the b
     }
 
 A block is always started and ended with curly parenthesis and features zero or more statements:
+
     -Return statements can have an expression or not (for Void functions): return; or return 1 + 1;
     -Expressions are statements: 1; or f(3);
     -if statements have (at least) a condition and a (then) block. Optionally they can have an else block, separated by a else keyword.
@@ -30,12 +31,13 @@ A block is always started and ended with curly parenthesis and features zero or 
     -Variable assignments do not require the type a = 1.
 
 Expressions represent values. They can be:
-   -Binary operators, with a C-like precedence and parenthesis to force other precedences: &&, ||, ==, !=, >=, >, <=, <, +, -, *, /, % em que a divisão tem sempre a semântica da     divisão decimal.
-   -The not unary operator (!true)
-   -Boolean literals (true, false)
-   -Integer literals (1, 01, 12312341341, 1_000_000) where underscores can be present in any position.
-   -Float literals (1.1, .5, 123.3123131231321)
-   -String literals ("", "a", "aa", "qwertyuiop", "qwerty\tuiop")
-   -Variables, which start with a letter or understore and are followed by any number of letters, underscores or numbers.
-   -index access, (a[0] or get_array()[i+1])
-   -function invocation (function(arg1, arg2)) where arguments can be expressions
+
+    -Binary operators, with a C-like precedence and parenthesis to force other precedences: &&, ||, ==, !=, >=, >, <=, <, +, -, *, /, % em que a divisão tem sempre a semântica da divisão decimal.
+    -The not unary operator (!true)
+    -Boolean literals (true, false)
+    -Integer literals (1, 01, 12312341341, 1_000_000) where underscores can be present in any position.
+    -Float literals (1.1, .5, 123.3123131231321)
+    -String literals ("", "a", "aa", "qwertyuiop", "qwerty\tuiop")
+    -Variables, which start with a letter or understore and are followed by any number of letters, underscores or numbers.
+    -index access, (a[0] or get_array()[i+1])
+    -function invocation (function(arg1, arg2)) where arguments can be expressions
