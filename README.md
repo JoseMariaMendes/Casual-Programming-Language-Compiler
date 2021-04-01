@@ -42,7 +42,7 @@ Expressions represent values. They can be:
     -index access, (a[0] or get_array()[i+1])
     -function invocation (function(arg1, arg2)) where arguments can be expressions
 
-# Phse Description
+# Phase Description
 
 1º Phase - Syntactic Errors:
 
