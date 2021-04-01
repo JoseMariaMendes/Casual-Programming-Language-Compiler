@@ -14,6 +14,7 @@ A declaration includes the name of the function, its arguments and the returning
     decl max (a:Int, b:Int):Int
 
 A definition has the same contents, but also has a block, corresponding to the body of the function:
+
     def max (a:Int, b:Int):Int {
       if a > b {
         return a;
