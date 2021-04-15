@@ -1,0 +1,24 @@
+decl fun(a:Float):Float
+
+def fun(a:Float):Float{
+	
+	b:Float = 2.2;
+	if a != 4.5{
+		a = a / b;
+	}
+
+	return a;
+}
+
+def main():Float{
+	
+	a:Float = 4.3;
+	d:Float = fun( 3.3) - 5.7;
+	
+	
+
+	b:[Int];
+
+	
+ 	return d;
+}
