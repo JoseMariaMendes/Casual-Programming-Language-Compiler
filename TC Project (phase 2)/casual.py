@@ -180,7 +180,7 @@ def p_declaration(t):
                     | NAME LPAR RPAR COLON types 
                     | NAME LPAR RPAR COLON VOID '''
     if len(t) == 7:
-        t[0] = {'nt': 'declaration', 'name': t[1], 'darguments': [t[3]], 'type': t[6]}
+        t[0] = {'nt': 'declaration', 'name': t[1], 'darguments': list(list_helper(t[3])), 'type': t[6]}
     elif len(t) == 6:
         t[0] = {'nt': 'declaration', 'name': t[1], 'darguments': "empty", 'type': t[5]}
 
@@ -191,7 +191,7 @@ def p_definition(t):
                     | NAME LPAR RPAR COLON VOID block
                     | NAME LPAR dargument RPAR COLON VOID block '''
     if len(t) == 8:
-        t[0] = {'nt': 'definition', 'name': t[1], 'darguments': [t[3]], 'type': t[6], 'block': t[7]}
+        t[0] = {'nt': 'definition', 'name': t[1], 'darguments': list(list_helper(t[3])), 'type': t[6], 'block': t[7]}
     elif len(t) == 7:
         t[0] = {'nt': 'definition', 'name': t[1],'darguments': "empty", 'type': t[5], 'block': t[6]}
 
@@ -207,9 +207,9 @@ def p_d_argument(t):
     '''dargument :   NAME COLON types
                   | NAME COLON types COMMA dargument '''
     if len(t) == 4:
-        t[0] = {'nt': 'dargument', 'name': t[1], 'type': t[3], 'dargument': "empty"}
+        t[0] = [{'nt': 'dargument', 'name': t[1], 'type': t[3]}]
     elif len(t) == 6:
-        t[0] = {'nt': 'dargument', 'name': t[1], 'type': t[3], 'dargument': t[5]}
+        t[0] = [{'nt': 'dargument', 'name': t[1], 'type': t[3]}, t[5]]
 
 #############################################################################################################
 
@@ -410,7 +410,7 @@ def verify(ctx:Context, node):
                 raise TypeError(f"Funcao {name} ja esta declarada e definidano contexto")
             elif 'declaration' not in ctx.get_type(name)[0] and 'definition' in ctx.get_type(name)[0]:
                 #não declarada mas definida
-                if node['darguments'] != "empty":
+                if len(node['darguments']) > 0:
                     assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
                                                                 [arg["type"] for arg in node['darguments']]], "function")
 
@@ -441,9 +441,10 @@ def verify(ctx:Context, node):
                         #o tipo é igual e os argumentos diferentes
                         raise TypeError(f"declaração da funcao {name} tem argumentos diferente da definição")
         else:       
-            if node['darguments'] != "empty":
+            if len(node['darguments']) > 0:
                 #não existe o nome
                 ctx.set_type("RETURN_CODE", node["type"])
+
                 assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
                                                             [arg["type"] for arg in node['darguments']]], "function")
                 ctx.set_type(name, assinatura)
@@ -464,8 +465,7 @@ def verify(ctx:Context, node):
                 raise TypeError(f"Funcao {name} ja esta declarada e definida no contexto")
             elif 'declaration' in ctx.get_type(name)[0] and 'definition' not in ctx.get_type(name)[0]:
                 #declarada mas nao definida
-                if node['darguments'] != "empty":
-                    print("######################################################")
+                if len(node['darguments']) > 0:
                     assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
                                                                 [arg["type"] for arg in node['darguments']]], "function")
 
@@ -474,11 +474,10 @@ def verify(ctx:Context, node):
                         assinatura = ctx.get_type(name)
                         assinatura[0].append("definition")
                         ctx.set_type(name, assinatura)
-                        print("######################################################")
                         #adicionar argumentos ao contexto 
                         for arg in node["darguments"]:
-                            print(arg)
-                            ctx.set_type(arg["name"], arg["type"])
+                            assinatura = (["var_decl_statment"],  arg["type"], "argumento")
+                            ctx.set_type(arg["name"], assinatura)
 
                     elif ctx.get_type(name)[1] != assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
                         #o tipo é diferente e os argumentos iguais
@@ -493,11 +492,6 @@ def verify(ctx:Context, node):
                         #o tipo e os argumentos sao iguais
                         assinatura = ctx.get_type(name)
                         assinatura[0].append("definition")
-                        #adicionar argumentos ao contexto 
-                        if node["darguments"] != "empty":
-                            for arg in node["darguments"]:
-                                print(arg['name'])
-                                ctx.set_type(arg["name"], arg["type"])
 
                         ctx.set_type(name, assinatura)
                     elif ctx.get_type(name)[1] != assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
@@ -508,7 +502,7 @@ def verify(ctx:Context, node):
                         raise TypeError(f"definição da funcao {name} tem argumentos diferentes da declaração")
         else:
             #não declarada nem definida
-            if node['darguments'] != "empty":
+            if len(node['darguments']) > 0 or node['darguments'] != "empty":
                 #funçao tem argumentos
                 ctx.set_type("RETURN_CODE", node["type"])
                 assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
@@ -516,8 +510,8 @@ def verify(ctx:Context, node):
                 ctx.set_type(name, assinatura)
                 #adicionar argumentos ao contexto 
                 for arg in node["darguments"]:
-                    print(arg['name'])
-                    ctx.set_type(arg["name"], arg["type"])
+                    assinatura = (["var_decl_statment"],  arg["type"], "argumento")
+                    ctx.set_type(arg["name"], assinatura)
 
             else:
                 #funçao nao tem argumentos
@@ -581,7 +575,7 @@ def verify(ctx:Context, node):
                 else:
                     raise TypeError(f"definiçao de  {name} nao corresponde ao tipo dado")
             else:
-                assinatura = ([node['nt']],  "empty", "argumento")
+                assinatura = ([node['nt']],  node["type"], "argumento")
                 ctx.set_type(name, assinatura)
         #return verify(ctx, node['type'])
     
@@ -623,6 +617,9 @@ def verify(ctx:Context, node):
         #print(verify(ctx, er))
         #print(verify(ctx, el))
         if op == '+' or op == '-' or op == '*' or op == '/' :
+            print( er)
+            print( el)
+            print(ctx.get_type(er["name"]))
             if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
                 return "Int"
             elif verify(ctx, er) == "Float" and verify(ctx, el) == "Float":
@@ -632,7 +629,7 @@ def verify(ctx:Context, node):
             elif verify(ctx, er)[1] == "Float" and verify(ctx, el)[1] == "Float":
                 return "Float"
             else:
-                raise TypeError(f"As expressoes nao sao inteiros nem float")
+                raise TypeError(f"As expressoes {op} nao sao inteiros nem float")
 
         elif op == '%':
             if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
@@ -640,15 +637,16 @@ def verify(ctx:Context, node):
             if verify(ctx, er)[1] == "Int" and verify(ctx, el)[1] == "Int":
                 return "Int"##########################################################
             else:
-                raise TypeError(f"As expressoes nao sao inteiros")
+                raise TypeError(f"As expressoes {op} nao sao inteiros")
 
         elif op == '>=' or op == '>' or op == '<=' or op == '<':
+            
             if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
                 return "Boolean"
             elif verify(ctx, er) == "Float" and verify(ctx, el) == "Float":
                 return "Boolean"
             else:
-                raise TypeError(f"As expressoes nao sao inteiros nem float")
+                raise TypeError(f"As expressoes {op} nao sao inteiros nem float")
 
         elif op == '==' or op == '!=':
 
@@ -665,7 +663,7 @@ def verify(ctx:Context, node):
             elif verify(ctx, er)[1] == "Boolean" and verify(ctx, el)[1] == "Boolean":
                 return "Boolean"
             else:
-                raise TypeError(f"As expressoes nao sao inteiros nem float nem booleanos")
+                raise TypeError(f"As expressoes {op} nao sao inteiros nem float nem booleanos")
 
         elif op == '&&' or op == '||':
             if verify(ctx, el) == "Boolean" and verify(ctx, er) == "Boolean":
@@ -673,7 +671,7 @@ def verify(ctx:Context, node):
             if verify(ctx, el)[1] == "Boolean" and verify(ctx, er[1]) == "Boolean":
                 return "Boolean"
             else:
-                raise TypeError(f"As expressoes nao sao booleanas")
+                raise TypeError(f"As expressoes {op} nao sao booleanas")
         
     elif node["nt"] == "bool_expression":
         return "Boolean"
@@ -692,7 +690,6 @@ def verify(ctx:Context, node):
 
     elif node["nt"] == "name_expression":
         name = node["name"]
-        print(name)
         if ctx.has_var(name):
             if ctx.get_type(name)[2] == "argumento":
                 return ctx.get_type(name)[1]

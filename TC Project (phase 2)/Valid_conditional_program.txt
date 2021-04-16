@@ -3,15 +3,15 @@ decl div_mult (bool:Boolean, num1:Int, num2:Int):Float
 def div_mult (bool:Boolean, num1:Int, num2:Int):Float{
     bool = False;
     if bool == False{
-        while num1* num2 < 200{
+        while num1* num2 < 2{
             num1 = num1 + 1;
         }
-        return num1*num2;
+        return 2.2;
     }
     else{
-        while num2 >= 20{
+        while num2 >= 2 {
             num2 = num2 - 1;
         }
-        return num1/num2;
+        return 3.3;
     }
 }
