@@ -29,6 +29,6 @@ def fun(a:Float):Float
     }
 
 def main():Float{
-    d:Float = fun() - 5.7;
+    d:Float = fun( 3.9) - 5.7;
     return d;
 }

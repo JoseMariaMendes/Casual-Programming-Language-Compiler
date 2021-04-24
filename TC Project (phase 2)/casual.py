@@ -441,7 +441,7 @@ def verify(ctx:Context, node):
                         #o tipo é igual e os argumentos diferentes
                         raise TypeError(f"declaração da funcao {name} tem argumentos diferente da definição")
         else:       
-            if len(node['darguments']) > 0:
+            if node['darguments'] != "empty":
                 #não existe o nome
                 ctx.set_type("RETURN_CODE", node["type"])
 
@@ -502,7 +502,7 @@ def verify(ctx:Context, node):
                         raise TypeError(f"definição da funcao {name} tem argumentos diferentes da declaração")
         else:
             #não declarada nem definida
-            if len(node['darguments']) > 0 or node['darguments'] != "empty":
+            if node['darguments'] != "empty":
                 #funçao tem argumentos
                 ctx.set_type("RETURN_CODE", node["type"])
                 assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
@@ -617,9 +617,9 @@ def verify(ctx:Context, node):
         #print(verify(ctx, er))
         #print(verify(ctx, el))
         if op == '+' or op == '-' or op == '*' or op == '/' :
-            print( er)
-            print( el)
-            print(ctx.get_type(er["name"]))
+            #print( er)
+            #print( el)
+            #print(ctx.get_type(er["name"]))
             if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
                 return "Int"
             elif verify(ctx, er) == "Float" and verify(ctx, el) == "Float":
@@ -697,28 +697,28 @@ def verify(ctx:Context, node):
                 raise TypeError(f"expressao {name}, não é uma variavel")
         else:
             raise TypeError(f"expressao {name}, não existe")
-
-    elif node["nt"] == "index_expression":
-        pass
-
-    elif node["nt"] == "expression_index_fun":
-        pass
-
+    
     elif node["nt"] == "expression_fun_invoc":
         name = node["name"]
-        if ctx.get_type(name)[3] == "function":             
-            (lista, tipo, argumentos, string) = ctx.get_type(node["name"])
-            ass = list((lista, tipo, argumentos, string))
-            ass.remove(lista)
-            ass.remove(string)
-            (expected_return, parameter_types) = tuple(ass)
-            if parameter_types != "empty":
-                for (i, (arg, par_t)) in enumerate(zip(node["argument"], parameter_types[1])):
-                    arg_t = verify(ctx, arg)
-                    if arg_t != par_t:
-                        index = i+1
-                        raise TypeError(f"Argumento {name} esperava {par_t} mas recebe {arg_t}") 
-                return expected_return
+        if ctx.get_type(name)[3] == "function":    
+            if len(node["argument"]) == len(ctx.get_type(name)[2][1]):         
+                (lista, tipo, argumentos, string) = ctx.get_type(node["name"])
+                ass = list((lista, tipo, argumentos, string))
+                ass.remove(lista)
+                ass.remove(string)
+                (expected_return, parameter_types) = tuple(ass)
+                if parameter_types != "empty":
+                    for (i, (arg, par_t)) in enumerate(zip(node["argument"], parameter_types[1])):
+                        arg_t = verify(ctx, arg)
+                        if arg_t != par_t:
+                            index = i+1
+                            raise TypeError(f"Argumento {name} esperava {par_t} mas recebe {arg_t}") 
+                    return expected_return
+                else:
+                    #se funçao nao tem parametros
+                    print("ahhhhhhhhhhhhh")
+            else:
+                raise TypeError(f"Função {name} não tem o numero certo de argumentos")
         else:
             raise TypeError(f"expressao {name}, não é uma funçao")
     
@@ -748,7 +748,14 @@ def verify(ctx:Context, node):
         if ctx.has_var_in_current_scope(name):
             if 'array_decl_statment' in ctx.get_type(name)[0] and 'array_assign_statment' not in ctx.get_type(name)[0]:
                 #declarada mas nao definida
-                raise TypeError(f"Array {name} ja esta declarada no contexto")
+                assinatura = ctx.get_type(name)
+                if ctx.get_type(name)[1] == assinatura[1]:
+                    #o tipo e igual
+                    assinatura = ctx.get_type(name)
+                    ctx.set_type(name, assinatura)
+                elif ctx.get_type(name)[1] != assinatura[1]:
+                    #o tipo é diferente
+                    raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
             elif 'array_decl_statment' in ctx.get_type(name)[0] and 'array_assign_statment' in ctx.get_type(name)[0]:
                 #declarada e definida
                 raise TypeError(f"Array {name} ja esta declarada e definida no contexto")
@@ -769,8 +776,7 @@ def verify(ctx:Context, node):
 
     else:
         t = node["nt"]
-        print(f"E preciso tratar do node {t}")
-    
+        print(f"E preciso tratar do node {t}")    
 
 parser = yacc.yacc()
 

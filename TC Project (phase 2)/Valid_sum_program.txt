@@ -1,6 +1,6 @@
 
-def sum (a:Int, b:Float):Int{
+def sum (a:Int, b:Int):Int{
     return a + b;
 }
 
-decl sum (a:Int, b:Float):Int
+decl sum (a:Int, b:Int):Int
