@@ -1,0 +1,16 @@
+decl div_mult (bool:Boolean num1:Int, num2:Int):Void
+
+de div_mult (bool:Boolean, num1:Int, num2:Int):Float{
+    if bool == False{
+        while num1*num2 < 200{
+            num3 = num1 + 1;
+        }
+        return False;
+    }
+    else{
+        while num2 >= 20
+            num2 = num2 - 1;
+        }
+        retun num1/num2;
+    }
+}

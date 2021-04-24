@@ -1,0 +1,5 @@
+decl sum (a:nt, b:Float):Int
+
+df sum (a:Int, b:Float):String{
+    return a + b
+}
