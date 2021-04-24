@@ -391,7 +391,7 @@ class Context(object):
     def exit_scope(self):
         self.stack.pop(0)
 
-        
+
 def verify(ctx:Context, node):
     #print(node)
     #print('-------')
