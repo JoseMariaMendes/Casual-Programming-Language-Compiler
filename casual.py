@@ -393,8 +393,8 @@ class Context(object):
 
         
 def verify(ctx:Context, node):
-    #print(node)
-    #print('-------')
+    print(node)
+    print('-------')
     if node["nt"] == "programb":
         for decl_def in node["program"]:
             verify(ctx, decl_def)
