@@ -14,7 +14,7 @@ def fun(a:Float, c:Float):Float{
 def main():Float{
 	
 	a:Float = 4.3;
-	d:Float = fun( 3.3, 5.6) - 5.7;
+	d:Float = fun( 3.7, 5.6) - 5.7;
 	
 	c:[Int];
 
