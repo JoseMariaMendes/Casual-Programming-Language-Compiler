@@ -5,7 +5,6 @@ import sys
 sys.tracebacklimit = 0
 from context import Context
 from verify import verify
-from parser import *
  
 def list_helper(lis):
     for item in lis:
