@@ -2,7 +2,7 @@ decl fun(a:Float, c:Float):Float
 
 def fun(a:Float, c:Float):Float{
 	
-	c = 0;
+	c = 1.1;
 	b:Float = c + 2.2;
 	if a != 4.5{
 		a = a / b;
@@ -14,11 +14,11 @@ def fun(a:Float, c:Float):Float{
 def main():Float{
 	
 	a:Float = 4.3;
-	d:Float = fun( 3.6, 5.6) - 5.7;
+	d:Float = fun(3.6, 5.6) - 5.7;
 	
 	c:[Int];
 
-	c[ 0] = 0;
+	c[0] = 0;
 	
  	return d;
 }
