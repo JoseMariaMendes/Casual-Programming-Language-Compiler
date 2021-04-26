@@ -1,0 +1,1 @@
+bash ./run.sh "ficheiro que quer compilar"

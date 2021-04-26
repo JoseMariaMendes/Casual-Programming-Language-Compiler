@@ -1,10 +1,10 @@
-decl max (a:In, b:Int):Float
+decl max (a:Int, b:Int):Float
 
-def max (a:Int, b:Int):Int {if a > b {return 2.2;}retrn b;}
+def max (a:Int, b:Int):Int {if a > b {return 2.2;}return b;}
 
 def max (a:Int, b:Int):Int {
     if a > b {
-        return a
+        return a;
     }
     return b;
     }

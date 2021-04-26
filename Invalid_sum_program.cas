@@ -1,5 +1,6 @@
-decl sum (a:nt, b:Float):Int
+decl sum (a:Int, b:Float):Int
 
-df sum (a:Int, b:Float):String{
-    return a + b
+def sum (a:Int, b:Float):Void{
+    c:Int = a + b;
+    return c;
 }

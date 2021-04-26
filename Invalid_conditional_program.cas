@@ -1,16 +1,17 @@
-decl div_mult (bool:Boolean num1:Int, num2:Int):Void
+decl div_mult (bool:Boolean, num1:Int, num2:Int):Void
 
-de div_mult (bool:Boolean, num1:Int, num2:Int):Float{
+def div_mult (bool:Boolean, num1:Int, num2:Float):Void{
     if bool == False{
-        while num1*num2 < 200{
+    num3:Int;
+        while num1*num2 < 1.8 {
             num3 = num1 + 1;
         }
-        return False;
+        return;
     }
     else{
-        while num2 >= 20
+        while num2 >= 5{
             num2 = num2 - 1;
         }
-        retun num1/num2;
+        return num2;
     }
 }
