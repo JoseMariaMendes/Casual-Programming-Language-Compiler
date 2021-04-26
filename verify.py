@@ -203,16 +203,18 @@ def verify(ctx:Context, node):
                 pass
             elif ctx.get_type(name)[1] == "String":
                 pass
-
-            assinatura = ctx.get_type(name)
-            #assinatura[0].append(node['nt'])
-            if ctx.get_type(name)[1] == assinatura[1]:
-                #o tipo e igual
+            if ctx.get_type(name)[1] == verify(ctx, node["expression"]):
                 assinatura = ctx.get_type(name)
-                ctx.set_type(name, assinatura)
-            elif ctx.get_type(name)[1] != assinatura[1]:
-                #o tipo é diferente
-                raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
+                #assinatura[0].append(node['nt'])
+                if ctx.get_type(name)[1] == assinatura[1]:
+                    #o tipo e igual
+                    assinatura = ctx.get_type(name)
+                    ctx.set_type(name, assinatura)
+                elif ctx.get_type(name)[1] != assinatura[1]:
+                    #o tipo é diferente
+                    raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
+            else:
+                raise TypeError(f"variavel {name} não é do mesmo tipo que a expressão atribuida")
         else:
             #não declarada nem definida
             raise TypeError(f"variavel {name} nao esta declarada")
