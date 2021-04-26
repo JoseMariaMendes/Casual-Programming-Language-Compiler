@@ -117,7 +117,7 @@ def t_DEFINITION(t):
     return t
 
 def t_FLOAT(t):
-    r'\d*\.\d+'
+    r'[0-9]*\.[0-9]+'
     try:
         t.value = float(t.value)
     except ValueError:
