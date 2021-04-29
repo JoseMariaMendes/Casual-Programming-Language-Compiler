@@ -2,9 +2,11 @@ import ply.yacc as yacc
 from collections.abc import Iterable
 import ply.lex as lex    
 import sys
-sys.tracebacklimit = 0
+#sys.tracebacklimit = 0
 from context import Context
 from verify import verify
+from compiler import compilador
+from emitter import Emitter
  
 def list_helper(lis):
     for item in lis:
@@ -369,5 +371,19 @@ try:
         code = inputfile.read()
         print(code)
         verify(Context(), parser.parse(code))
+        codigo_llvm = compilador(parser.parse(code))
+        print("\n" + codigo_llvm)
+
+        with open("code.ll", "w") as f:
+            f.write(codigo_llvm)
+        import subprocess
+
+        # /usr/local/opt/llvm/bin/lli code.ll
+        r = subprocess.call(
+            "/usr/bin/llc code.ll && clang code.s -o code && ./code",
+            shell=True,
+        )
+        # print("Return code", r)
+
 except EOFError:
     print("Unable to read file")

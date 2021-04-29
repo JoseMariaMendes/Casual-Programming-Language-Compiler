@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/sbin/python"
+    "python.pythonPath": "/sbin/python",
+    "git.ignoreLimitWarning": true
 }
