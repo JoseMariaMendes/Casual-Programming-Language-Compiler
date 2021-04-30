@@ -88,9 +88,9 @@ def compilador(node, emitter=None):
             print("something went wrong")
 
     elif node["nt"] == "var_assign_statment":
-        currentvar = [node['type'], pointer]
+        pointer = emitter.get_pointer_name(node['name'])
+        currentvar = ["unknown", pointer]
         compilador(node["expression"], emitter)
-        pass
     
     elif node["nt"] == "return_statement":
         pass
@@ -133,8 +133,10 @@ def compilador(node, emitter=None):
             value = 1
         else:
             value = 0
-        exptype = get_type(currentvar[0], "var")
-        emitter << f"store {exptype} {value}, {exptype}* {currentvar[1]}, {get_align(currentvar[0])}"
+        exptype = "i8"
+        
+        emitter << f"store {exptype} {value}, {exptype}* {currentvar[1]}, {get_align('Boolean')}"
+        return exptype
        
     elif node["nt"] == "nuo_expression":
         pass
@@ -142,18 +144,20 @@ def compilador(node, emitter=None):
     elif node["nt"] == "int_expression":
         #store i32 0, i32* %9, align 4
         value = node["number"]
-        exptype = get_type(currentvar[0], "var")
-        emitter << f"store {exptype} {value}, {exptype}* {currentvar[1]}, {get_align(currentvar[0])}"
+        exptype = "i32"
+        emitter << f"store {exptype} {value}, {exptype}* {currentvar[1]}, {get_align('Int')}"
+        return exptype
         
     elif node["nt"] == "float_expression":
         value = float_to_hex(node["float"])
-        exptype = get_type(currentvar[0], "var")
-        emitter << f"store {exptype} {value}, {exptype}* {currentvar[1]}, {get_align(currentvar[0])}"
+        exptype = "float"
+        emitter << f"store {exptype} {value}, {exptype}* {currentvar[1]}, {get_align('Float')}"
+        return exptype
 
     elif node["nt"] == "string_expression":
         pointer = currentvar[1]
-        vartype = get_type(currentvar[0], "var")
-        align = get_align(currentvar[0])
+        vartype = "i8*"
+        align = get_align('String')
         value = node["string"]
         size = len(value)-1
         nn = value.count("\\n")
@@ -161,12 +165,12 @@ def compilador(node, emitter=None):
         value = value.replace('"', '')
         value = value.replace("\\n", "\\0A")
         value = f'"{value}\\00"'
-        
         id = emitter.get_id()
         str_name = f"@.casual_str_{id}"
         str_decl = f"""{str_name} = private unnamed_addr constant [{size} x i8] c{value}, align 1"""
         emitter.lines.insert(0, str_decl)
         emitter << f"store {vartype} getelementptr inbounds ([{size} x i8], [{size} x i8]* @.str, i64 0, i64 0), {vartype}* {pointer}, {align}"
+        return vartype
 
     elif node["nt"] == "array_expression":
         print(currentvar)

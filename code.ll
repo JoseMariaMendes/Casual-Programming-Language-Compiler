@@ -4,6 +4,7 @@ define float @fun(float %a, float %c) #0 {
 store float %a, float* %pont_a, align 4
 %pont_c = alloca float, align 4
 store float %c, float* %pont_c, align 4
+store float 0x3ff19999a0000000, float* %pont_c, align 4
 %pont_b = alloca float, align 4
 %pont_f = alloca i8, align 1
 store i8 1, i8* %pont_f, align 1
