@@ -248,9 +248,15 @@ def verify(ctx:Context, node):
 
         elif op == '%':
             if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
-                return "Int"#######################################################
+                if isinstance(el%er, int):
+                    return "Int"
+                if isinstance(el%er, float):
+                    return "Float"
             if verify(ctx, er)[1] == "Int" and verify(ctx, el)[1] == "Int":
-                return "Int"##########################################################
+                if isinstance(el%er, int):
+                    return "Int"
+                if isinstance(el%er, float):
+                    return "Float"
             else:
                 raise TypeError(f"As expressoes {op} nao sao inteiros")
 

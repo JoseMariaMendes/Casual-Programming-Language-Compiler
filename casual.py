@@ -27,7 +27,7 @@ tokens = (
 
 #Variables
 t_NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_STRING = r'"[a-zA-Z0-9/]*"'
+t_STRING = r'"[a-zA-Z0-9\\]*"'
 
 
 #Binary operators

@@ -8,12 +8,16 @@ def fun(a:Float, c:Float):Float{
 		a = a / b;
 	}
 
+	f:Boolean = True;
 	return a;
 }
 
 def main():Float{
 	
-	a:Float = 4.3;
+
+	maria:String = "maria\n";
+	a:Float = 4.6;
+	oscar:Int = 5;
 	d:Float = fun(3.6, 5.6) - 5.7;
 	
 	c:[Int];
