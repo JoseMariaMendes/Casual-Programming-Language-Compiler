@@ -58,26 +58,72 @@ def compilador(node, emitter=None):
         for statment in node['block_content']:
             compilador(statment, emitter)
 
-    elif node["nt"] == "ifelse_statement":
-        
-    """
-    elif node["nt"] == "return_statement":
-    elif node["nt"] == "while_statement":
-    elif node["nt"] == "var_decl_statment":
-    elif node["nt"] == "var_assign_statment":
-    elif node["nt"] == "array_decl_statment":
-    elif node["nt"] == "array_assign_statment":
     elif node["nt"] == "statement_expr":
+        compilador(node["expressiom"], emitter)
+   
+    elif node["nt"] == "var_decl_statment":
+        pointer = emitter.get_pointer_name(node['name'])
+        vartype = get_type(node['type'])
+        tyoealign = get_align(node['type'])
+
+        if node["expression"] != "empty":
+            #variavel declarada e defnida
+            emitter << f"{pointer} = alloca {vartype}, {tyoealign}"
+            compilador(node["expression"], emitter)
+            
+        else:
+            print("something went wrong")
+
+    elif node["nt"] == "var_assign_statment":
+
+        pass
+    
+    elif node["nt"] == "return_statement":
+        pass
+    
+    elif node["nt"] == "ifelse_statement":
+        pass
+
+    elif node["nt"] == "while_statement":
+        pass
+    
+    elif node["nt"] == "array_decl_statment":
+        pass
+
+    elif node["nt"] == "array_assign_statment":
+        pass
+
     elif node["nt"] == "binop_expression":
+        if node["value"] == "+" or "-" or "*" or "/"
+        pass
+
     elif node["nt"] == "bool_expression":
+        pass
+       
     elif node["nt"] == "nuo_expression":
+        pass
+
     elif node["nt"] == "int_expression":
+        emitter << f""
+        pass
+
     elif node["nt"] == "float_expression":
+        print("FLOATR")
+
     elif node["nt"] == "string_expression":
+        pass
+
     elif node["nt"] == "array_expression":
+        pass
+
     elif node["nt"] == "name_expression":
+        return "var"
+
     elif node["nt"] == "group_expression":
+        pass
+
     elif node["nt"] == "expression_index_fun":
+        pass
+
     elif node["nt"] == "expression_fun_invoc":
-        
-    """
+        pass

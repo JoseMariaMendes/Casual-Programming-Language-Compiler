@@ -187,8 +187,9 @@ def verify(ctx:Context, node):
                 else:
                     raise TypeError(f"definiçao de  {name} nao corresponde ao tipo dado")
             else:
-                assinatura = ([node['nt']],  node["type"], "argumento")
-                ctx.set_type(name, assinatura)
+                #assinatura = ([node['nt']],  node["type"], "argumento")
+                #ctx.set_type(name, assinatura)
+                raise TypeError(f"{name} nao tem valor inicial")
         #return verify(ctx, node['type'])
     
     elif node["nt"] == "var_assign_statment":
