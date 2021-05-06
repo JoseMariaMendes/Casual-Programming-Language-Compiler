@@ -1,0 +1,10 @@
+def hello():String{
+    return "hello";
+}
+
+def main():Int{
+	
+	hello();
+
+ 	return 0;
+}

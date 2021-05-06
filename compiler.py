@@ -358,7 +358,7 @@ def compilador(node, emitter=None):
         str_decl = f"""{str_name} = private unnamed_addr constant [{size} x i8] c{value}, align 1"""
         emitter.lines.insert(0, str_decl)
         value = f"getelementptr inbounds ([{size} x i8], [{size} x i8]* {str_name}, i64 0, i64 0)"
-        return [value, vartype, aligntype]
+        return [value, vartype, align]
 
     elif node["nt"] == "array_expression":
         print(currentvar)
