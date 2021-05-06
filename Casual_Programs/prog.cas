@@ -1,6 +1,4 @@
-
-
-def fun(a:Float, c:Float):Float{
+def fun(a:Float, c:Float, y:Boolean):Float{
 	
 	b:Float = c + 2.2;
 	return b;
@@ -8,7 +6,7 @@ def fun(a:Float, c:Float):Float{
 
 def main():Float{
 	
-	d:Float = fun(3.6, 5.6) - 5.7 + 8.4;
+	d:Float = fun(3.6, 5.6, True) - 5.7 + 8.4;
 
  	return d;
 }

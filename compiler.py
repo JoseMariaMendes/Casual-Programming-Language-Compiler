@@ -62,8 +62,11 @@ def compilador(node, emitter=None):
         #adicionar conteudo do bloco
         if node["darguments"] != "empty":
             for arg in node["darguments"]:
-                emitter << f"{emitter.get_pointer_name(arg['name'])} = alloca {get_type(arg['type'], 'var')}, {get_align(arg['type'])}"
-                emitter << f"store {get_type(arg['type'], 'var')} %{arg['name']}, {get_type(arg['type'], 'var')}* {emitter.get_pointer_name(arg['name'])}, {get_align(arg['type'])}"
+                if arg["type"] == "Boolean":
+                    emitter << f"{emitter.get_pointer_name(arg['name'])} = zext {get_type(arg['type'], 'var')} %{arg['name']}, {get_align(arg['type'])}"
+                else:
+                    emitter << f"{emitter.get_pointer_name(arg['name'])} = alloca {get_type(arg['type'], 'var')}, {get_align(arg['type'])}"
+                    emitter << f"store {get_type(arg['type'], 'var')} %{arg['name']}, {get_type(arg['type'], 'var')}* {emitter.get_pointer_name(arg['name'])}, {get_align(arg['type'])}"
 
         compilador(node["block"], emitter)
         emitter << "}"
@@ -138,9 +141,7 @@ def compilador(node, emitter=None):
             #TypeError f"ERROOOO {er}, {el}, {value}"    
             pass
         
-        
-        
-          '''  
+        '''  
         print (er["nt"])
         print (el["nt"])
         if 'value' not in er:
@@ -157,7 +158,11 @@ def compilador(node, emitter=None):
             
             
         if node["oper"] == "+":
-            pass
+            if er["nt"] == 'float_expression':
+                ertype = "float"
+            elif er["nt"] == 'int_expression':
+                ertype = "int"
+            
         #elif value == "-":
         #elif value == "*":
         #elif value == "/":
