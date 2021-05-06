@@ -45,6 +45,7 @@ def compilador(node, emitter=None):
     elif node["nt"] == "definition":
         name = node["name"]
         funtype = get_type(node["type"], "fun")
+        emitter.set_type("RETURN_TYPE", node["type"])
         aligntype = get_align(node["type"])
         arguments = ""
         if node["darguments"] != "empty":
@@ -58,16 +59,16 @@ def compilador(node, emitter=None):
                     arguments += ", " + get_type(arg["type"], "funarg") + " %" + arg["name"]
 
         emitter << f"define {funtype} @{name}({arguments}) #0 {'{'}"
-        emitter << f"{emitter.get_pointer_name(name)} = alloca {funtype}, {aligntype}"
         #adicionar conteudo do bloco
         if node["darguments"] != "empty":
             for arg in node["darguments"]:
+                emitter.set_type(arg["name"], arg["type"])
                 if arg["type"] == "Boolean":
                     pont = f"%{emitter.get_id()}"
                     name = emitter.get_pointer_name(arg['name'])
-                    emitter << f"{pont} = alloca i8, align 1"
-                    emitter << f"{name} = zext i1 %{arg['name']} to i8"
-                    emitter << f"store i8 {name}, i8* {pont}, align 1"
+                    emitter << f"{name} = alloca i8, align 1"
+                    emitter << f"{pont} = zext i1 %{arg['name']} to i8"
+                    emitter << f"store i8 {pont}, i8* {name}, align 1"
                 else:
                     emitter << f"{emitter.get_pointer_name(arg['name'])} = alloca {get_type(arg['type'], 'var')}, {get_align(arg['type'])}"
                     emitter << f"store {get_type(arg['type'], 'var')} %{arg['name']}, {get_type(arg['type'], 'var')}* {emitter.get_pointer_name(arg['name'])}, {get_align(arg['type'])}"
@@ -81,7 +82,7 @@ def compilador(node, emitter=None):
             compilador(statment, emitter)
 
     elif node["nt"] == "statement_expr":
-        compilador(node["expressiom"], emitter)
+        compilador(node["expression"], emitter)
    
     elif node["nt"] == "var_decl_statment":
         pointer = emitter.get_pointer_name(node['name'])
@@ -115,15 +116,18 @@ def compilador(node, emitter=None):
         aligntype = var[2]
         emitter << f"store {exptype} {value}, {exptype}* {pointer}, {aligntype}"
         
-        
-    
     elif node["nt"] == "return_statement":
         exp = compilador(node["expression"], emitter)
         value = exp[0]
         exptype = exp[1]
         aligntype = exp[2]
-        
-        emitter << f""
+        if emitter.get_type("RETURN_TYPE") == "Boolean":
+            truncname = f"%{emitter.get_id()}"
+            emitter << f"{truncname} = trunc {exptype} {value} to i1"
+            value = truncname
+            emitter << f"ret i1 {value}"
+        else:
+            emitter << f"ret {exptype} {value}"
         
         
         pass
@@ -143,38 +147,42 @@ def compilador(node, emitter=None):
     elif node["nt"] == "binop_expression":
         #print("binop")
         value = f"%{emitter.get_id()}_binopexp"
-        exptype = get_type(currentvar[0], "var")
-        aligntype = get_align(currentvar[0])
+        ernt = node["expression_right"]["nt"]
+        elnt = node["expression_left"]["nt"]
         er = compilador(node["expression_right"], emitter)
         el = compilador(node["expression_left"], emitter)
+        exptype = er[1]
+        aligntype = er[2]
+        print(er)
+        print(el)
         oper = node["oper"]
 
         if oper == "+":
-            if currentvar[0] == "Int": 
+            if er[1]  == "i32": 
                 emitter << f"{value} = add nsw {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
-            elif currentvar[0] == "Float":
+            elif er[1]  == "float":
                 emitter << f"{value} = fadd {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
         elif oper == "-":
-            if currentvar[0] == "Int": 
+            if er[1]  == "i32": 
                 emitter << f"{value} = sub nsw {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
-            elif currentvar[0] == "Float":
+            elif er[1]  == "float":
                 emitter << f"{value} = fsub {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
         elif oper == "*":
-            if currentvar[0] == "Int": 
+            if er[1]  == "i32": 
                 emitter << f"{value} = mul nsw {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
-            elif currentvar[0] == "Float":
+            elif er[1]  == "float":
                 emitter << f"{value} = fmul {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
         elif oper == "/":
-            if currentvar[0] == "Int": 
+            if er[1]  == "i32": 
                 emitter << f"{value} = sdiv {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
-            elif currentvar[0] == "Float":
+            elif er[1]  == "float":
                 emitter << f"{value} = fdiv {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
         elif oper == "%":
@@ -182,43 +190,49 @@ def compilador(node, emitter=None):
             return[value, exptype, aligntype]
         ########################################################################
         elif oper == "<=":
-            if currentvar[0] == "Int": 
+            if er[1]  == "i32": 
                 emitter << f"{value} = icmp sle {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
-            elif currentvar[0] == "Float":
+            elif er[1]  == "float":
                 emitter << f"{value} = fcmp ole {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
         elif oper == ">":
-            if currentvar[0] == "Int": 
+            if er[1]  == "i32": 
                 emitter << f"{value} = icmp sgt {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
-            elif currentvar[0] == "Float":
+            elif er[1]  == "float":
                 emitter << f"{value} = fcmp ogt {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
         elif oper == "<":
-            if currentvar[0] == "Int": 
+            if er[1]  == "i32": 
                 emitter << f"{value} = icmp slt {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
-            elif currentvar[0] == "Float":
+            elif er[1]  == "float":
                 emitter << f"{value} = fcmp olt {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
         elif oper == ">=":
-            if currentvar[0] == "Int": 
+            if er[1]  == "i32": 
                 emitter << f"{value} = icmp sge {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
-            elif currentvar[0] == "Float":
+            elif er[1]  == "float":
                 emitter << f"{value} = fcmp oge {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
             
         ##############################################################################
-        #elif oper == "==":
-            
+        elif oper == "==":
+            if er[1]  == "i32": 
+                emitter << f"{value} = icmp eq {exptype} {el[0]}, {er[0]}"
+                return[value, "i1", aligntype]
+            elif er[1]  == "float":
+                if ernt == "name_expression":
+                    #emitter << f"{emitter.get_id()} = sitofp i32 {}"
+                    emitter << f"{value} = fcmp oeq {exptype} {el[0]}, {er[0]}"
+                    
+                return[value, "i1", aligntype]
         #elif oper == "!=":
         #elif oper == "&&":
         #elif oper == "||":
 
-    
-       
     elif node["nt"] == "nuo_expression":
         pass
 
@@ -248,9 +262,9 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "name_expression":
         name = node["name"]
-        exptype = get_type(currentvar[0], "var")
-        aligntype = get_align(currentvar[0])
-        loadpointer = f"%load_{name}"
+        exptype = get_type(emitter.get_type(name), "var") 
+        aligntype = get_align(emitter.get_type(name))
+        loadpointer = f"%load_{emitter.get_id()}_{name}"
         emitter << f"{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {aligntype}"
         return [loadpointer, exptype, aligntype]
     
