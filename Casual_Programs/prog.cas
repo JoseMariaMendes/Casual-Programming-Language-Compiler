@@ -1,14 +1,9 @@
-def fun(a:Float, c:Float, y:Boolean):Float{
-	
-	b:Float = c / 2.8 * 9.8  ;
+def fun(y:Int):Int{
+	y = y +6;
 
-	b = 3.8;
-	return b;
+	return y;
 }
 
-def main():Float{
-	
-	d:Float = 5.8 + 8.8;
-
- 	return d;
+def main():Int{
+	return 0;
 }
