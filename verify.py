@@ -402,6 +402,9 @@ def verify(ctx:Context, node):
             raise TypeError(f"expressao do return nao tem o tipo certo")
         return ctx.get_type(name)
 
+    elif node["nt"] == "group_expression":
+        return verify(ctx, node["expression"])
+    
     else:
         t = node["nt"]
         print(f"E preciso tratar do node {t}")
