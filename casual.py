@@ -223,6 +223,8 @@ def p_block(t):
             | LCURLY block_content RCURLY'''
     if len(t) == 4:
         t[0] = {'nt': 'block', 'block_content': list(list_helper(t[2]))}
+    if len(t) == 3:
+        t[0] = {'nt': 'block', 'block_content': "empty"}
 
 def p_block_content(t):
     '''block_content : statement  
@@ -292,12 +294,12 @@ def p_expression_binop(t):
                   | expression LOWER expression
                   | expression AND expression
                   | expression OR expression'''
-    t[0] = {'nt': 'binop_expression', 'value': t[2], 'expression_left': t[1], 'expression_right': t[3]}
+    t[0] = {'nt': 'binop_expression', 'oper': t[2], 'expression_left': t[1], 'expression_right': t[3]}
     
 def p_expression_bool(t):
     '''expression : TRUE 
                 | FALSE'''
-    t[0] = {'nt': 'bool_expression', 'bool': t[1]}
+    t[0] = {'nt': 'bool_expression', 'value': t[1]}
 
 def p_expression_nuo(t):
     '''expression : DIFFER expression'''
@@ -305,15 +307,15 @@ def p_expression_nuo(t):
 
 def p_expression_int(t):
     'expression : NUMBER'
-    t[0] = {'nt': 'int_expression', 'number': t[1]}
+    t[0] = {'nt': 'int_expression', 'value': t[1]}
 
 def p_expression_float(t):
     '''expression : FLOAT'''
-    t[0] = {'nt': 'float_expression', 'float': t[1]}
+    t[0] = {'nt': 'float_expression', 'value': t[1]}
 
 def p_expression_string(t):
     '''expression : STRING '''
-    t[0] = {'nt': 'string_expression', 'string': t[1]}
+    t[0] = {'nt': 'string_expression', 'value': t[1]}
 
 def p_expression_array(t):
     'expression : NAME LBRACK expression RBRACK'

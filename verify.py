@@ -9,6 +9,7 @@ def verify(ctx:Context, node):
     #print('-------')
     if node["nt"] == "programb":
         for decl_def in node["program"]:
+            
             verify(ctx, decl_def)
     
     elif node["nt"] == "declaration":
@@ -66,7 +67,6 @@ def verify(ctx:Context, node):
                 ctx.set_type(name, assinatura)
                 
     elif node["nt"] == "definition":
-        ctx.enter_scope()
         name = node['name']
         if ctx.has_var(name):
             if 'declaration' not in ctx.get_type(name)[0] and 'definition' in ctx.get_type(name)[0]:
@@ -116,6 +116,7 @@ def verify(ctx:Context, node):
             #não declarada nem definida
             if node['darguments'] != "empty":
                 #funçao tem argumentos
+                
                 ctx.set_type("RETURN_CODE", node["type"])
                 assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
                                                             [arg["type"] for arg in node['darguments']]], "function")
@@ -132,7 +133,13 @@ def verify(ctx:Context, node):
                 ctx.set_type(name, assinatura)
 
         
-        verify(ctx, node['block'])
+        ctx.enter_scope()
+        
+        if node['block']['block_content'] != "empty":
+            verify(ctx, node['block'])
+        else:
+            raise TypeError(f"funcao {name} está vazia")
+        
         ctx.exit_scope()
     
     elif node["nt"] == "block":
@@ -226,7 +233,7 @@ def verify(ctx:Context, node):
         verify(ctx, node['expression'])
         
     elif node["nt"] == "binop_expression":
-        op = node['value']
+        op = node['oper']
         el = node['expression_left']
         er = node['expression_right']
         #print(verify(ctx, er))

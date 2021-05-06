@@ -1,0 +1,14 @@
+
+
+def fun(a:Float, c:Float):Float{
+	
+	b:Float = c + 2.2;
+	return b;
+}
+
+def main():Float{
+	
+	d:Float = fun(3.6, 5.6) - 5.7 + 8.4;
+
+ 	return d;
+}

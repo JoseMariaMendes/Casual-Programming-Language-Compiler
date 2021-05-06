@@ -45,6 +45,7 @@ def compilador(node, emitter=None):
     elif node["nt"] == "definition":
         name = node["name"]
         funtype = get_type(node["type"], "fun")
+        aligntype = get_align(node["type"])
         arguments = ""
         if node["darguments"] != "empty":
             #funçao tem argumentos
@@ -57,6 +58,7 @@ def compilador(node, emitter=None):
                     arguments += ", " + get_type(arg["type"], "funarg") + " %" + arg["name"]
 
         emitter << f"define {funtype} @{name}({arguments}) #0 {'{'}"
+        emitter << f"{emitter.get_pointer_name(name)} = alloca {funtype}, {aligntype}"
         #adicionar conteudo do bloco
         if node["darguments"] != "empty":
             for arg in node["darguments"]:
@@ -80,6 +82,7 @@ def compilador(node, emitter=None):
 
         if node["expression"] != "empty":
             #variavel declarada e defnida
+            
             emitter << f"{pointer} = alloca {vartype}, {typealign}"
             currentvar = [node['type'], pointer]
             compilador(node["expression"], emitter)
@@ -110,13 +113,58 @@ def compilador(node, emitter=None):
     elif node["nt"] == "binop_expression":
         er = node["expression_right"]
         el = node["expression_left"]
-        value = node["value"]
-        if node["value"] == "+":
-            result = compilador
+        value = node["oper"]
+        
+        if el["nt"] == "binop_expression":
+            compilador(el, emitter)
+        
+        if er["nt"] == "binop_expression":
+            compilador(er, emitter)
+        
+        
+        if er["nt"] == 'float_expression':
+            ertype = "float"
+        elif er["nt"] == 'int_expression':
+            ertype = "int"
+        elif er["nt"] == 'string_expression':
+            ertype = "int"
+        elif er["nt"] == 'bool_expression':
+            ertype = "int"
+        elif er["nt"] == 'name_expression':
+            ertype = "var"
+        elif er["nt"] == 'expression_fun_invoc':
+            ertype = "fun"
+        else:
+            #TypeError f"ERROOOO {er}, {el}, {value}"    
+            pass
+        
+        
+        
+          '''  
+        print (er["nt"])
+        print (el["nt"])
+        if 'value' not in er:
+            print(er['name'])
+        else:
+            print(er['value'])
+            
+            
+        if 'value' not in el:
+            print(el["name"])
+        else:
+            print(el['value'])
+            '''
+            
+            
+        if node["oper"] == "+":
+            pass
         #elif value == "-":
         #elif value == "*":
         #elif value == "/":
         #elif value == "%":
+        
+        
+        #nao chegam aqui sem ser booleans por causa do verify
         #elif value == "==":
         #elif value == "!=":
         #elif value == ">=":
@@ -128,7 +176,7 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "bool_expression":
         #store i8 1, i8* %11, align 1
-        value = node["bool"]
+        value = node["value"]
         if value == "True":
             value = 1
         else:
@@ -143,22 +191,33 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "int_expression":
         #store i32 0, i32* %9, align 4
-        value = node["number"]
+        value = node["value"]
         exptype = "i32"
         emitter << f"store {exptype} {value}, {exptype}* {currentvar[1]}, {get_align('Int')}"
         return exptype
         
     elif node["nt"] == "float_expression":
-        value = float_to_hex(node["float"])
+        value = float_to_hex(node["value"])
         exptype = "float"
         emitter << f"store {exptype} {value}, {exptype}* {currentvar[1]}, {get_align('Float')}"
         return exptype
 
+    elif node["nt"] == "name_expression":
+        name = node["name"]
+        exptype = get_type(currentvar[0], "var")
+        align = get_align(currentvar[0])
+        varpointer = currentvar[1]
+        loadpointer = emitter.get_id()
+        print(currentvar)
+        emitter << f"%{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {align}"
+        emitter << f"store {exptype} %{loadpointer}, {exptype}* {varpointer}, {align}"
+        return "var"
+    
     elif node["nt"] == "string_expression":
         pointer = currentvar[1]
         vartype = "i8*"
         align = get_align('String')
-        value = node["string"]
+        value = node["value"]
         size = len(value)-1
         nn = value.count("\\n")
         size -= nn
@@ -169,20 +228,12 @@ def compilador(node, emitter=None):
         str_name = f"@.casual_str_{id}"
         str_decl = f"""{str_name} = private unnamed_addr constant [{size} x i8] c{value}, align 1"""
         emitter.lines.insert(0, str_decl)
-        emitter << f"store {vartype} getelementptr inbounds ([{size} x i8], [{size} x i8]* @.str, i64 0, i64 0), {vartype}* {pointer}, {align}"
+        emitter << f"store {vartype} getelementptr inbounds ([{size} x i8], [{size} x i8]* {str_name}, i64 0, i64 0), {vartype}* {pointer}, {align}"
         return vartype
 
     elif node["nt"] == "array_expression":
         print(currentvar)
         pass
-
-    elif node["nt"] == "name_expression":
-        name = node["name"]
-        exptype = currentvar
-
-        print(currentvar)
-        emitter << f"%{emitter.get_id()} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {get_align(exptype)}"
-        return "var"
 
     elif node["nt"] == "group_expression":
         pass
