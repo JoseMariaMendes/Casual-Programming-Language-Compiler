@@ -211,6 +211,7 @@ def verify(ctx:Context, node):
                 pass
             elif ctx.get_type(name)[1] == "String":
                 pass
+            
             if ctx.get_type(name)[1] == verify(ctx, node["expression"]):
                 assinatura = ctx.get_type(name)
                 #assinatura[0].append(node['nt'])

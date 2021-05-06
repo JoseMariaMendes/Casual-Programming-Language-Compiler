@@ -303,7 +303,7 @@ def p_expression_bool(t):
 
 def p_expression_nuo(t):
     '''expression : DIFFER expression'''
-    t[0] = ['nuo_expression',t[2]]
+    t[0] = {'nt': 'nuo_expression', 'expression': t[2]}
 
 def p_expression_int(t):
     'expression : NUMBER'
@@ -385,7 +385,7 @@ try:
             "/usr/bin/llc code.ll && clang code.s -o code && ./code",
             shell=True,
         )
-        # print("Return code", r)
+        print("Return code", r)
 
 except EOFError:
     print("Unable to read file")

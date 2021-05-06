@@ -107,6 +107,7 @@ def compilador(node, emitter=None):
             print("something went wrong")
 
     elif node["nt"] == "var_assign_statment":
+        print(node['name'])
         pointer = emitter.get_pointer_name(node['name'])
         exptype = emitter.get_type(node['name'])
         currentvar = [exptype, pointer]
@@ -133,11 +134,52 @@ def compilador(node, emitter=None):
         pass
     
     elif node["nt"] == "ifelse_statement":
-        pass
+        exp = compilador(node["expression"], emitter)
+        labelif = f"if_{emitter.get_id()}"
+        labelelse = f"else_{emitter.get_id()}"
+        labelcont = f"cont_{emitter.get_id()}"
+        trunc = f"%trunc_{emitter.get_id()}"
+        emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
+        emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
+        
+        if len(node["block"]) == 2:
+            emitter <<""
+            emitter << f"{labelif}:"
+            compilador(node["block"][0], emitter)
+            emitter << f"br label %{labelcont}"
+            emitter << ""
+            emitter << f"{labelelse}:"
+            compilador(node["block"][1], emitter)
+            emitter << f"br label %{labelcont}"
+            emitter << ""
+            emitter << f"{labelcont}:"
+        else:
+            emitter << f"br i1 {exp[0]}, label %{labelif}, label %{labelelse}"
+            emitter <<""
+            emitter << f"{labelif}:"
+            compilador(node["block"][0], emitter)
+            emitter << ""
+            emitter << f"{labelelse}:"
 
     elif node["nt"] == "while_statement":
-        pass
-    
+        labelwhile = f"while_{emitter.get_id()}"
+        labelblock = f"block_{emitter.get_id()}"
+        labelcont = f"cont_{emitter.get_id()}"
+        trunc = f"%trunc_{emitter.get_id()}"
+        
+        emitter << f"br label %{labelwhile}"
+        emitter << ""
+        emitter << f"{labelwhile}:"
+        exp = compilador(node["expression"], emitter)
+        emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
+        emitter << f"br i1 {trunc}, label %{labelblock}, label %{labelcont}"
+        emitter << ""
+        emitter << f"{labelblock}:"
+        compilador(node["block"], emitter)
+        emitter << f"br label %{labelwhile}"
+        emitter << ""
+        emitter << f"{labelcont}:"
+        
     elif node["nt"] == "array_decl_statment":
         pass
 
@@ -153,8 +195,6 @@ def compilador(node, emitter=None):
         el = compilador(node["expression_left"], emitter)
         exptype = er[1]
         aligntype = er[2]
-        print(er)
-        print(el)
         oper = node["oper"]
 
         if oper == "+":
@@ -224,20 +264,55 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = icmp eq {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
             elif er[1]  == "float":
-                if ernt == "name_expression":
-                    #emitter << f"{emitter.get_id()} = sitofp i32 {}"
-                    emitter << f"{value} = fcmp oeq {exptype} {el[0]}, {er[0]}"
-                    
+                emitter << f"{value} = fcmp oeq {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
-        #elif oper == "!=":
+            elif er[1] == "i8":
+                if not isinstance(er[0], int):
+                    tran = er[0]
+                    other = er[0]
+                elif not isinstance(el[0], int):
+                    tran = el[0]
+                    other = er[0]
+                
+                temp1 = f"%trunc_{emitter.get_id()}"
+                temp2 = f"%zext_{emitter.get_id()}"
+                
+                emitter << f"{temp1} = trunc {exptype} {tran} to i1"
+                emitter << f"{temp2} = zext i1 {temp1} to i32"
+                emitter << f"{value} = icmp eq i32 {temp2}, {other}"
+        elif oper == "!=":
+            if er[1]  == "i32": 
+                emitter << f"{value} = icmp ne {exptype} {el[0]}, {er[0]}"
+                return[value, "i1", aligntype]
+            elif er[1]  == "float":
+                emitter << f"{value} = fcmp une {exptype} {el[0]}, {er[0]}"
+                return[value, "i1", aligntype]
+            elif er[1] == "i8":
+                if not isinstance(er[0], int):
+                    tran = er[0]
+                    other = er[0]
+                elif not isinstance(el[0], int):
+                    tran = el[0]
+                    other = er[0]
+                
+                temp1 = f"%trunc_{emitter.get_id()}"
+                temp2 = f"%zext_{emitter.get_id()}"
+                
+                emitter << f"{temp1} = trunc {exptype} {tran} to i1"
+                emitter << f"{temp2} = zext i1 {temp1} to i32"
+                emitter << f"{value} = icmp ne i32 {temp2}, {other}"
+                
         #elif oper == "&&":
         #elif oper == "||":
 
     elif node["nt"] == "nuo_expression":
-        pass
+        var = compilador(node["expression"], emitter)
+        #print(node["expression"])
+        return compilador(node["expression"], emitter)
 
     elif node["nt"] == "bool_expression":
         #store i8 1, i8* %11, align 1
+        
         value = node["value"]
         if value == "True":
             value = 1

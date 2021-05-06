@@ -1,9 +1,26 @@
-def fun(y:Int):Int{
-	y = y +6;
+def fun(a:Float, c:Float, y:Boolean):Boolean{
+	
+	b:Float = c / 2.8 * 9.8  ;
+
+	b = 3.8;
+	
+	f:Boolean = True;
+	if (f){
+		b = 3.3 + 4.3;
+	}else{
+		b = 6.3 + 7.3;
+	}
+
+	while(y){
+		g:Int = 9;
+	}
 
 	return y;
 }
 
 def main():Int{
-	return 0;
+	
+	d:Int = 5;
+
+ 	return d;
 }
