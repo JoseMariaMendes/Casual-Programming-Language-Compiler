@@ -1,0 +1,3707 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    QMARK
+
+Grammar
+
+Rule 0     S' -> programb
+Rule 1     programb -> program
+Rule 2     program -> DECLARATION declaration
+Rule 3     program -> DEFINITION definition
+Rule 4     program -> DECLARATION declaration program
+Rule 5     program -> DEFINITION definition program
+Rule 6     declaration -> NAME LPAR dargument RPAR COLON types
+Rule 7     declaration -> NAME LPAR dargument RPAR COLON VOID
+Rule 8     declaration -> NAME LPAR RPAR COLON types
+Rule 9     declaration -> NAME LPAR RPAR COLON VOID
+Rule 10    definition -> NAME LPAR dargument RPAR COLON types block
+Rule 11    definition -> NAME LPAR RPAR COLON types block
+Rule 12    definition -> NAME LPAR RPAR COLON VOID block
+Rule 13    definition -> NAME LPAR dargument RPAR COLON VOID block
+Rule 14    types -> INT
+Rule 15    types -> FLOATTYPE
+Rule 16    types -> BOOL
+Rule 17    types -> STRINGTYPE
+Rule 18    dargument -> NAME COLON types
+Rule 19    dargument -> NAME COLON types COMMA dargument
+Rule 20    block -> LCURLY RCURLY
+Rule 21    block -> LCURLY block_content RCURLY
+Rule 22    block_content -> statement
+Rule 23    block_content -> statement block_content
+Rule 24    statement -> RETURN SEMICOLON
+Rule 25    statement -> RETURN expression SEMICOLON
+Rule 26    statement -> IF expression block
+Rule 27    statement -> IF expression block ELSE block
+Rule 28    statement -> WHILE expression block
+Rule 29    statement -> NAME COLON types EQUALS expression SEMICOLON
+Rule 30    statement -> NAME COLON types SEMICOLON
+Rule 31    statement -> NAME EQUALS expression SEMICOLON
+Rule 32    statement -> NAME COLON LBRACK types RBRACK SEMICOLON
+Rule 33    statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON
+Rule 34    statement -> expression SEMICOLON
+Rule 35    expression -> expression SUM expression
+Rule 36    expression -> expression SUB expression
+Rule 37    expression -> expression MULTIPLY expression
+Rule 38    expression -> expression DIVIDE expression
+Rule 39    expression -> expression RESTOF expression
+Rule 40    expression -> expression SAMEAS expression
+Rule 41    expression -> expression NEQUAL expression
+Rule 42    expression -> expression HEQUAL expression
+Rule 43    expression -> expression LEQUAL expression
+Rule 44    expression -> expression HIGHER expression
+Rule 45    expression -> expression LOWER expression
+Rule 46    expression -> expression AND expression
+Rule 47    expression -> expression OR expression
+Rule 48    expression -> TRUE
+Rule 49    expression -> FALSE
+Rule 50    expression -> DIFFER expression
+Rule 51    expression -> NUMBER
+Rule 52    expression -> FLOAT
+Rule 53    expression -> STRING
+Rule 54    expression -> NAME LBRACK expression RBRACK
+Rule 55    expression -> NAME
+Rule 56    expression -> LPAR expression RPAR
+Rule 57    expression -> NAME LPAR RPAR LBRACK expression RBRACK
+Rule 58    expression -> NAME LPAR argument RPAR LBRACK expression RBRACK
+Rule 59    expression -> NAME LPAR RPAR
+Rule 60    expression -> NAME LPAR argument RPAR
+Rule 61    argument -> expression
+Rule 62    argument -> expression COMMA argument
+
+Terminals, with rules where they appear
+
+AND                  : 46
+BOOL                 : 16
+COLON                : 6 7 8 9 10 11 12 13 18 19 29 30 32
+COMMA                : 19 62
+DECLARATION          : 2 4
+DEFINITION           : 3 5
+DIFFER               : 50
+DIVIDE               : 38
+ELSE                 : 27
+EQUALS               : 29 31 33
+FALSE                : 49
+FLOAT                : 52
+FLOATTYPE            : 15
+HEQUAL               : 42
+HIGHER               : 44
+IF                   : 26 27
+INT                  : 14
+LBRACK               : 32 33 54 57 58
+LCURLY               : 20 21
+LEQUAL               : 43
+LOWER                : 45
+LPAR                 : 6 7 8 9 10 11 12 13 56 57 58 59 60
+MULTIPLY             : 37
+NAME                 : 6 7 8 9 10 11 12 13 18 19 29 30 31 32 33 54 55 57 58 59 60
+NEQUAL               : 41
+NUMBER               : 51
+OR                   : 47
+QMARK                : 
+RBRACK               : 32 33 54 57 58
+RCURLY               : 20 21
+RESTOF               : 39
+RETURN               : 24 25
+RPAR                 : 6 7 8 9 10 11 12 13 56 57 58 59 60
+SAMEAS               : 40
+SEMICOLON            : 24 25 29 30 31 32 33 34
+STRING               : 53
+STRINGTYPE           : 17
+SUB                  : 36
+SUM                  : 35
+TRUE                 : 48
+VOID                 : 7 9 12 13
+WHILE                : 28
+error                : 
+
+Nonterminals, with rules where they appear
+
+argument             : 58 60 62
+block                : 10 11 12 13 26 27 27 28
+block_content        : 21 23
+dargument            : 6 7 10 13 19
+declaration          : 2 4
+definition           : 3 5
+expression           : 25 26 27 28 29 31 33 33 34 35 35 36 36 37 37 38 38 39 39 40 40 41 41 42 42 43 43 44 44 45 45 46 46 47 47 50 54 56 57 58 61 62
+program              : 1 4 5
+programb             : 0
+statement            : 22 23
+types                : 6 8 10 11 18 19 29 30 32
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . programb
+    (1) programb -> . program
+    (2) program -> . DECLARATION declaration
+    (3) program -> . DEFINITION definition
+    (4) program -> . DECLARATION declaration program
+    (5) program -> . DEFINITION definition program
+
+    DECLARATION     shift and go to state 3
+    DEFINITION      shift and go to state 4
+
+    programb                       shift and go to state 1
+    program                        shift and go to state 2
+
+state 1
+
+    (0) S' -> programb .
+
+
+
+state 2
+
+    (1) programb -> program .
+
+    $end            reduce using rule 1 (programb -> program .)
+
+
+state 3
+
+    (2) program -> DECLARATION . declaration
+    (4) program -> DECLARATION . declaration program
+    (6) declaration -> . NAME LPAR dargument RPAR COLON types
+    (7) declaration -> . NAME LPAR dargument RPAR COLON VOID
+    (8) declaration -> . NAME LPAR RPAR COLON types
+    (9) declaration -> . NAME LPAR RPAR COLON VOID
+
+    NAME            shift and go to state 6
+
+    declaration                    shift and go to state 5
+
+state 4
+
+    (3) program -> DEFINITION . definition
+    (5) program -> DEFINITION . definition program
+    (10) definition -> . NAME LPAR dargument RPAR COLON types block
+    (11) definition -> . NAME LPAR RPAR COLON types block
+    (12) definition -> . NAME LPAR RPAR COLON VOID block
+    (13) definition -> . NAME LPAR dargument RPAR COLON VOID block
+
+    NAME            shift and go to state 8
+
+    definition                     shift and go to state 7
+
+state 5
+
+    (2) program -> DECLARATION declaration .
+    (4) program -> DECLARATION declaration . program
+    (2) program -> . DECLARATION declaration
+    (3) program -> . DEFINITION definition
+    (4) program -> . DECLARATION declaration program
+    (5) program -> . DEFINITION definition program
+
+    $end            reduce using rule 2 (program -> DECLARATION declaration .)
+    DECLARATION     shift and go to state 3
+    DEFINITION      shift and go to state 4
+
+    program                        shift and go to state 9
+
+state 6
+
+    (6) declaration -> NAME . LPAR dargument RPAR COLON types
+    (7) declaration -> NAME . LPAR dargument RPAR COLON VOID
+    (8) declaration -> NAME . LPAR RPAR COLON types
+    (9) declaration -> NAME . LPAR RPAR COLON VOID
+
+    LPAR            shift and go to state 10
+
+
+state 7
+
+    (3) program -> DEFINITION definition .
+    (5) program -> DEFINITION definition . program
+    (2) program -> . DECLARATION declaration
+    (3) program -> . DEFINITION definition
+    (4) program -> . DECLARATION declaration program
+    (5) program -> . DEFINITION definition program
+
+    $end            reduce using rule 3 (program -> DEFINITION definition .)
+    DECLARATION     shift and go to state 3
+    DEFINITION      shift and go to state 4
+
+    program                        shift and go to state 11
+
+state 8
+
+    (10) definition -> NAME . LPAR dargument RPAR COLON types block
+    (11) definition -> NAME . LPAR RPAR COLON types block
+    (12) definition -> NAME . LPAR RPAR COLON VOID block
+    (13) definition -> NAME . LPAR dargument RPAR COLON VOID block
+
+    LPAR            shift and go to state 12
+
+
+state 9
+
+    (4) program -> DECLARATION declaration program .
+
+    $end            reduce using rule 4 (program -> DECLARATION declaration program .)
+
+
+state 10
+
+    (6) declaration -> NAME LPAR . dargument RPAR COLON types
+    (7) declaration -> NAME LPAR . dargument RPAR COLON VOID
+    (8) declaration -> NAME LPAR . RPAR COLON types
+    (9) declaration -> NAME LPAR . RPAR COLON VOID
+    (18) dargument -> . NAME COLON types
+    (19) dargument -> . NAME COLON types COMMA dargument
+
+    RPAR            shift and go to state 15
+    NAME            shift and go to state 13
+
+    dargument                      shift and go to state 14
+
+state 11
+
+    (5) program -> DEFINITION definition program .
+
+    $end            reduce using rule 5 (program -> DEFINITION definition program .)
+
+
+state 12
+
+    (10) definition -> NAME LPAR . dargument RPAR COLON types block
+    (11) definition -> NAME LPAR . RPAR COLON types block
+    (12) definition -> NAME LPAR . RPAR COLON VOID block
+    (13) definition -> NAME LPAR . dargument RPAR COLON VOID block
+    (18) dargument -> . NAME COLON types
+    (19) dargument -> . NAME COLON types COMMA dargument
+
+    RPAR            shift and go to state 17
+    NAME            shift and go to state 13
+
+    dargument                      shift and go to state 16
+
+state 13
+
+    (18) dargument -> NAME . COLON types
+    (19) dargument -> NAME . COLON types COMMA dargument
+
+    COLON           shift and go to state 18
+
+
+state 14
+
+    (6) declaration -> NAME LPAR dargument . RPAR COLON types
+    (7) declaration -> NAME LPAR dargument . RPAR COLON VOID
+
+    RPAR            shift and go to state 19
+
+
+state 15
+
+    (8) declaration -> NAME LPAR RPAR . COLON types
+    (9) declaration -> NAME LPAR RPAR . COLON VOID
+
+    COLON           shift and go to state 20
+
+
+state 16
+
+    (10) definition -> NAME LPAR dargument . RPAR COLON types block
+    (13) definition -> NAME LPAR dargument . RPAR COLON VOID block
+
+    RPAR            shift and go to state 21
+
+
+state 17
+
+    (11) definition -> NAME LPAR RPAR . COLON types block
+    (12) definition -> NAME LPAR RPAR . COLON VOID block
+
+    COLON           shift and go to state 22
+
+
+state 18
+
+    (18) dargument -> NAME COLON . types
+    (19) dargument -> NAME COLON . types COMMA dargument
+    (14) types -> . INT
+    (15) types -> . FLOATTYPE
+    (16) types -> . BOOL
+    (17) types -> . STRINGTYPE
+
+    INT             shift and go to state 24
+    FLOATTYPE       shift and go to state 25
+    BOOL            shift and go to state 26
+    STRINGTYPE      shift and go to state 27
+
+    types                          shift and go to state 23
+
+state 19
+
+    (6) declaration -> NAME LPAR dargument RPAR . COLON types
+    (7) declaration -> NAME LPAR dargument RPAR . COLON VOID
+
+    COLON           shift and go to state 28
+
+
+state 20
+
+    (8) declaration -> NAME LPAR RPAR COLON . types
+    (9) declaration -> NAME LPAR RPAR COLON . VOID
+    (14) types -> . INT
+    (15) types -> . FLOATTYPE
+    (16) types -> . BOOL
+    (17) types -> . STRINGTYPE
+
+    VOID            shift and go to state 30
+    INT             shift and go to state 24
+    FLOATTYPE       shift and go to state 25
+    BOOL            shift and go to state 26
+    STRINGTYPE      shift and go to state 27
+
+    types                          shift and go to state 29
+
+state 21
+
+    (10) definition -> NAME LPAR dargument RPAR . COLON types block
+    (13) definition -> NAME LPAR dargument RPAR . COLON VOID block
+
+    COLON           shift and go to state 31
+
+
+state 22
+
+    (11) definition -> NAME LPAR RPAR COLON . types block
+    (12) definition -> NAME LPAR RPAR COLON . VOID block
+    (14) types -> . INT
+    (15) types -> . FLOATTYPE
+    (16) types -> . BOOL
+    (17) types -> . STRINGTYPE
+
+    VOID            shift and go to state 33
+    INT             shift and go to state 24
+    FLOATTYPE       shift and go to state 25
+    BOOL            shift and go to state 26
+    STRINGTYPE      shift and go to state 27
+
+    types                          shift and go to state 32
+
+state 23
+
+    (18) dargument -> NAME COLON types .
+    (19) dargument -> NAME COLON types . COMMA dargument
+
+    RPAR            reduce using rule 18 (dargument -> NAME COLON types .)
+    COMMA           shift and go to state 34
+
+
+state 24
+
+    (14) types -> INT .
+
+    COMMA           reduce using rule 14 (types -> INT .)
+    RPAR            reduce using rule 14 (types -> INT .)
+    DECLARATION     reduce using rule 14 (types -> INT .)
+    DEFINITION      reduce using rule 14 (types -> INT .)
+    $end            reduce using rule 14 (types -> INT .)
+    LCURLY          reduce using rule 14 (types -> INT .)
+    EQUALS          reduce using rule 14 (types -> INT .)
+    SEMICOLON       reduce using rule 14 (types -> INT .)
+    RBRACK          reduce using rule 14 (types -> INT .)
+
+
+state 25
+
+    (15) types -> FLOATTYPE .
+
+    COMMA           reduce using rule 15 (types -> FLOATTYPE .)
+    RPAR            reduce using rule 15 (types -> FLOATTYPE .)
+    DECLARATION     reduce using rule 15 (types -> FLOATTYPE .)
+    DEFINITION      reduce using rule 15 (types -> FLOATTYPE .)
+    $end            reduce using rule 15 (types -> FLOATTYPE .)
+    LCURLY          reduce using rule 15 (types -> FLOATTYPE .)
+    EQUALS          reduce using rule 15 (types -> FLOATTYPE .)
+    SEMICOLON       reduce using rule 15 (types -> FLOATTYPE .)
+    RBRACK          reduce using rule 15 (types -> FLOATTYPE .)
+
+
+state 26
+
+    (16) types -> BOOL .
+
+    COMMA           reduce using rule 16 (types -> BOOL .)
+    RPAR            reduce using rule 16 (types -> BOOL .)
+    DECLARATION     reduce using rule 16 (types -> BOOL .)
+    DEFINITION      reduce using rule 16 (types -> BOOL .)
+    $end            reduce using rule 16 (types -> BOOL .)
+    LCURLY          reduce using rule 16 (types -> BOOL .)
+    EQUALS          reduce using rule 16 (types -> BOOL .)
+    SEMICOLON       reduce using rule 16 (types -> BOOL .)
+    RBRACK          reduce using rule 16 (types -> BOOL .)
+
+
+state 27
+
+    (17) types -> STRINGTYPE .
+
+    COMMA           reduce using rule 17 (types -> STRINGTYPE .)
+    RPAR            reduce using rule 17 (types -> STRINGTYPE .)
+    DECLARATION     reduce using rule 17 (types -> STRINGTYPE .)
+    DEFINITION      reduce using rule 17 (types -> STRINGTYPE .)
+    $end            reduce using rule 17 (types -> STRINGTYPE .)
+    LCURLY          reduce using rule 17 (types -> STRINGTYPE .)
+    EQUALS          reduce using rule 17 (types -> STRINGTYPE .)
+    SEMICOLON       reduce using rule 17 (types -> STRINGTYPE .)
+    RBRACK          reduce using rule 17 (types -> STRINGTYPE .)
+
+
+state 28
+
+    (6) declaration -> NAME LPAR dargument RPAR COLON . types
+    (7) declaration -> NAME LPAR dargument RPAR COLON . VOID
+    (14) types -> . INT
+    (15) types -> . FLOATTYPE
+    (16) types -> . BOOL
+    (17) types -> . STRINGTYPE
+
+    VOID            shift and go to state 36
+    INT             shift and go to state 24
+    FLOATTYPE       shift and go to state 25
+    BOOL            shift and go to state 26
+    STRINGTYPE      shift and go to state 27
+
+    types                          shift and go to state 35
+
+state 29
+
+    (8) declaration -> NAME LPAR RPAR COLON types .
+
+    DECLARATION     reduce using rule 8 (declaration -> NAME LPAR RPAR COLON types .)
+    DEFINITION      reduce using rule 8 (declaration -> NAME LPAR RPAR COLON types .)
+    $end            reduce using rule 8 (declaration -> NAME LPAR RPAR COLON types .)
+
+
+state 30
+
+    (9) declaration -> NAME LPAR RPAR COLON VOID .
+
+    DECLARATION     reduce using rule 9 (declaration -> NAME LPAR RPAR COLON VOID .)
+    DEFINITION      reduce using rule 9 (declaration -> NAME LPAR RPAR COLON VOID .)
+    $end            reduce using rule 9 (declaration -> NAME LPAR RPAR COLON VOID .)
+
+
+state 31
+
+    (10) definition -> NAME LPAR dargument RPAR COLON . types block
+    (13) definition -> NAME LPAR dargument RPAR COLON . VOID block
+    (14) types -> . INT
+    (15) types -> . FLOATTYPE
+    (16) types -> . BOOL
+    (17) types -> . STRINGTYPE
+
+    VOID            shift and go to state 38
+    INT             shift and go to state 24
+    FLOATTYPE       shift and go to state 25
+    BOOL            shift and go to state 26
+    STRINGTYPE      shift and go to state 27
+
+    types                          shift and go to state 37
+
+state 32
+
+    (11) definition -> NAME LPAR RPAR COLON types . block
+    (20) block -> . LCURLY RCURLY
+    (21) block -> . LCURLY block_content RCURLY
+
+    LCURLY          shift and go to state 40
+
+    block                          shift and go to state 39
+
+state 33
+
+    (12) definition -> NAME LPAR RPAR COLON VOID . block
+    (20) block -> . LCURLY RCURLY
+    (21) block -> . LCURLY block_content RCURLY
+
+    LCURLY          shift and go to state 40
+
+    block                          shift and go to state 41
+
+state 34
+
+    (19) dargument -> NAME COLON types COMMA . dargument
+    (18) dargument -> . NAME COLON types
+    (19) dargument -> . NAME COLON types COMMA dargument
+
+    NAME            shift and go to state 13
+
+    dargument                      shift and go to state 42
+
+state 35
+
+    (6) declaration -> NAME LPAR dargument RPAR COLON types .
+
+    DECLARATION     reduce using rule 6 (declaration -> NAME LPAR dargument RPAR COLON types .)
+    DEFINITION      reduce using rule 6 (declaration -> NAME LPAR dargument RPAR COLON types .)
+    $end            reduce using rule 6 (declaration -> NAME LPAR dargument RPAR COLON types .)
+
+
+state 36
+
+    (7) declaration -> NAME LPAR dargument RPAR COLON VOID .
+
+    DECLARATION     reduce using rule 7 (declaration -> NAME LPAR dargument RPAR COLON VOID .)
+    DEFINITION      reduce using rule 7 (declaration -> NAME LPAR dargument RPAR COLON VOID .)
+    $end            reduce using rule 7 (declaration -> NAME LPAR dargument RPAR COLON VOID .)
+
+
+state 37
+
+    (10) definition -> NAME LPAR dargument RPAR COLON types . block
+    (20) block -> . LCURLY RCURLY
+    (21) block -> . LCURLY block_content RCURLY
+
+    LCURLY          shift and go to state 40
+
+    block                          shift and go to state 43
+
+state 38
+
+    (13) definition -> NAME LPAR dargument RPAR COLON VOID . block
+    (20) block -> . LCURLY RCURLY
+    (21) block -> . LCURLY block_content RCURLY
+
+    LCURLY          shift and go to state 40
+
+    block                          shift and go to state 44
+
+state 39
+
+    (11) definition -> NAME LPAR RPAR COLON types block .
+
+    DECLARATION     reduce using rule 11 (definition -> NAME LPAR RPAR COLON types block .)
+    DEFINITION      reduce using rule 11 (definition -> NAME LPAR RPAR COLON types block .)
+    $end            reduce using rule 11 (definition -> NAME LPAR RPAR COLON types block .)
+
+
+state 40
+
+    (20) block -> LCURLY . RCURLY
+    (21) block -> LCURLY . block_content RCURLY
+    (22) block_content -> . statement
+    (23) block_content -> . statement block_content
+    (24) statement -> . RETURN SEMICOLON
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . IF expression block
+    (27) statement -> . IF expression block ELSE block
+    (28) statement -> . WHILE expression block
+    (29) statement -> . NAME COLON types EQUALS expression SEMICOLON
+    (30) statement -> . NAME COLON types SEMICOLON
+    (31) statement -> . NAME EQUALS expression SEMICOLON
+    (32) statement -> . NAME COLON LBRACK types RBRACK SEMICOLON
+    (33) statement -> . NAME LBRACK expression RBRACK EQUALS expression SEMICOLON
+    (34) statement -> . expression SEMICOLON
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    RCURLY          shift and go to state 45
+    RETURN          shift and go to state 48
+    IF              shift and go to state 50
+    WHILE           shift and go to state 51
+    NAME            shift and go to state 52
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    LPAR            shift and go to state 59
+
+    block_content                  shift and go to state 46
+    statement                      shift and go to state 47
+    expression                     shift and go to state 49
+
+state 41
+
+    (12) definition -> NAME LPAR RPAR COLON VOID block .
+
+    DECLARATION     reduce using rule 12 (definition -> NAME LPAR RPAR COLON VOID block .)
+    DEFINITION      reduce using rule 12 (definition -> NAME LPAR RPAR COLON VOID block .)
+    $end            reduce using rule 12 (definition -> NAME LPAR RPAR COLON VOID block .)
+
+
+state 42
+
+    (19) dargument -> NAME COLON types COMMA dargument .
+
+    RPAR            reduce using rule 19 (dargument -> NAME COLON types COMMA dargument .)
+
+
+state 43
+
+    (10) definition -> NAME LPAR dargument RPAR COLON types block .
+
+    DECLARATION     reduce using rule 10 (definition -> NAME LPAR dargument RPAR COLON types block .)
+    DEFINITION      reduce using rule 10 (definition -> NAME LPAR dargument RPAR COLON types block .)
+    $end            reduce using rule 10 (definition -> NAME LPAR dargument RPAR COLON types block .)
+
+
+state 44
+
+    (13) definition -> NAME LPAR dargument RPAR COLON VOID block .
+
+    DECLARATION     reduce using rule 13 (definition -> NAME LPAR dargument RPAR COLON VOID block .)
+    DEFINITION      reduce using rule 13 (definition -> NAME LPAR dargument RPAR COLON VOID block .)
+    $end            reduce using rule 13 (definition -> NAME LPAR dargument RPAR COLON VOID block .)
+
+
+state 45
+
+    (20) block -> LCURLY RCURLY .
+
+    DECLARATION     reduce using rule 20 (block -> LCURLY RCURLY .)
+    DEFINITION      reduce using rule 20 (block -> LCURLY RCURLY .)
+    $end            reduce using rule 20 (block -> LCURLY RCURLY .)
+    ELSE            reduce using rule 20 (block -> LCURLY RCURLY .)
+    RETURN          reduce using rule 20 (block -> LCURLY RCURLY .)
+    IF              reduce using rule 20 (block -> LCURLY RCURLY .)
+    WHILE           reduce using rule 20 (block -> LCURLY RCURLY .)
+    NAME            reduce using rule 20 (block -> LCURLY RCURLY .)
+    TRUE            reduce using rule 20 (block -> LCURLY RCURLY .)
+    FALSE           reduce using rule 20 (block -> LCURLY RCURLY .)
+    DIFFER          reduce using rule 20 (block -> LCURLY RCURLY .)
+    NUMBER          reduce using rule 20 (block -> LCURLY RCURLY .)
+    FLOAT           reduce using rule 20 (block -> LCURLY RCURLY .)
+    STRING          reduce using rule 20 (block -> LCURLY RCURLY .)
+    LPAR            reduce using rule 20 (block -> LCURLY RCURLY .)
+    RCURLY          reduce using rule 20 (block -> LCURLY RCURLY .)
+
+
+state 46
+
+    (21) block -> LCURLY block_content . RCURLY
+
+    RCURLY          shift and go to state 60
+
+
+state 47
+
+    (22) block_content -> statement .
+    (23) block_content -> statement . block_content
+    (22) block_content -> . statement
+    (23) block_content -> . statement block_content
+    (24) statement -> . RETURN SEMICOLON
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . IF expression block
+    (27) statement -> . IF expression block ELSE block
+    (28) statement -> . WHILE expression block
+    (29) statement -> . NAME COLON types EQUALS expression SEMICOLON
+    (30) statement -> . NAME COLON types SEMICOLON
+    (31) statement -> . NAME EQUALS expression SEMICOLON
+    (32) statement -> . NAME COLON LBRACK types RBRACK SEMICOLON
+    (33) statement -> . NAME LBRACK expression RBRACK EQUALS expression SEMICOLON
+    (34) statement -> . expression SEMICOLON
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    RCURLY          reduce using rule 22 (block_content -> statement .)
+    RETURN          shift and go to state 48
+    IF              shift and go to state 50
+    WHILE           shift and go to state 51
+    NAME            shift and go to state 52
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    LPAR            shift and go to state 59
+
+    statement                      shift and go to state 47
+    block_content                  shift and go to state 61
+    expression                     shift and go to state 49
+
+state 48
+
+    (24) statement -> RETURN . SEMICOLON
+    (25) statement -> RETURN . expression SEMICOLON
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    SEMICOLON       shift and go to state 62
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 63
+
+state 49
+
+    (34) statement -> expression . SEMICOLON
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       shift and go to state 65
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 50
+
+    (26) statement -> IF . expression block
+    (27) statement -> IF . expression block ELSE block
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 79
+
+state 51
+
+    (28) statement -> WHILE . expression block
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 80
+
+state 52
+
+    (29) statement -> NAME . COLON types EQUALS expression SEMICOLON
+    (30) statement -> NAME . COLON types SEMICOLON
+    (31) statement -> NAME . EQUALS expression SEMICOLON
+    (32) statement -> NAME . COLON LBRACK types RBRACK SEMICOLON
+    (33) statement -> NAME . LBRACK expression RBRACK EQUALS expression SEMICOLON
+    (54) expression -> NAME . LBRACK expression RBRACK
+    (55) expression -> NAME .
+    (57) expression -> NAME . LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> NAME . LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> NAME . LPAR RPAR
+    (60) expression -> NAME . LPAR argument RPAR
+
+    COLON           shift and go to state 81
+    EQUALS          shift and go to state 82
+    LBRACK          shift and go to state 83
+    SEMICOLON       reduce using rule 55 (expression -> NAME .)
+    SUM             reduce using rule 55 (expression -> NAME .)
+    SUB             reduce using rule 55 (expression -> NAME .)
+    MULTIPLY        reduce using rule 55 (expression -> NAME .)
+    DIVIDE          reduce using rule 55 (expression -> NAME .)
+    RESTOF          reduce using rule 55 (expression -> NAME .)
+    SAMEAS          reduce using rule 55 (expression -> NAME .)
+    NEQUAL          reduce using rule 55 (expression -> NAME .)
+    HEQUAL          reduce using rule 55 (expression -> NAME .)
+    LEQUAL          reduce using rule 55 (expression -> NAME .)
+    HIGHER          reduce using rule 55 (expression -> NAME .)
+    LOWER           reduce using rule 55 (expression -> NAME .)
+    AND             reduce using rule 55 (expression -> NAME .)
+    OR              reduce using rule 55 (expression -> NAME .)
+    LPAR            shift and go to state 84
+
+
+state 53
+
+    (48) expression -> TRUE .
+
+    SEMICOLON       reduce using rule 48 (expression -> TRUE .)
+    SUM             reduce using rule 48 (expression -> TRUE .)
+    SUB             reduce using rule 48 (expression -> TRUE .)
+    MULTIPLY        reduce using rule 48 (expression -> TRUE .)
+    DIVIDE          reduce using rule 48 (expression -> TRUE .)
+    RESTOF          reduce using rule 48 (expression -> TRUE .)
+    SAMEAS          reduce using rule 48 (expression -> TRUE .)
+    NEQUAL          reduce using rule 48 (expression -> TRUE .)
+    HEQUAL          reduce using rule 48 (expression -> TRUE .)
+    LEQUAL          reduce using rule 48 (expression -> TRUE .)
+    HIGHER          reduce using rule 48 (expression -> TRUE .)
+    LOWER           reduce using rule 48 (expression -> TRUE .)
+    AND             reduce using rule 48 (expression -> TRUE .)
+    OR              reduce using rule 48 (expression -> TRUE .)
+    LCURLY          reduce using rule 48 (expression -> TRUE .)
+    RPAR            reduce using rule 48 (expression -> TRUE .)
+    RBRACK          reduce using rule 48 (expression -> TRUE .)
+    COMMA           reduce using rule 48 (expression -> TRUE .)
+
+
+state 54
+
+    (49) expression -> FALSE .
+
+    SEMICOLON       reduce using rule 49 (expression -> FALSE .)
+    SUM             reduce using rule 49 (expression -> FALSE .)
+    SUB             reduce using rule 49 (expression -> FALSE .)
+    MULTIPLY        reduce using rule 49 (expression -> FALSE .)
+    DIVIDE          reduce using rule 49 (expression -> FALSE .)
+    RESTOF          reduce using rule 49 (expression -> FALSE .)
+    SAMEAS          reduce using rule 49 (expression -> FALSE .)
+    NEQUAL          reduce using rule 49 (expression -> FALSE .)
+    HEQUAL          reduce using rule 49 (expression -> FALSE .)
+    LEQUAL          reduce using rule 49 (expression -> FALSE .)
+    HIGHER          reduce using rule 49 (expression -> FALSE .)
+    LOWER           reduce using rule 49 (expression -> FALSE .)
+    AND             reduce using rule 49 (expression -> FALSE .)
+    OR              reduce using rule 49 (expression -> FALSE .)
+    LCURLY          reduce using rule 49 (expression -> FALSE .)
+    RPAR            reduce using rule 49 (expression -> FALSE .)
+    RBRACK          reduce using rule 49 (expression -> FALSE .)
+    COMMA           reduce using rule 49 (expression -> FALSE .)
+
+
+state 55
+
+    (50) expression -> DIFFER . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 85
+
+state 56
+
+    (51) expression -> NUMBER .
+
+    SEMICOLON       reduce using rule 51 (expression -> NUMBER .)
+    SUM             reduce using rule 51 (expression -> NUMBER .)
+    SUB             reduce using rule 51 (expression -> NUMBER .)
+    MULTIPLY        reduce using rule 51 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 51 (expression -> NUMBER .)
+    RESTOF          reduce using rule 51 (expression -> NUMBER .)
+    SAMEAS          reduce using rule 51 (expression -> NUMBER .)
+    NEQUAL          reduce using rule 51 (expression -> NUMBER .)
+    HEQUAL          reduce using rule 51 (expression -> NUMBER .)
+    LEQUAL          reduce using rule 51 (expression -> NUMBER .)
+    HIGHER          reduce using rule 51 (expression -> NUMBER .)
+    LOWER           reduce using rule 51 (expression -> NUMBER .)
+    AND             reduce using rule 51 (expression -> NUMBER .)
+    OR              reduce using rule 51 (expression -> NUMBER .)
+    LCURLY          reduce using rule 51 (expression -> NUMBER .)
+    RPAR            reduce using rule 51 (expression -> NUMBER .)
+    RBRACK          reduce using rule 51 (expression -> NUMBER .)
+    COMMA           reduce using rule 51 (expression -> NUMBER .)
+
+
+state 57
+
+    (52) expression -> FLOAT .
+
+    SEMICOLON       reduce using rule 52 (expression -> FLOAT .)
+    SUM             reduce using rule 52 (expression -> FLOAT .)
+    SUB             reduce using rule 52 (expression -> FLOAT .)
+    MULTIPLY        reduce using rule 52 (expression -> FLOAT .)
+    DIVIDE          reduce using rule 52 (expression -> FLOAT .)
+    RESTOF          reduce using rule 52 (expression -> FLOAT .)
+    SAMEAS          reduce using rule 52 (expression -> FLOAT .)
+    NEQUAL          reduce using rule 52 (expression -> FLOAT .)
+    HEQUAL          reduce using rule 52 (expression -> FLOAT .)
+    LEQUAL          reduce using rule 52 (expression -> FLOAT .)
+    HIGHER          reduce using rule 52 (expression -> FLOAT .)
+    LOWER           reduce using rule 52 (expression -> FLOAT .)
+    AND             reduce using rule 52 (expression -> FLOAT .)
+    OR              reduce using rule 52 (expression -> FLOAT .)
+    LCURLY          reduce using rule 52 (expression -> FLOAT .)
+    RPAR            reduce using rule 52 (expression -> FLOAT .)
+    RBRACK          reduce using rule 52 (expression -> FLOAT .)
+    COMMA           reduce using rule 52 (expression -> FLOAT .)
+
+
+state 58
+
+    (53) expression -> STRING .
+
+    SEMICOLON       reduce using rule 53 (expression -> STRING .)
+    SUM             reduce using rule 53 (expression -> STRING .)
+    SUB             reduce using rule 53 (expression -> STRING .)
+    MULTIPLY        reduce using rule 53 (expression -> STRING .)
+    DIVIDE          reduce using rule 53 (expression -> STRING .)
+    RESTOF          reduce using rule 53 (expression -> STRING .)
+    SAMEAS          reduce using rule 53 (expression -> STRING .)
+    NEQUAL          reduce using rule 53 (expression -> STRING .)
+    HEQUAL          reduce using rule 53 (expression -> STRING .)
+    LEQUAL          reduce using rule 53 (expression -> STRING .)
+    HIGHER          reduce using rule 53 (expression -> STRING .)
+    LOWER           reduce using rule 53 (expression -> STRING .)
+    AND             reduce using rule 53 (expression -> STRING .)
+    OR              reduce using rule 53 (expression -> STRING .)
+    LCURLY          reduce using rule 53 (expression -> STRING .)
+    RPAR            reduce using rule 53 (expression -> STRING .)
+    RBRACK          reduce using rule 53 (expression -> STRING .)
+    COMMA           reduce using rule 53 (expression -> STRING .)
+
+
+state 59
+
+    (56) expression -> LPAR . expression RPAR
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 86
+
+state 60
+
+    (21) block -> LCURLY block_content RCURLY .
+
+    DECLARATION     reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    DEFINITION      reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    $end            reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    ELSE            reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    RETURN          reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    IF              reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    WHILE           reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    NAME            reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    TRUE            reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    FALSE           reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    DIFFER          reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    NUMBER          reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    FLOAT           reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    STRING          reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    LPAR            reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+    RCURLY          reduce using rule 21 (block -> LCURLY block_content RCURLY .)
+
+
+state 61
+
+    (23) block_content -> statement block_content .
+
+    RCURLY          reduce using rule 23 (block_content -> statement block_content .)
+
+
+state 62
+
+    (24) statement -> RETURN SEMICOLON .
+
+    RETURN          reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    IF              reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    WHILE           reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    NAME            reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    TRUE            reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    FALSE           reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    DIFFER          reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    NUMBER          reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    FLOAT           reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    STRING          reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    LPAR            reduce using rule 24 (statement -> RETURN SEMICOLON .)
+    RCURLY          reduce using rule 24 (statement -> RETURN SEMICOLON .)
+
+
+state 63
+
+    (25) statement -> RETURN expression . SEMICOLON
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       shift and go to state 87
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 64
+
+    (54) expression -> NAME . LBRACK expression RBRACK
+    (55) expression -> NAME .
+    (57) expression -> NAME . LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> NAME . LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> NAME . LPAR RPAR
+    (60) expression -> NAME . LPAR argument RPAR
+
+    LBRACK          shift and go to state 88
+    SEMICOLON       reduce using rule 55 (expression -> NAME .)
+    SUM             reduce using rule 55 (expression -> NAME .)
+    SUB             reduce using rule 55 (expression -> NAME .)
+    MULTIPLY        reduce using rule 55 (expression -> NAME .)
+    DIVIDE          reduce using rule 55 (expression -> NAME .)
+    RESTOF          reduce using rule 55 (expression -> NAME .)
+    SAMEAS          reduce using rule 55 (expression -> NAME .)
+    NEQUAL          reduce using rule 55 (expression -> NAME .)
+    HEQUAL          reduce using rule 55 (expression -> NAME .)
+    LEQUAL          reduce using rule 55 (expression -> NAME .)
+    HIGHER          reduce using rule 55 (expression -> NAME .)
+    LOWER           reduce using rule 55 (expression -> NAME .)
+    AND             reduce using rule 55 (expression -> NAME .)
+    OR              reduce using rule 55 (expression -> NAME .)
+    LCURLY          reduce using rule 55 (expression -> NAME .)
+    RPAR            reduce using rule 55 (expression -> NAME .)
+    RBRACK          reduce using rule 55 (expression -> NAME .)
+    COMMA           reduce using rule 55 (expression -> NAME .)
+    LPAR            shift and go to state 84
+
+
+state 65
+
+    (34) statement -> expression SEMICOLON .
+
+    RETURN          reduce using rule 34 (statement -> expression SEMICOLON .)
+    IF              reduce using rule 34 (statement -> expression SEMICOLON .)
+    WHILE           reduce using rule 34 (statement -> expression SEMICOLON .)
+    NAME            reduce using rule 34 (statement -> expression SEMICOLON .)
+    TRUE            reduce using rule 34 (statement -> expression SEMICOLON .)
+    FALSE           reduce using rule 34 (statement -> expression SEMICOLON .)
+    DIFFER          reduce using rule 34 (statement -> expression SEMICOLON .)
+    NUMBER          reduce using rule 34 (statement -> expression SEMICOLON .)
+    FLOAT           reduce using rule 34 (statement -> expression SEMICOLON .)
+    STRING          reduce using rule 34 (statement -> expression SEMICOLON .)
+    LPAR            reduce using rule 34 (statement -> expression SEMICOLON .)
+    RCURLY          reduce using rule 34 (statement -> expression SEMICOLON .)
+
+
+state 66
+
+    (35) expression -> expression SUM . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 89
+
+state 67
+
+    (36) expression -> expression SUB . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 90
+
+state 68
+
+    (37) expression -> expression MULTIPLY . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 91
+
+state 69
+
+    (38) expression -> expression DIVIDE . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 92
+
+state 70
+
+    (39) expression -> expression RESTOF . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 93
+
+state 71
+
+    (40) expression -> expression SAMEAS . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 94
+
+state 72
+
+    (41) expression -> expression NEQUAL . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 95
+
+state 73
+
+    (42) expression -> expression HEQUAL . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 96
+
+state 74
+
+    (43) expression -> expression LEQUAL . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 97
+
+state 75
+
+    (44) expression -> expression HIGHER . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 98
+
+state 76
+
+    (45) expression -> expression LOWER . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 99
+
+state 77
+
+    (46) expression -> expression AND . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 100
+
+state 78
+
+    (47) expression -> expression OR . expression
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 101
+
+state 79
+
+    (26) statement -> IF expression . block
+    (27) statement -> IF expression . block ELSE block
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+    (20) block -> . LCURLY RCURLY
+    (21) block -> . LCURLY block_content RCURLY
+
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+    LCURLY          shift and go to state 40
+
+    block                          shift and go to state 102
+
+state 80
+
+    (28) statement -> WHILE expression . block
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+    (20) block -> . LCURLY RCURLY
+    (21) block -> . LCURLY block_content RCURLY
+
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+    LCURLY          shift and go to state 40
+
+    block                          shift and go to state 103
+
+state 81
+
+    (29) statement -> NAME COLON . types EQUALS expression SEMICOLON
+    (30) statement -> NAME COLON . types SEMICOLON
+    (32) statement -> NAME COLON . LBRACK types RBRACK SEMICOLON
+    (14) types -> . INT
+    (15) types -> . FLOATTYPE
+    (16) types -> . BOOL
+    (17) types -> . STRINGTYPE
+
+    LBRACK          shift and go to state 105
+    INT             shift and go to state 24
+    FLOATTYPE       shift and go to state 25
+    BOOL            shift and go to state 26
+    STRINGTYPE      shift and go to state 27
+
+    types                          shift and go to state 104
+
+state 82
+
+    (31) statement -> NAME EQUALS . expression SEMICOLON
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 106
+
+state 83
+
+    (33) statement -> NAME LBRACK . expression RBRACK EQUALS expression SEMICOLON
+    (54) expression -> NAME LBRACK . expression RBRACK
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 107
+
+state 84
+
+    (57) expression -> NAME LPAR . RPAR LBRACK expression RBRACK
+    (58) expression -> NAME LPAR . argument RPAR LBRACK expression RBRACK
+    (59) expression -> NAME LPAR . RPAR
+    (60) expression -> NAME LPAR . argument RPAR
+    (61) argument -> . expression
+    (62) argument -> . expression COMMA argument
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    RPAR            shift and go to state 108
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 109
+    argument                       shift and go to state 110
+
+state 85
+
+    (50) expression -> DIFFER expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 50 (expression -> DIFFER expression .)
+    SAMEAS          reduce using rule 50 (expression -> DIFFER expression .)
+    NEQUAL          reduce using rule 50 (expression -> DIFFER expression .)
+    HEQUAL          reduce using rule 50 (expression -> DIFFER expression .)
+    LEQUAL          reduce using rule 50 (expression -> DIFFER expression .)
+    HIGHER          reduce using rule 50 (expression -> DIFFER expression .)
+    LOWER           reduce using rule 50 (expression -> DIFFER expression .)
+    AND             reduce using rule 50 (expression -> DIFFER expression .)
+    OR              reduce using rule 50 (expression -> DIFFER expression .)
+    LCURLY          reduce using rule 50 (expression -> DIFFER expression .)
+    RPAR            reduce using rule 50 (expression -> DIFFER expression .)
+    RBRACK          reduce using rule 50 (expression -> DIFFER expression .)
+    COMMA           reduce using rule 50 (expression -> DIFFER expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! SUM             [ reduce using rule 50 (expression -> DIFFER expression .) ]
+  ! SUB             [ reduce using rule 50 (expression -> DIFFER expression .) ]
+  ! MULTIPLY        [ reduce using rule 50 (expression -> DIFFER expression .) ]
+  ! DIVIDE          [ reduce using rule 50 (expression -> DIFFER expression .) ]
+  ! RESTOF          [ reduce using rule 50 (expression -> DIFFER expression .) ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 86
+
+    (56) expression -> LPAR expression . RPAR
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    RPAR            shift and go to state 111
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 87
+
+    (25) statement -> RETURN expression SEMICOLON .
+
+    RETURN          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    IF              reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    WHILE           reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    NAME            reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    TRUE            reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    FALSE           reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    DIFFER          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    NUMBER          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    FLOAT           reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    STRING          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    LPAR            reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    RCURLY          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+
+
+state 88
+
+    (54) expression -> NAME LBRACK . expression RBRACK
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 112
+
+state 89
+
+    (35) expression -> expression SUM expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 35 (expression -> expression SUM expression .)
+    SUM             reduce using rule 35 (expression -> expression SUM expression .)
+    SUB             reduce using rule 35 (expression -> expression SUM expression .)
+    SAMEAS          reduce using rule 35 (expression -> expression SUM expression .)
+    NEQUAL          reduce using rule 35 (expression -> expression SUM expression .)
+    HEQUAL          reduce using rule 35 (expression -> expression SUM expression .)
+    LEQUAL          reduce using rule 35 (expression -> expression SUM expression .)
+    HIGHER          reduce using rule 35 (expression -> expression SUM expression .)
+    LOWER           reduce using rule 35 (expression -> expression SUM expression .)
+    AND             reduce using rule 35 (expression -> expression SUM expression .)
+    OR              reduce using rule 35 (expression -> expression SUM expression .)
+    LCURLY          reduce using rule 35 (expression -> expression SUM expression .)
+    RPAR            reduce using rule 35 (expression -> expression SUM expression .)
+    RBRACK          reduce using rule 35 (expression -> expression SUM expression .)
+    COMMA           reduce using rule 35 (expression -> expression SUM expression .)
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! MULTIPLY        [ reduce using rule 35 (expression -> expression SUM expression .) ]
+  ! DIVIDE          [ reduce using rule 35 (expression -> expression SUM expression .) ]
+  ! RESTOF          [ reduce using rule 35 (expression -> expression SUM expression .) ]
+  ! SUM             [ shift and go to state 66 ]
+  ! SUB             [ shift and go to state 67 ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 90
+
+    (36) expression -> expression SUB expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 36 (expression -> expression SUB expression .)
+    SUM             reduce using rule 36 (expression -> expression SUB expression .)
+    SUB             reduce using rule 36 (expression -> expression SUB expression .)
+    SAMEAS          reduce using rule 36 (expression -> expression SUB expression .)
+    NEQUAL          reduce using rule 36 (expression -> expression SUB expression .)
+    HEQUAL          reduce using rule 36 (expression -> expression SUB expression .)
+    LEQUAL          reduce using rule 36 (expression -> expression SUB expression .)
+    HIGHER          reduce using rule 36 (expression -> expression SUB expression .)
+    LOWER           reduce using rule 36 (expression -> expression SUB expression .)
+    AND             reduce using rule 36 (expression -> expression SUB expression .)
+    OR              reduce using rule 36 (expression -> expression SUB expression .)
+    LCURLY          reduce using rule 36 (expression -> expression SUB expression .)
+    RPAR            reduce using rule 36 (expression -> expression SUB expression .)
+    RBRACK          reduce using rule 36 (expression -> expression SUB expression .)
+    COMMA           reduce using rule 36 (expression -> expression SUB expression .)
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! MULTIPLY        [ reduce using rule 36 (expression -> expression SUB expression .) ]
+  ! DIVIDE          [ reduce using rule 36 (expression -> expression SUB expression .) ]
+  ! RESTOF          [ reduce using rule 36 (expression -> expression SUB expression .) ]
+  ! SUM             [ shift and go to state 66 ]
+  ! SUB             [ shift and go to state 67 ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 91
+
+    (37) expression -> expression MULTIPLY expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    SUM             reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    SUB             reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    MULTIPLY        reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    DIVIDE          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    RESTOF          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    SAMEAS          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    NEQUAL          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    HEQUAL          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    LEQUAL          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    HIGHER          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    LOWER           reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    AND             reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    OR              reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    LCURLY          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    RPAR            reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    RBRACK          reduce using rule 37 (expression -> expression MULTIPLY expression .)
+    COMMA           reduce using rule 37 (expression -> expression MULTIPLY expression .)
+
+  ! SUM             [ shift and go to state 66 ]
+  ! SUB             [ shift and go to state 67 ]
+  ! MULTIPLY        [ shift and go to state 68 ]
+  ! DIVIDE          [ shift and go to state 69 ]
+  ! RESTOF          [ shift and go to state 70 ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 92
+
+    (38) expression -> expression DIVIDE expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 38 (expression -> expression DIVIDE expression .)
+    SUM             reduce using rule 38 (expression -> expression DIVIDE expression .)
+    SUB             reduce using rule 38 (expression -> expression DIVIDE expression .)
+    MULTIPLY        reduce using rule 38 (expression -> expression DIVIDE expression .)
+    DIVIDE          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    RESTOF          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    SAMEAS          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    NEQUAL          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    HEQUAL          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    LEQUAL          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    HIGHER          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    LOWER           reduce using rule 38 (expression -> expression DIVIDE expression .)
+    AND             reduce using rule 38 (expression -> expression DIVIDE expression .)
+    OR              reduce using rule 38 (expression -> expression DIVIDE expression .)
+    LCURLY          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    RPAR            reduce using rule 38 (expression -> expression DIVIDE expression .)
+    RBRACK          reduce using rule 38 (expression -> expression DIVIDE expression .)
+    COMMA           reduce using rule 38 (expression -> expression DIVIDE expression .)
+
+  ! SUM             [ shift and go to state 66 ]
+  ! SUB             [ shift and go to state 67 ]
+  ! MULTIPLY        [ shift and go to state 68 ]
+  ! DIVIDE          [ shift and go to state 69 ]
+  ! RESTOF          [ shift and go to state 70 ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 93
+
+    (39) expression -> expression RESTOF expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 39 (expression -> expression RESTOF expression .)
+    SUM             reduce using rule 39 (expression -> expression RESTOF expression .)
+    SUB             reduce using rule 39 (expression -> expression RESTOF expression .)
+    MULTIPLY        reduce using rule 39 (expression -> expression RESTOF expression .)
+    DIVIDE          reduce using rule 39 (expression -> expression RESTOF expression .)
+    RESTOF          reduce using rule 39 (expression -> expression RESTOF expression .)
+    SAMEAS          reduce using rule 39 (expression -> expression RESTOF expression .)
+    NEQUAL          reduce using rule 39 (expression -> expression RESTOF expression .)
+    HEQUAL          reduce using rule 39 (expression -> expression RESTOF expression .)
+    LEQUAL          reduce using rule 39 (expression -> expression RESTOF expression .)
+    HIGHER          reduce using rule 39 (expression -> expression RESTOF expression .)
+    LOWER           reduce using rule 39 (expression -> expression RESTOF expression .)
+    AND             reduce using rule 39 (expression -> expression RESTOF expression .)
+    OR              reduce using rule 39 (expression -> expression RESTOF expression .)
+    LCURLY          reduce using rule 39 (expression -> expression RESTOF expression .)
+    RPAR            reduce using rule 39 (expression -> expression RESTOF expression .)
+    RBRACK          reduce using rule 39 (expression -> expression RESTOF expression .)
+    COMMA           reduce using rule 39 (expression -> expression RESTOF expression .)
+
+  ! SUM             [ shift and go to state 66 ]
+  ! SUB             [ shift and go to state 67 ]
+  ! MULTIPLY        [ shift and go to state 68 ]
+  ! DIVIDE          [ shift and go to state 69 ]
+  ! RESTOF          [ shift and go to state 70 ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 94
+
+    (40) expression -> expression SAMEAS expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 40 (expression -> expression SAMEAS expression .)
+    SAMEAS          reduce using rule 40 (expression -> expression SAMEAS expression .)
+    NEQUAL          reduce using rule 40 (expression -> expression SAMEAS expression .)
+    HEQUAL          reduce using rule 40 (expression -> expression SAMEAS expression .)
+    LEQUAL          reduce using rule 40 (expression -> expression SAMEAS expression .)
+    HIGHER          reduce using rule 40 (expression -> expression SAMEAS expression .)
+    LOWER           reduce using rule 40 (expression -> expression SAMEAS expression .)
+    AND             reduce using rule 40 (expression -> expression SAMEAS expression .)
+    OR              reduce using rule 40 (expression -> expression SAMEAS expression .)
+    LCURLY          reduce using rule 40 (expression -> expression SAMEAS expression .)
+    RPAR            reduce using rule 40 (expression -> expression SAMEAS expression .)
+    RBRACK          reduce using rule 40 (expression -> expression SAMEAS expression .)
+    COMMA           reduce using rule 40 (expression -> expression SAMEAS expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! SUM             [ reduce using rule 40 (expression -> expression SAMEAS expression .) ]
+  ! SUB             [ reduce using rule 40 (expression -> expression SAMEAS expression .) ]
+  ! MULTIPLY        [ reduce using rule 40 (expression -> expression SAMEAS expression .) ]
+  ! DIVIDE          [ reduce using rule 40 (expression -> expression SAMEAS expression .) ]
+  ! RESTOF          [ reduce using rule 40 (expression -> expression SAMEAS expression .) ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 95
+
+    (41) expression -> expression NEQUAL expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 41 (expression -> expression NEQUAL expression .)
+    SAMEAS          reduce using rule 41 (expression -> expression NEQUAL expression .)
+    NEQUAL          reduce using rule 41 (expression -> expression NEQUAL expression .)
+    HEQUAL          reduce using rule 41 (expression -> expression NEQUAL expression .)
+    LEQUAL          reduce using rule 41 (expression -> expression NEQUAL expression .)
+    HIGHER          reduce using rule 41 (expression -> expression NEQUAL expression .)
+    LOWER           reduce using rule 41 (expression -> expression NEQUAL expression .)
+    AND             reduce using rule 41 (expression -> expression NEQUAL expression .)
+    OR              reduce using rule 41 (expression -> expression NEQUAL expression .)
+    LCURLY          reduce using rule 41 (expression -> expression NEQUAL expression .)
+    RPAR            reduce using rule 41 (expression -> expression NEQUAL expression .)
+    RBRACK          reduce using rule 41 (expression -> expression NEQUAL expression .)
+    COMMA           reduce using rule 41 (expression -> expression NEQUAL expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! SUM             [ reduce using rule 41 (expression -> expression NEQUAL expression .) ]
+  ! SUB             [ reduce using rule 41 (expression -> expression NEQUAL expression .) ]
+  ! MULTIPLY        [ reduce using rule 41 (expression -> expression NEQUAL expression .) ]
+  ! DIVIDE          [ reduce using rule 41 (expression -> expression NEQUAL expression .) ]
+  ! RESTOF          [ reduce using rule 41 (expression -> expression NEQUAL expression .) ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 96
+
+    (42) expression -> expression HEQUAL expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 42 (expression -> expression HEQUAL expression .)
+    SAMEAS          reduce using rule 42 (expression -> expression HEQUAL expression .)
+    NEQUAL          reduce using rule 42 (expression -> expression HEQUAL expression .)
+    HEQUAL          reduce using rule 42 (expression -> expression HEQUAL expression .)
+    LEQUAL          reduce using rule 42 (expression -> expression HEQUAL expression .)
+    HIGHER          reduce using rule 42 (expression -> expression HEQUAL expression .)
+    LOWER           reduce using rule 42 (expression -> expression HEQUAL expression .)
+    AND             reduce using rule 42 (expression -> expression HEQUAL expression .)
+    OR              reduce using rule 42 (expression -> expression HEQUAL expression .)
+    LCURLY          reduce using rule 42 (expression -> expression HEQUAL expression .)
+    RPAR            reduce using rule 42 (expression -> expression HEQUAL expression .)
+    RBRACK          reduce using rule 42 (expression -> expression HEQUAL expression .)
+    COMMA           reduce using rule 42 (expression -> expression HEQUAL expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! SUM             [ reduce using rule 42 (expression -> expression HEQUAL expression .) ]
+  ! SUB             [ reduce using rule 42 (expression -> expression HEQUAL expression .) ]
+  ! MULTIPLY        [ reduce using rule 42 (expression -> expression HEQUAL expression .) ]
+  ! DIVIDE          [ reduce using rule 42 (expression -> expression HEQUAL expression .) ]
+  ! RESTOF          [ reduce using rule 42 (expression -> expression HEQUAL expression .) ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 97
+
+    (43) expression -> expression LEQUAL expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 43 (expression -> expression LEQUAL expression .)
+    SAMEAS          reduce using rule 43 (expression -> expression LEQUAL expression .)
+    NEQUAL          reduce using rule 43 (expression -> expression LEQUAL expression .)
+    HEQUAL          reduce using rule 43 (expression -> expression LEQUAL expression .)
+    LEQUAL          reduce using rule 43 (expression -> expression LEQUAL expression .)
+    HIGHER          reduce using rule 43 (expression -> expression LEQUAL expression .)
+    LOWER           reduce using rule 43 (expression -> expression LEQUAL expression .)
+    AND             reduce using rule 43 (expression -> expression LEQUAL expression .)
+    OR              reduce using rule 43 (expression -> expression LEQUAL expression .)
+    LCURLY          reduce using rule 43 (expression -> expression LEQUAL expression .)
+    RPAR            reduce using rule 43 (expression -> expression LEQUAL expression .)
+    RBRACK          reduce using rule 43 (expression -> expression LEQUAL expression .)
+    COMMA           reduce using rule 43 (expression -> expression LEQUAL expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! SUM             [ reduce using rule 43 (expression -> expression LEQUAL expression .) ]
+  ! SUB             [ reduce using rule 43 (expression -> expression LEQUAL expression .) ]
+  ! MULTIPLY        [ reduce using rule 43 (expression -> expression LEQUAL expression .) ]
+  ! DIVIDE          [ reduce using rule 43 (expression -> expression LEQUAL expression .) ]
+  ! RESTOF          [ reduce using rule 43 (expression -> expression LEQUAL expression .) ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 98
+
+    (44) expression -> expression HIGHER expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 44 (expression -> expression HIGHER expression .)
+    SAMEAS          reduce using rule 44 (expression -> expression HIGHER expression .)
+    NEQUAL          reduce using rule 44 (expression -> expression HIGHER expression .)
+    HEQUAL          reduce using rule 44 (expression -> expression HIGHER expression .)
+    LEQUAL          reduce using rule 44 (expression -> expression HIGHER expression .)
+    HIGHER          reduce using rule 44 (expression -> expression HIGHER expression .)
+    LOWER           reduce using rule 44 (expression -> expression HIGHER expression .)
+    AND             reduce using rule 44 (expression -> expression HIGHER expression .)
+    OR              reduce using rule 44 (expression -> expression HIGHER expression .)
+    LCURLY          reduce using rule 44 (expression -> expression HIGHER expression .)
+    RPAR            reduce using rule 44 (expression -> expression HIGHER expression .)
+    RBRACK          reduce using rule 44 (expression -> expression HIGHER expression .)
+    COMMA           reduce using rule 44 (expression -> expression HIGHER expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! SUM             [ reduce using rule 44 (expression -> expression HIGHER expression .) ]
+  ! SUB             [ reduce using rule 44 (expression -> expression HIGHER expression .) ]
+  ! MULTIPLY        [ reduce using rule 44 (expression -> expression HIGHER expression .) ]
+  ! DIVIDE          [ reduce using rule 44 (expression -> expression HIGHER expression .) ]
+  ! RESTOF          [ reduce using rule 44 (expression -> expression HIGHER expression .) ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 99
+
+    (45) expression -> expression LOWER expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 45 (expression -> expression LOWER expression .)
+    SAMEAS          reduce using rule 45 (expression -> expression LOWER expression .)
+    NEQUAL          reduce using rule 45 (expression -> expression LOWER expression .)
+    HEQUAL          reduce using rule 45 (expression -> expression LOWER expression .)
+    LEQUAL          reduce using rule 45 (expression -> expression LOWER expression .)
+    HIGHER          reduce using rule 45 (expression -> expression LOWER expression .)
+    LOWER           reduce using rule 45 (expression -> expression LOWER expression .)
+    AND             reduce using rule 45 (expression -> expression LOWER expression .)
+    OR              reduce using rule 45 (expression -> expression LOWER expression .)
+    LCURLY          reduce using rule 45 (expression -> expression LOWER expression .)
+    RPAR            reduce using rule 45 (expression -> expression LOWER expression .)
+    RBRACK          reduce using rule 45 (expression -> expression LOWER expression .)
+    COMMA           reduce using rule 45 (expression -> expression LOWER expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+
+  ! SUM             [ reduce using rule 45 (expression -> expression LOWER expression .) ]
+  ! SUB             [ reduce using rule 45 (expression -> expression LOWER expression .) ]
+  ! MULTIPLY        [ reduce using rule 45 (expression -> expression LOWER expression .) ]
+  ! DIVIDE          [ reduce using rule 45 (expression -> expression LOWER expression .) ]
+  ! RESTOF          [ reduce using rule 45 (expression -> expression LOWER expression .) ]
+  ! SAMEAS          [ shift and go to state 71 ]
+  ! NEQUAL          [ shift and go to state 72 ]
+  ! HEQUAL          [ shift and go to state 73 ]
+  ! LEQUAL          [ shift and go to state 74 ]
+  ! HIGHER          [ shift and go to state 75 ]
+  ! LOWER           [ shift and go to state 76 ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 100
+
+    (46) expression -> expression AND expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 46 (expression -> expression AND expression .)
+    AND             reduce using rule 46 (expression -> expression AND expression .)
+    OR              reduce using rule 46 (expression -> expression AND expression .)
+    LCURLY          reduce using rule 46 (expression -> expression AND expression .)
+    RPAR            reduce using rule 46 (expression -> expression AND expression .)
+    RBRACK          reduce using rule 46 (expression -> expression AND expression .)
+    COMMA           reduce using rule 46 (expression -> expression AND expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+
+  ! SUM             [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! SUB             [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! MULTIPLY        [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! DIVIDE          [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! RESTOF          [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! SAMEAS          [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! NEQUAL          [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! HEQUAL          [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! LEQUAL          [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! HIGHER          [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! LOWER           [ reduce using rule 46 (expression -> expression AND expression .) ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 101
+
+    (47) expression -> expression OR expression .
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       reduce using rule 47 (expression -> expression OR expression .)
+    AND             reduce using rule 47 (expression -> expression OR expression .)
+    OR              reduce using rule 47 (expression -> expression OR expression .)
+    LCURLY          reduce using rule 47 (expression -> expression OR expression .)
+    RPAR            reduce using rule 47 (expression -> expression OR expression .)
+    RBRACK          reduce using rule 47 (expression -> expression OR expression .)
+    COMMA           reduce using rule 47 (expression -> expression OR expression .)
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+
+  ! SUM             [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! SUB             [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! MULTIPLY        [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! DIVIDE          [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! RESTOF          [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! SAMEAS          [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! NEQUAL          [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! HEQUAL          [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! LEQUAL          [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! HIGHER          [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! LOWER           [ reduce using rule 47 (expression -> expression OR expression .) ]
+  ! AND             [ shift and go to state 77 ]
+  ! OR              [ shift and go to state 78 ]
+
+
+state 102
+
+    (26) statement -> IF expression block .
+    (27) statement -> IF expression block . ELSE block
+
+    RETURN          reduce using rule 26 (statement -> IF expression block .)
+    IF              reduce using rule 26 (statement -> IF expression block .)
+    WHILE           reduce using rule 26 (statement -> IF expression block .)
+    NAME            reduce using rule 26 (statement -> IF expression block .)
+    TRUE            reduce using rule 26 (statement -> IF expression block .)
+    FALSE           reduce using rule 26 (statement -> IF expression block .)
+    DIFFER          reduce using rule 26 (statement -> IF expression block .)
+    NUMBER          reduce using rule 26 (statement -> IF expression block .)
+    FLOAT           reduce using rule 26 (statement -> IF expression block .)
+    STRING          reduce using rule 26 (statement -> IF expression block .)
+    LPAR            reduce using rule 26 (statement -> IF expression block .)
+    RCURLY          reduce using rule 26 (statement -> IF expression block .)
+    ELSE            shift and go to state 113
+
+
+state 103
+
+    (28) statement -> WHILE expression block .
+
+    RETURN          reduce using rule 28 (statement -> WHILE expression block .)
+    IF              reduce using rule 28 (statement -> WHILE expression block .)
+    WHILE           reduce using rule 28 (statement -> WHILE expression block .)
+    NAME            reduce using rule 28 (statement -> WHILE expression block .)
+    TRUE            reduce using rule 28 (statement -> WHILE expression block .)
+    FALSE           reduce using rule 28 (statement -> WHILE expression block .)
+    DIFFER          reduce using rule 28 (statement -> WHILE expression block .)
+    NUMBER          reduce using rule 28 (statement -> WHILE expression block .)
+    FLOAT           reduce using rule 28 (statement -> WHILE expression block .)
+    STRING          reduce using rule 28 (statement -> WHILE expression block .)
+    LPAR            reduce using rule 28 (statement -> WHILE expression block .)
+    RCURLY          reduce using rule 28 (statement -> WHILE expression block .)
+
+
+state 104
+
+    (29) statement -> NAME COLON types . EQUALS expression SEMICOLON
+    (30) statement -> NAME COLON types . SEMICOLON
+
+    EQUALS          shift and go to state 114
+    SEMICOLON       shift and go to state 115
+
+
+state 105
+
+    (32) statement -> NAME COLON LBRACK . types RBRACK SEMICOLON
+    (14) types -> . INT
+    (15) types -> . FLOATTYPE
+    (16) types -> . BOOL
+    (17) types -> . STRINGTYPE
+
+    INT             shift and go to state 24
+    FLOATTYPE       shift and go to state 25
+    BOOL            shift and go to state 26
+    STRINGTYPE      shift and go to state 27
+
+    types                          shift and go to state 116
+
+state 106
+
+    (31) statement -> NAME EQUALS expression . SEMICOLON
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       shift and go to state 117
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 107
+
+    (33) statement -> NAME LBRACK expression . RBRACK EQUALS expression SEMICOLON
+    (54) expression -> NAME LBRACK expression . RBRACK
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    RBRACK          shift and go to state 118
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 108
+
+    (57) expression -> NAME LPAR RPAR . LBRACK expression RBRACK
+    (59) expression -> NAME LPAR RPAR .
+
+    LBRACK          shift and go to state 119
+    SEMICOLON       reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    SUM             reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    SUB             reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    MULTIPLY        reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    DIVIDE          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    RESTOF          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    SAMEAS          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    NEQUAL          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    HEQUAL          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    LEQUAL          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    HIGHER          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    LOWER           reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    AND             reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    OR              reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    LCURLY          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    RPAR            reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    RBRACK          reduce using rule 59 (expression -> NAME LPAR RPAR .)
+    COMMA           reduce using rule 59 (expression -> NAME LPAR RPAR .)
+
+
+state 109
+
+    (61) argument -> expression .
+    (62) argument -> expression . COMMA argument
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    RPAR            reduce using rule 61 (argument -> expression .)
+    COMMA           shift and go to state 120
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 110
+
+    (58) expression -> NAME LPAR argument . RPAR LBRACK expression RBRACK
+    (60) expression -> NAME LPAR argument . RPAR
+
+    RPAR            shift and go to state 121
+
+
+state 111
+
+    (56) expression -> LPAR expression RPAR .
+
+    SEMICOLON       reduce using rule 56 (expression -> LPAR expression RPAR .)
+    SUM             reduce using rule 56 (expression -> LPAR expression RPAR .)
+    SUB             reduce using rule 56 (expression -> LPAR expression RPAR .)
+    MULTIPLY        reduce using rule 56 (expression -> LPAR expression RPAR .)
+    DIVIDE          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    RESTOF          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    SAMEAS          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    NEQUAL          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    HEQUAL          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    LEQUAL          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    HIGHER          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    LOWER           reduce using rule 56 (expression -> LPAR expression RPAR .)
+    AND             reduce using rule 56 (expression -> LPAR expression RPAR .)
+    OR              reduce using rule 56 (expression -> LPAR expression RPAR .)
+    LCURLY          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    RPAR            reduce using rule 56 (expression -> LPAR expression RPAR .)
+    RBRACK          reduce using rule 56 (expression -> LPAR expression RPAR .)
+    COMMA           reduce using rule 56 (expression -> LPAR expression RPAR .)
+
+
+state 112
+
+    (54) expression -> NAME LBRACK expression . RBRACK
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    RBRACK          shift and go to state 122
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 113
+
+    (27) statement -> IF expression block ELSE . block
+    (20) block -> . LCURLY RCURLY
+    (21) block -> . LCURLY block_content RCURLY
+
+    LCURLY          shift and go to state 40
+
+    block                          shift and go to state 123
+
+state 114
+
+    (29) statement -> NAME COLON types EQUALS . expression SEMICOLON
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 124
+
+state 115
+
+    (30) statement -> NAME COLON types SEMICOLON .
+
+    RETURN          reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    IF              reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    WHILE           reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    NAME            reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    TRUE            reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    FALSE           reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    DIFFER          reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    NUMBER          reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    FLOAT           reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    STRING          reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    LPAR            reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+    RCURLY          reduce using rule 30 (statement -> NAME COLON types SEMICOLON .)
+
+
+state 116
+
+    (32) statement -> NAME COLON LBRACK types . RBRACK SEMICOLON
+
+    RBRACK          shift and go to state 125
+
+
+state 117
+
+    (31) statement -> NAME EQUALS expression SEMICOLON .
+
+    RETURN          reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    IF              reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    WHILE           reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    NAME            reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    TRUE            reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    FALSE           reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    DIFFER          reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    NUMBER          reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    FLOAT           reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    STRING          reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    LPAR            reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+    RCURLY          reduce using rule 31 (statement -> NAME EQUALS expression SEMICOLON .)
+
+
+state 118
+
+    (33) statement -> NAME LBRACK expression RBRACK . EQUALS expression SEMICOLON
+    (54) expression -> NAME LBRACK expression RBRACK .
+
+    EQUALS          shift and go to state 126
+    SEMICOLON       reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    SUM             reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    SUB             reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    MULTIPLY        reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    DIVIDE          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    RESTOF          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    SAMEAS          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    NEQUAL          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    HEQUAL          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    LEQUAL          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    HIGHER          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    LOWER           reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    AND             reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    OR              reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+
+
+state 119
+
+    (57) expression -> NAME LPAR RPAR LBRACK . expression RBRACK
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 127
+
+state 120
+
+    (62) argument -> expression COMMA . argument
+    (61) argument -> . expression
+    (62) argument -> . expression COMMA argument
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 109
+    argument                       shift and go to state 128
+
+state 121
+
+    (58) expression -> NAME LPAR argument RPAR . LBRACK expression RBRACK
+    (60) expression -> NAME LPAR argument RPAR .
+
+    LBRACK          shift and go to state 129
+    SEMICOLON       reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    SUM             reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    SUB             reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    MULTIPLY        reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    DIVIDE          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    RESTOF          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    SAMEAS          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    NEQUAL          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    HEQUAL          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    LEQUAL          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    HIGHER          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    LOWER           reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    AND             reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    OR              reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    LCURLY          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    RPAR            reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    RBRACK          reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+    COMMA           reduce using rule 60 (expression -> NAME LPAR argument RPAR .)
+
+
+state 122
+
+    (54) expression -> NAME LBRACK expression RBRACK .
+
+    SEMICOLON       reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    SUM             reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    SUB             reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    MULTIPLY        reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    DIVIDE          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    RESTOF          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    SAMEAS          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    NEQUAL          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    HEQUAL          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    LEQUAL          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    HIGHER          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    LOWER           reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    AND             reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    OR              reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    LCURLY          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    RPAR            reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    RBRACK          reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+    COMMA           reduce using rule 54 (expression -> NAME LBRACK expression RBRACK .)
+
+
+state 123
+
+    (27) statement -> IF expression block ELSE block .
+
+    RETURN          reduce using rule 27 (statement -> IF expression block ELSE block .)
+    IF              reduce using rule 27 (statement -> IF expression block ELSE block .)
+    WHILE           reduce using rule 27 (statement -> IF expression block ELSE block .)
+    NAME            reduce using rule 27 (statement -> IF expression block ELSE block .)
+    TRUE            reduce using rule 27 (statement -> IF expression block ELSE block .)
+    FALSE           reduce using rule 27 (statement -> IF expression block ELSE block .)
+    DIFFER          reduce using rule 27 (statement -> IF expression block ELSE block .)
+    NUMBER          reduce using rule 27 (statement -> IF expression block ELSE block .)
+    FLOAT           reduce using rule 27 (statement -> IF expression block ELSE block .)
+    STRING          reduce using rule 27 (statement -> IF expression block ELSE block .)
+    LPAR            reduce using rule 27 (statement -> IF expression block ELSE block .)
+    RCURLY          reduce using rule 27 (statement -> IF expression block ELSE block .)
+
+
+state 124
+
+    (29) statement -> NAME COLON types EQUALS expression . SEMICOLON
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       shift and go to state 130
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 125
+
+    (32) statement -> NAME COLON LBRACK types RBRACK . SEMICOLON
+
+    SEMICOLON       shift and go to state 131
+
+
+state 126
+
+    (33) statement -> NAME LBRACK expression RBRACK EQUALS . expression SEMICOLON
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 132
+
+state 127
+
+    (57) expression -> NAME LPAR RPAR LBRACK expression . RBRACK
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    RBRACK          shift and go to state 133
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 128
+
+    (62) argument -> expression COMMA argument .
+
+    RPAR            reduce using rule 62 (argument -> expression COMMA argument .)
+
+
+state 129
+
+    (58) expression -> NAME LPAR argument RPAR LBRACK . expression RBRACK
+    (35) expression -> . expression SUM expression
+    (36) expression -> . expression SUB expression
+    (37) expression -> . expression MULTIPLY expression
+    (38) expression -> . expression DIVIDE expression
+    (39) expression -> . expression RESTOF expression
+    (40) expression -> . expression SAMEAS expression
+    (41) expression -> . expression NEQUAL expression
+    (42) expression -> . expression HEQUAL expression
+    (43) expression -> . expression LEQUAL expression
+    (44) expression -> . expression HIGHER expression
+    (45) expression -> . expression LOWER expression
+    (46) expression -> . expression AND expression
+    (47) expression -> . expression OR expression
+    (48) expression -> . TRUE
+    (49) expression -> . FALSE
+    (50) expression -> . DIFFER expression
+    (51) expression -> . NUMBER
+    (52) expression -> . FLOAT
+    (53) expression -> . STRING
+    (54) expression -> . NAME LBRACK expression RBRACK
+    (55) expression -> . NAME
+    (56) expression -> . LPAR expression RPAR
+    (57) expression -> . NAME LPAR RPAR LBRACK expression RBRACK
+    (58) expression -> . NAME LPAR argument RPAR LBRACK expression RBRACK
+    (59) expression -> . NAME LPAR RPAR
+    (60) expression -> . NAME LPAR argument RPAR
+
+    TRUE            shift and go to state 53
+    FALSE           shift and go to state 54
+    DIFFER          shift and go to state 55
+    NUMBER          shift and go to state 56
+    FLOAT           shift and go to state 57
+    STRING          shift and go to state 58
+    NAME            shift and go to state 64
+    LPAR            shift and go to state 59
+
+    expression                     shift and go to state 134
+
+state 130
+
+    (29) statement -> NAME COLON types EQUALS expression SEMICOLON .
+
+    RETURN          reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    IF              reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    WHILE           reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    NAME            reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    TRUE            reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    FALSE           reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    DIFFER          reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    NUMBER          reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    FLOAT           reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    STRING          reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    LPAR            reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+    RCURLY          reduce using rule 29 (statement -> NAME COLON types EQUALS expression SEMICOLON .)
+
+
+state 131
+
+    (32) statement -> NAME COLON LBRACK types RBRACK SEMICOLON .
+
+    RETURN          reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    IF              reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    WHILE           reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    NAME            reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    TRUE            reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    FALSE           reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    DIFFER          reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    NUMBER          reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    FLOAT           reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    STRING          reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    LPAR            reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+    RCURLY          reduce using rule 32 (statement -> NAME COLON LBRACK types RBRACK SEMICOLON .)
+
+
+state 132
+
+    (33) statement -> NAME LBRACK expression RBRACK EQUALS expression . SEMICOLON
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    SEMICOLON       shift and go to state 135
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 133
+
+    (57) expression -> NAME LPAR RPAR LBRACK expression RBRACK .
+
+    SEMICOLON       reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    SUM             reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    SUB             reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    MULTIPLY        reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    DIVIDE          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    RESTOF          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    SAMEAS          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    NEQUAL          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    HEQUAL          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    LEQUAL          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    HIGHER          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    LOWER           reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    AND             reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    OR              reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    LCURLY          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    RPAR            reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    RBRACK          reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+    COMMA           reduce using rule 57 (expression -> NAME LPAR RPAR LBRACK expression RBRACK .)
+
+
+state 134
+
+    (58) expression -> NAME LPAR argument RPAR LBRACK expression . RBRACK
+    (35) expression -> expression . SUM expression
+    (36) expression -> expression . SUB expression
+    (37) expression -> expression . MULTIPLY expression
+    (38) expression -> expression . DIVIDE expression
+    (39) expression -> expression . RESTOF expression
+    (40) expression -> expression . SAMEAS expression
+    (41) expression -> expression . NEQUAL expression
+    (42) expression -> expression . HEQUAL expression
+    (43) expression -> expression . LEQUAL expression
+    (44) expression -> expression . HIGHER expression
+    (45) expression -> expression . LOWER expression
+    (46) expression -> expression . AND expression
+    (47) expression -> expression . OR expression
+
+    RBRACK          shift and go to state 136
+    SUM             shift and go to state 66
+    SUB             shift and go to state 67
+    MULTIPLY        shift and go to state 68
+    DIVIDE          shift and go to state 69
+    RESTOF          shift and go to state 70
+    SAMEAS          shift and go to state 71
+    NEQUAL          shift and go to state 72
+    HEQUAL          shift and go to state 73
+    LEQUAL          shift and go to state 74
+    HIGHER          shift and go to state 75
+    LOWER           shift and go to state 76
+    AND             shift and go to state 77
+    OR              shift and go to state 78
+
+
+state 135
+
+    (33) statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .
+
+    RETURN          reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    IF              reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    WHILE           reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    NAME            reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    TRUE            reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    FALSE           reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    DIFFER          reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    NUMBER          reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    FLOAT           reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    STRING          reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    LPAR            reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+    RCURLY          reduce using rule 33 (statement -> NAME LBRACK expression RBRACK EQUALS expression SEMICOLON .)
+
+
+state 136
+
+    (58) expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .
+
+    SEMICOLON       reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    SUM             reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    SUB             reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    MULTIPLY        reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    DIVIDE          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    RESTOF          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    SAMEAS          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    NEQUAL          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    HEQUAL          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    LEQUAL          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    HIGHER          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    LOWER           reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    AND             reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    OR              reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    LCURLY          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    RPAR            reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    RBRACK          reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+    COMMA           reduce using rule 58 (expression -> NAME LPAR argument RPAR LBRACK expression RBRACK .)
+

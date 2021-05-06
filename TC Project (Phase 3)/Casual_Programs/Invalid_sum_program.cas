@@ -1,0 +1,6 @@
+decl sum (a:Int, b:Float):Int
+
+def sum (a:Int, b:Float):Void{
+    c:Int = a + b;
+    return c;
+}

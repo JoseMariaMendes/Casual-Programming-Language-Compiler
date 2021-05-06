@@ -1,0 +1,37 @@
+decl fun(a:Float, c:Float):Float
+
+def fun(a:Float, c:Float):Float{
+	
+	h:String = "dfkas";
+
+	y:String = h;
+	c = 1.1;
+	b:Float = c + 2.2;
+	if a != 4.5{
+		a = a / b;
+	}
+	h = "fgsdfg";
+	fran:Float = a;
+	f:Boolean = True;
+	return a;
+}
+
+def main():Float{
+	
+
+	maria:String = "maria\n";
+	a:Float = 4.6;
+	oscar:Int = 5;
+	d:Float = fun(3.6, 5.6) - 5.7;
+	
+	c:[Int];
+
+	c[0] = 0;
+	
+ 	return d;
+}
+
+def dun():Int{
+
+	return 9;
+}
