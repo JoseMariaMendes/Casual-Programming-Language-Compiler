@@ -65,6 +65,10 @@ def t_INT(t):
     r'Int'
     return t
 
+def t_PRINT(t):
+    r'print'
+    return t
+
 def t_FLOATTYPE(t):
     r'Float'
     return t
@@ -352,6 +356,11 @@ def p_argument(t):
         t[0] =  [t[1]]
     elif len(t) == 4:
         t[0] = [t[1], t[3]]
+
+#def p_print(t):
+#    '''print : PRINT LPAR expression RPAR 
+#    '''
+#    pass
         
 ##################################################################################################################
 def find_column(input, token):

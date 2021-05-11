@@ -33,7 +33,7 @@ def float_to_hex(f):
     return hex(struct.unpack('<Q', struct.pack('<d', unpack))[0])
 
 def compilador(node, emitter=None):
-    global currentvar
+    
     if node["nt"] == "programb":
         print("-------------------")
         emitter = Emitter()
@@ -107,7 +107,7 @@ def compilador(node, emitter=None):
             print("something went wrong")
 
     elif node["nt"] == "var_assign_statment":
-        print(node['name'])
+        #print(node['name'])
         pointer = emitter.get_pointer_name(node['name'])
         exptype = emitter.get_type(node['name'])
         currentvar = [exptype, pointer]
@@ -134,13 +134,25 @@ def compilador(node, emitter=None):
         pass
     
     elif node["nt"] == "ifelse_statement":
-        exp = compilador(node["expression"], emitter)
+        var = node["expression"]
+        while var["nt"] == "group_expression":
+            var = var["expression"]
+        
+        exp = compilador(var, emitter)
         labelif = f"if_{emitter.get_id()}"
         labelelse = f"else_{emitter.get_id()}"
         labelcont = f"cont_{emitter.get_id()}"
         trunc = f"%trunc_{emitter.get_id()}"
         emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
-        emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
+        
+        if var["nt"] == "nuo_expression":
+            if exp[3] == False:
+                emitter << f"br i1 {trunc}, label %{labelelse}, label %{labelif}"
+            else:
+                emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
+        else:
+            emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
+        
         
         if len(node["block"]) == 2:
             emitter <<""
@@ -154,25 +166,46 @@ def compilador(node, emitter=None):
             emitter << ""
             emitter << f"{labelcont}:"
         else:
-            emitter << f"br i1 {exp[0]}, label %{labelif}, label %{labelelse}"
             emitter <<""
             emitter << f"{labelif}:"
             compilador(node["block"][0], emitter)
+            emitter << f"br label %{labelelse}"
             emitter << ""
             emitter << f"{labelelse}:"
 
     elif node["nt"] == "while_statement":
+        var = node["expression"]
+        while var["nt"] == "group_expression":
+            var = var["expression"]
+        
+        print(var)
+        xor = f"%xor_{emitter.get_id()}"
         labelwhile = f"while_{emitter.get_id()}"
         labelblock = f"block_{emitter.get_id()}"
         labelcont = f"cont_{emitter.get_id()}"
         trunc = f"%trunc_{emitter.get_id()}"
+        exp = compilador(var, emitter)
+        print(exp)
+        
+        
         
         emitter << f"br label %{labelwhile}"
         emitter << ""
         emitter << f"{labelwhile}:"
-        exp = compilador(node["expression"], emitter)
+        
         emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
-        emitter << f"br i1 {trunc}, label %{labelblock}, label %{labelcont}"
+        if var["nt"] == "nuo_expression":
+            if exp[3] == False:
+                #trocar
+                #%4 = trunc i8 %3 to i1
+                # %5 = xor i1 %4, true
+                emitter << f"{xor} = xor i1 {trunc}, true"
+                emitter << f"br i1 {xor}, label %{labelblock}, label %{labelcont}"
+            else:
+                emitter << f"br i1 {trunc}, label %{labelblock}, label %{labelcont}"
+        else:
+            emitter << f"br i1 {trunc}, label %{labelblock}, label %{labelcont}"
+            
         emitter << ""
         emitter << f"{labelblock}:"
         compilador(node["block"], emitter)
@@ -306,9 +339,22 @@ def compilador(node, emitter=None):
         #elif oper == "||":
 
     elif node["nt"] == "nuo_expression":
-        var = compilador(node["expression"], emitter)
-        #print(node["expression"])
-        return compilador(node["expression"], emitter)
+        nnuo = 1
+        exptype = "i8"
+        aligntype = get_align('Boolean')
+        exp = node["expression"]
+        while exp["nt"] == "nuo_expression":
+            exp = exp["expression"]
+            nnuo += 1
+        var = compilador(exp, emitter)
+        
+        if nnuo % 2 == 0:
+            #par
+            value = True
+        else:
+            value = False
+            
+        return [var[0], var[1], var[2], value]
 
     elif node["nt"] == "bool_expression":
         #store i8 1, i8* %11, align 1
@@ -361,16 +407,18 @@ def compilador(node, emitter=None):
         return [value, vartype, align]
 
     elif node["nt"] == "array_expression":
-        print(currentvar)
+        
         pass
 
     elif node["nt"] == "group_expression":
         return compilador(node["expression"], emitter)
 
     elif node["nt"] == "expression_index_fun":
-        print(currentvar)
         pass
 
     elif node["nt"] == "expression_fun_invoc":
-        print(currentvar)
         pass
+    
+    else:
+        t = node["nt"]
+        print(f"E preciso tratar do node {t}")

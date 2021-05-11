@@ -5,7 +5,7 @@ def fun(a:Float, c:Float, y:Boolean):Boolean{
 	b = 3.8;
 	
 	f:Boolean = True;
-	if (f){
+	if (!f){
 		b = 3.3 + 4.3;
 	}else{
 		b = 6.3 + 7.3;
