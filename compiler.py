@@ -19,6 +19,14 @@ def get_type (argtype, stattype):
         return "i8"
     elif argtype == "Boolean" and stattype == "ret":
         return "i1"
+    elif argtype == "[Int]":
+        return "i32*"
+    elif argtype == "[Float]":
+        return "float*"
+    elif argtype == "[String]":
+        return "i8**"
+    elif argtype == "[Boolean]" :
+        return "i8*"
 
 def get_align (exptype):
     if exptype == "Int" or exptype == "Float":
@@ -27,6 +35,8 @@ def get_align (exptype):
         return "align 8"
     elif exptype == "Boolean":
         return "align 1"
+    if exptype == "[Int]" or exptype == "[Float]" or exptype == "[Boolean]" or exptype == "[String]":
+        return "align 8"
 
 def float_to_hex(f):
     unpack = struct.unpack('f', struct.pack('f', f))[0]
@@ -53,6 +63,7 @@ def compilador(node, emitter=None):
             for arg in node["darguments"]:
                 if len(arguments) == 0:
                     #primeiro argumentos a ser adicionado
+                    
                     arguments += get_type(arg["type"], "funarg") + " %" + arg["name"]
                 else:
                     #resto dos argumentos depois do primeiro
@@ -81,6 +92,46 @@ def compilador(node, emitter=None):
     elif node["nt"] == "declaration":
         pass
 
+    elif node["nt"] == "array_declaration":
+        pass
+    
+    elif node["nt"] == "array_definition":
+        name = node["name"]
+        funtype = get_type(node["type"], "fun")
+        emitter.set_type("RETURN_TYPE", node["type"])
+        aligntype = get_align(node["type"])
+        arguments = ""
+        if node["darguments"] != "empty":
+            #funçao tem argumentos
+            for arg in node["darguments"]:
+                if len(arguments) == 0:
+                    #primeiro argumentos a ser adicionado
+                    
+                    arguments += get_type(arg["type"], "funarg") + " %" + arg["name"]
+                else:
+                    #resto dos argumentos depois do primeiro
+                    arguments += ", " + get_type(arg["type"], "funarg") + " %" + arg["name"]
+    
+    
+        emitter << f"define {funtype} @{name}({arguments}) #0 {'{'}"
+        #adicionar conteudo do bloco
+        if node["darguments"] != "empty":
+            for arg in node["darguments"]:
+                emitter.set_type(arg["name"], arg["type"])
+                if arg["type"] == "Boolean":
+                    pont = f"%{emitter.get_id()}"
+                    name = emitter.get_pointer_name(arg['name'])
+                    emitter << f"{name} = alloca i8, align 1"
+                    emitter << f"{pont} = zext i1 %{arg['name']} to i8"
+                    emitter << f"store i8 {pont}, i8* {name}, align 1"
+                else:
+                    emitter << f"{emitter.get_pointer_name(arg['name'])} = alloca {get_type(arg['type'], 'var')}, {get_align(arg['type'])}"
+                    emitter << f"store {get_type(arg['type'], 'var')} %{arg['name']}, {get_type(arg['type'], 'var')}* {emitter.get_pointer_name(arg['name'])}, {get_align(arg['type'])}"
+
+        compilador(node["block"], emitter)
+        
+        emitter << "}"
+    
     elif node["nt"] == "block":
         for statment in node['block_content']:
             compilador(statment, emitter)
@@ -379,11 +430,15 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "name_expression":
         name = node["name"]
-        exptype = get_type(emitter.get_type(name), "var") 
-        aligntype = get_align(emitter.get_type(name))
-        loadpointer = f"%load_{emitter.get_id()}_{name}"
-        emitter << f"{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {aligntype}"
-        return [loadpointer, exptype, aligntype]
+        if "[" in emitter.get_type(name):
+            #se for um array
+            pass
+        else:
+            exptype = get_type(emitter.get_type(name), "var") 
+            aligntype = get_align(emitter.get_type(name))
+            loadpointer = f"%load_{emitter.get_id()}_{name}"
+            emitter << f"{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {aligntype}"
+            return [loadpointer, exptype, aligntype]
     
     elif node["nt"] == "string_expression":
         vartype = "i8*"
@@ -405,13 +460,41 @@ def compilador(node, emitter=None):
     elif node["nt"] == "group_expression":
         return compilador(node["expression"], emitter)
     
-    elif node["nt"] == "array_expression":
-        pass
-
     elif node["nt"] == "array_decl_statment":
-        pass
+        
+        size = node["size"]
+        pointer = emitter.get_pointer_name(node['name'])
+        t = node['type']
+        
+        for char in "[]":
+            t = t.replace(char, "")
+            
+        vartype = get_type(t, "var")
+        if size < 4:
+            typealign = "align 4"
+        else:
+            typealign = "align 16"
+        
+        a_type = f"[{size} x {vartype}]"    
+        emitter << f"{pointer} = alloca {a_type}, {typealign}"        
+        emitter.set_type(node['name'], a_type)
+        currentvar = [node['type'], pointer]
 
     elif node["nt"] == "array_assign_statment":
+        index = node["index"]["value"]
+        pointer = emitter.get_pointer_name(node['name'])
+        exptype = emitter.get_type(node['name'])
+        var = compilador(node["expression"], emitter)
+        getelem = f"%getelem_{emitter.get_id()}"
+        value = var[0]
+        storetype = var[1]
+        aligntype = var[2]
+        
+        emitter << f"{getelem} = getelementptr inbounds {exptype}, {exptype}* {pointer}, i64 0, i64 {index}"
+        
+        emitter << f"store {storetype} {value}, {storetype}* {getelem}, align 8"
+
+    elif node["nt"] == "array_expression":
         pass
 
     elif node["nt"] == "expression_index_fun":

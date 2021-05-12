@@ -190,9 +190,9 @@ def p_declaration(t):
     '''declaration : NAME LPAR dargument RPAR COLON types
                     | NAME LPAR dargument RPAR COLON VOID 
                     | NAME LPAR RPAR COLON types 
-                    | NAME LPAR RPAR COLON VOID 
-                    | NAME LPAR RPAR COLON LBRACK types RBRACK
-                    | NAME LPAR dargument RPAR COLON LBRACK types RBRACK '''
+                    | NAME LPAR RPAR COLON VOID '''
+                    #| NAME LPAR RPAR COLON LBRACK types RBRACK
+                    #| NAME LPAR dargument RPAR COLON LBRACK types RBRACK 
     if len(t) == 7:
         t[0] = {'nt': 'declaration', 'name': t[1], 'darguments': list(list_helper(t[3])), 'type': t[6]}
     elif len(t) == 6:
@@ -207,9 +207,9 @@ def p_definition(t):
     '''definition : NAME LPAR dargument RPAR COLON types block
                     | NAME LPAR RPAR COLON types block
                     | NAME LPAR RPAR COLON VOID block
-                    | NAME LPAR dargument RPAR COLON VOID block 
-                    | NAME LPAR RPAR COLON LBRACK types RBRACK block
-                    | NAME LPAR dargument RPAR COLON LBRACK types RBRACK block'''
+                    | NAME LPAR dargument RPAR COLON VOID block '''
+                    #| NAME LPAR RPAR COLON LBRACK types RBRACK block
+                    #| NAME LPAR dargument RPAR COLON LBRACK types RBRACK block
     if len(t) == 8:
         t[0] = {'nt': 'definition', 'name': t[1], 'darguments': list(list_helper(t[3])), 'type': t[6], 'block': t[7]}
     elif len(t) == 7:
@@ -306,7 +306,7 @@ def p_array_assign_statment(t):
 
 def p_expression_array(t):
     'expression : NAME LBRACK expression RBRACK'
-    t[0] = {'nt': 'array_expression', 'name': t[1], 'expression': t[3]}
+    t[0] = {'nt': 'array_expression', 'name': t[1], 'index': t[3]}
 
 def p_expression_index_fun(t):
     '''expression :  GETARRAY LPAR RPAR LBRACK expression RBRACK

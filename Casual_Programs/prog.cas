@@ -1,7 +1,9 @@
-def fun(y:[Boolean]):[Boolean]{
-	
-	y[0] = True;
-	return y;
+def fun(y:[Int]):Int{
+	u:Int = 9;
+	t:[Int] = 10;
+	t[0] = 7;
+
+	return 6;
 }
 
 def main():Int{

@@ -310,9 +310,13 @@ def verify(ctx:Context, node):
     elif node["nt"] == "return_statement":
         expression = node['expression']
         if expression != 'empty':
-            if verify(ctx, node['expression']) != ctx.get_type("RETURN_CODE"):
-                
-                raise TypeError(f"expressao do return nao tem o tipo certo")
+            if "[" in verify(ctx, node['expression'])[1]:
+                #return é um array
+                if ctx.get_type("RETURN_CODE") not in verify(ctx, node['expression'])[1]:
+                    raise TypeError(f"expressao do return nao tem o tipo certo")
+            else:
+                if verify(ctx, node['expression']) != ctx.get_type("RETURN_CODE"):
+                    raise TypeError(f"expressao do return nao tem o tipo certo")
         else:
             if ctx.get_type("RETURN_CODE") != "Void":
                 raise TypeError(f"expressao do return nao tem o tipo certo")
@@ -417,14 +421,14 @@ def verify(ctx:Context, node):
 
         elif op == '%':
             if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
-                if isinstance(el%er, int):
-                    return "Int"
-                if isinstance(el%er, float):
+                #if isinstance(el%er, int):
+                #    return "Int"
+                #if isinstance(el%er, float):
                     return "Float"
             if verify(ctx, er)[1] == "Int" and verify(ctx, el)[1] == "Int":
-                if isinstance(el%er, int):
-                    return "Int"
-                if isinstance(el%er, float):
+                #if isinstance(el%er, int):
+                #    return "Int"
+                #if isinstance(el%er, float):
                     return "Float"
             else:
                 raise TypeError(f"As expressoes {op} nao sao inteiros")
@@ -566,10 +570,10 @@ def verify(ctx:Context, node):
             raise TypeError(f"Array {name} nao esta declarado") 
     
     elif node["nt"] == "array_expression":
-        expression = node['expression']
+        index = node['index']
         name = node['name']
-        if verify(ctx, node['expression']) != ctx.get_type(name):
-            raise TypeError(f"expressao do return nao tem o tipo certo")
+        if verify(ctx, node['index']) != "Int":
+            raise TypeError(f"index de {name} errado")
         return ctx.get_type(name)
 
     elif node["nt"] == "group_expression":
