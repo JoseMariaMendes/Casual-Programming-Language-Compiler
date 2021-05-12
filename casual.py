@@ -22,7 +22,7 @@ tokens = (
     'HIGHER', 'LOWER', 'SUM', 'SUB', 'MULTIPLY', 'DIVIDE', 
     'RESTOF', 'DECLARATION', 'DEFINITION', 
     'RETURN', 'IF', 'ELSE', 'WHILE', 'LCURLY', 'RCURLY', 'LPAR',
-    'RPAR', 'TRUE', 'FALSE', 'SEMICOLON', 'COLON', 'QMARK', 'DIFFER',  
+    'RPAR', 'TRUE', 'FALSE', 'SEMICOLON', 'COLON', 'QMARK', 'DIFFER', 'PRINT', 'GETARRAY',  
     )
 
 #Variables
@@ -67,6 +67,10 @@ def t_INT(t):
 
 def t_PRINT(t):
     r'print'
+    return t
+
+def t_GETARRAY(t):
+    r'get_array'
     return t
 
 def t_FLOATTYPE(t):
@@ -271,13 +275,33 @@ def p_var_assign_statment(t):
     t[0] = {'nt': 'var_assign_statment', 'name': t[1], 'expression': t[3]}
     
 def p_array_decl_statment(t):
-    '''statement : NAME COLON LBRACK types RBRACK SEMICOLON'''
-    t[0] = {'nt': 'array_decl_statment', 'name': t[1], 'type': t[3]}     
+    '''statement : NAME COLON LBRACK types RBRACK EQUALS NUMBER SEMICOLON'''
+    t[0] = {'nt': 'array_decl_statment', 'name': t[1], 'type': t[4], 'size': t[7]}     
 
 def p_array_assign_statment(t):
     '''statement : NAME LBRACK expression RBRACK EQUALS expression SEMICOLON'''
     t[0] = {'nt': 'array_assign_statment', 'index': t[3], 'name': t[1], 'expression': t[6]}
 
+def p_expression_array(t):
+    'expression : NAME LBRACK expression RBRACK'
+    t[0] = {'nt': 'array_expression', 'name': t[1], 'expression': t[3]}
+
+def p_expression_index_fun(t):
+    '''expression :  GETARRAY LPAR RPAR LBRACK expression RBRACK
+                    | GETARRAY LPAR argument RPAR LBRACK expression RBRACK '''
+    if len(t) == 7:
+        t[0] = {"nt": 'expression_index_fun', 'argument': 'empty', 'expression': t[5]}
+    elif len(t) == 8:
+        t[0] = {"nt": 'expression_index_fun', 'argument': list(list_helper(t[3])), 'expression': t[6]}
+
+def p_expression_fun_invoc(t):
+    '''expression : NAME LPAR RPAR
+                    | NAME LPAR argument RPAR'''
+    if len(t) == 5:
+        t[0] = {"nt": 'expression_fun_invoc','name': t[1], 'argument': list(list_helper(t[3]))}
+    elif len(t) == 4:
+        t[0] = {"nt": 'expression_fun_invoc','name': t[1], 'argument': "empty"}
+        
 ############################################################################################################
 
 def p_statement_expr(t):
@@ -321,10 +345,6 @@ def p_expression_string(t):
     '''expression : STRING '''
     t[0] = {'nt': 'string_expression', 'value': t[1]}
 
-def p_expression_array(t):
-    'expression : NAME LBRACK expression RBRACK'
-    t[0] = {'nt': 'array_expression', 'name': t[1], 'expression': t[3]}
-
 def p_expression_name(t):
     'expression : NAME'
     t[0] = {'nt': 'name_expression', 'name': t[1]}
@@ -332,22 +352,6 @@ def p_expression_name(t):
 def p_expression_group(t):
     'expression : LPAR expression RPAR'
     t[0] = {'nt': 'group_expression', 'expression': t[2]}
-
-def p_expression_index_fun(t):
-    '''expression :  NAME LPAR RPAR LBRACK expression RBRACK
-                    | NAME LPAR argument RPAR LBRACK expression RBRACK '''
-    if len(t) == 7:
-        t[0] = {"nt": 'expression_index_fun','name': t[1], 'argument': 'empty', 'expression': t[5]}
-    elif len(t) == 8:
-        t[0] = {"nt": 'expression_index_fun','name': t[1], 'argument': [t[3]], 'expression': t[6]}
-
-def p_expression_fun_invoc(t):
-    '''expression : NAME LPAR RPAR
-                    | NAME LPAR argument RPAR'''
-    if len(t) == 5:
-        t[0] = {"nt": 'expression_fun_invoc','name': t[1], 'argument': list(list_helper(t[3]))}
-    elif len(t) == 4:
-        t[0] = {"nt": 'expression_fun_invoc','name': t[1], 'argument': "empty"}
 
 def p_argument(t):
     '''argument :   expression

@@ -57,7 +57,8 @@ def compilador(node, emitter=None):
                 else:
                     #resto dos argumentos depois do primeiro
                     arguments += ", " + get_type(arg["type"], "funarg") + " %" + arg["name"]
-
+    
+    
         emitter << f"define {funtype} @{name}({arguments}) #0 {'{'}"
         #adicionar conteudo do bloco
         if node["darguments"] != "empty":
@@ -76,6 +77,9 @@ def compilador(node, emitter=None):
         compilador(node["block"], emitter)
         
         emitter << "}"
+
+    elif node["nt"] == "declaration":
+        pass
 
     elif node["nt"] == "block":
         for statment in node['block_content']:
@@ -178,14 +182,12 @@ def compilador(node, emitter=None):
         while var["nt"] == "group_expression":
             var = var["expression"]
         
-        print(var)
         xor = f"%xor_{emitter.get_id()}"
         labelwhile = f"while_{emitter.get_id()}"
         labelblock = f"block_{emitter.get_id()}"
         labelcont = f"cont_{emitter.get_id()}"
         trunc = f"%trunc_{emitter.get_id()}"
         exp = compilador(var, emitter)
-        print(exp)
         
         
         
@@ -213,12 +215,6 @@ def compilador(node, emitter=None):
         emitter << ""
         emitter << f"{labelcont}:"
         
-    elif node["nt"] == "array_decl_statment":
-        pass
-
-    elif node["nt"] == "array_assign_statment":
-        pass
-
     elif node["nt"] == "binop_expression":
         #print("binop")
         value = f"%{emitter.get_id()}_binopexp"
@@ -406,12 +402,17 @@ def compilador(node, emitter=None):
         value = f"getelementptr inbounds ([{size} x i8], [{size} x i8]* {str_name}, i64 0, i64 0)"
         return [value, vartype, align]
 
-    elif node["nt"] == "array_expression":
-        
-        pass
-
     elif node["nt"] == "group_expression":
         return compilador(node["expression"], emitter)
+    
+    elif node["nt"] == "array_expression":
+        pass
+
+    elif node["nt"] == "array_decl_statment":
+        pass
+
+    elif node["nt"] == "array_assign_statment":
+        pass
 
     elif node["nt"] == "expression_index_fun":
         pass

@@ -24,7 +24,7 @@ def main():Float{
 	oscar:Int = 5;
 	d:Float = fun(3.6, 5.6) - 5.7;
 	
-	c:[Int];
+	c:[Int] = 100;
 
 	c[0] = 0;
 	

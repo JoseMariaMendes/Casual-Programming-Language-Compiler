@@ -405,7 +405,11 @@ def verify(ctx:Context, node):
 
     elif node["nt"] == "group_expression":
         return verify(ctx, node["expression"])
-    
+
+    elif node["nt"] == "expression_index_fun":
+        if verify(ctx, node["expression"]) != "Int":
+            TypeError(f"expressao get_array, não tem um tamanho valido")
+            
     else:
         t = node["nt"]
         print(f"E preciso tratar do node {t}")
