@@ -190,22 +190,34 @@ def p_declaration(t):
     '''declaration : NAME LPAR dargument RPAR COLON types
                     | NAME LPAR dargument RPAR COLON VOID 
                     | NAME LPAR RPAR COLON types 
-                    | NAME LPAR RPAR COLON VOID '''
+                    | NAME LPAR RPAR COLON VOID 
+                    | NAME LPAR RPAR COLON LBRACK types RBRACK
+                    | NAME LPAR dargument RPAR COLON LBRACK types RBRACK '''
     if len(t) == 7:
         t[0] = {'nt': 'declaration', 'name': t[1], 'darguments': list(list_helper(t[3])), 'type': t[6]}
     elif len(t) == 6:
         t[0] = {'nt': 'declaration', 'name': t[1], 'darguments': "empty", 'type': t[5]}
+    elif len(t) == 8:
+        t[0] = {'nt': 'array_declaration', 'name': t[1],'darguments': "empty", 'type': f"{t[5]}{t[6]}{t[7]}"}
+    elif len(t) == 9:
+        t[0] = {'nt': 'array_declaration', 'name': t[1],'darguments': list(list_helper(t[3])), 'type': f"{t[6]}{t[7]}{t[8]}"}
 
 
 def p_definition(t):
     '''definition : NAME LPAR dargument RPAR COLON types block
                     | NAME LPAR RPAR COLON types block
                     | NAME LPAR RPAR COLON VOID block
-                    | NAME LPAR dargument RPAR COLON VOID block '''
+                    | NAME LPAR dargument RPAR COLON VOID block 
+                    | NAME LPAR RPAR COLON LBRACK types RBRACK block
+                    | NAME LPAR dargument RPAR COLON LBRACK types RBRACK block'''
     if len(t) == 8:
         t[0] = {'nt': 'definition', 'name': t[1], 'darguments': list(list_helper(t[3])), 'type': t[6], 'block': t[7]}
     elif len(t) == 7:
         t[0] = {'nt': 'definition', 'name': t[1],'darguments': "empty", 'type': t[5], 'block': t[6]}
+    elif len(t) == 9:
+        t[0] = {'nt': 'array_definition', 'name': t[1],'darguments': "empty", 'type': f"{t[5]}{t[6]}{t[7]}", 'block': t[8]}
+    elif len(t) == 10:
+        t[0] = {'nt': 'array_definition', 'name': t[1],'darguments': list(list_helper(t[3])), 'type': f"{t[6]}{t[7]}{t[8]}", 'block': t[9]}
 
 def p_types(t):
     '''types :    INT 
@@ -223,6 +235,16 @@ def p_d_argument(t):
     elif len(t) == 6:
         t[0] = [{'nt': 'dargument', 'name': t[1], 'type': t[3]}, t[5]]
 
+def p_array_d_argument(t):
+    '''dargument : NAME COLON LBRACK types RBRACK
+                  | NAME COLON LBRACK types RBRACK COMMA dargument'''
+    if len(t) == 6:
+        t[0] = [{'nt': 'array_dargument', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}"}]
+    elif len(t) == 8:
+        t[0] = [{'nt': 'array_dargument', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}"}, t[7]]
+
+
+                  
 #############################################################################################################
 
 
@@ -276,7 +298,7 @@ def p_var_assign_statment(t):
     
 def p_array_decl_statment(t):
     '''statement : NAME COLON LBRACK types RBRACK EQUALS NUMBER SEMICOLON'''
-    t[0] = {'nt': 'array_decl_statment', 'name': t[1], 'type': t[4], 'size': t[7]}     
+    t[0] = {'nt': 'array_decl_statment', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}", 'size': t[7]}     
 
 def p_array_assign_statment(t):
     '''statement : NAME LBRACK expression RBRACK EQUALS expression SEMICOLON'''

@@ -1,26 +1,11 @@
-def fun(a:Float, c:Float, y:Boolean):Boolean{
+def fun(y:[Boolean]):[Boolean]{
 	
-	b:Float = c / 2.8 * 9.8  ;
-
-	b = 3.8;
-	
-	f:Boolean = True;
-	if (!f){
-		b = 3.3 + 4.3;
-	}else{
-		b = 6.3 + 7.3;
-	}
-
-	while(y){
-		g:Int = 9;
-	}
-
+	y[0] = True;
 	return y;
 }
 
 def main():Int{
 	
 	d:Int = 5;
-
  	return d;
 }
