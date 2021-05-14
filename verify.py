@@ -4,6 +4,8 @@ import ply.lex as lex
 import sys
 from context import Context
 
+
+flist = []
 def verify(ctx:Context, node):
     #print(node)
     #print('-------')
@@ -366,6 +368,8 @@ def verify(ctx:Context, node):
     
     elif node["nt"] == "var_assign_statment":
         name = node['name']
+        type = ctx.get_type(name)[1]
+        exp = verify(ctx, node["expression"])
         if ctx.has_var(name):
             #a variavel ja esta declarada
             if ctx.get_type(name)[1] == "Int":
@@ -377,18 +381,40 @@ def verify(ctx:Context, node):
             elif ctx.get_type(name)[1] == "String":
                 pass
             
-            if ctx.get_type(name)[1] == verify(ctx, node["expression"]):
-                assinatura = ctx.get_type(name)
-                #assinatura[0].append(node['nt'])
-                if ctx.get_type(name)[1] == assinatura[1]:
-                    #o tipo e igual
+            if isinstance(exp, tuple):
+                exp = exp[1]
+                for char in "[]":
+                    type = type.replace(char, "")
+                    exp = exp.replace(char, "")
+                if exp == type:
                     assinatura = ctx.get_type(name)
-                    ctx.set_type(name, assinatura)
-                elif ctx.get_type(name)[1] != assinatura[1]:
-                    #o tipo é diferente
-                    raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
+                    #assinatura[0].append(node['nt'])
+                    if ctx.get_type(name)[1] == assinatura[1]:
+                        #o tipo e igual
+                        assinatura = ctx.get_type(name)
+                        ctx.set_type(name, assinatura)
+                    elif ctx.get_type(name)[1] != assinatura[1]:
+                        #o tipo é diferente
+                        raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
+                else:
+                    raise TypeError(f"variavel {name} não é do mesmo tipo que a expressão atribuida")
             else:
-                raise TypeError(f"variavel {name} não é do mesmo tipo que a expressão atribuida")
+                for char in "[]":
+                    type = type.replace(char, "")
+                    exp = exp.replace(char, "")
+        
+                if exp == type:
+                    assinatura = ctx.get_type(name)
+                    #assinatura[0].append(node['nt'])
+                    if ctx.get_type(name)[1] == assinatura[1]:
+                        #o tipo e igual
+                        assinatura = ctx.get_type(name)
+                        ctx.set_type(name, assinatura)
+                    elif ctx.get_type(name)[1] != assinatura[1]:
+                        #o tipo é diferente
+                        raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
+                else:
+                    raise TypeError(f"variavel {name} não é do mesmo tipo que a expressão atribuida")
         else:
             #não declarada nem definida
             raise TypeError(f"variavel {name} nao esta declarada")
@@ -494,6 +520,8 @@ def verify(ctx:Context, node):
     
     elif node["nt"] == "expression_fun_invoc":
         name = node["name"]
+        if not ctx.has_var(name):
+            raise TypeError(f"funçao {name} nao esta declarada antes do main")
         if ctx.get_type(name)[3] == "function":    
             if len(node["argument"]) == len(ctx.get_type(name)[2][1]):         
                 (lista, tipo, argumentos, string) = ctx.get_type(node["name"])
@@ -537,6 +565,7 @@ def verify(ctx:Context, node):
             
     elif node["nt"] == "array_assign_statment":
         name = node['name']
+        exp = verify(ctx, node["expression"])
         type = ctx.get_type(name)[1]
         if verify(ctx, node["index"]) != "Int":
             raise TypeError(f"Index do array {name} nao é inteiro")
@@ -544,20 +573,42 @@ def verify(ctx:Context, node):
             if 'array_decl_statment' in ctx.get_type(name)[0] and 'array_assign_statment' not in ctx.get_type(name)[0]:
                 #declarada mas nao definida
                 assinatura = ctx.get_type(name)
+                  
+                if isinstance(exp, tuple):
+                    exp = exp[1]
+                    for char in "[]":
+                        type = type.replace(char, "")
+                        exp = exp.replace(char, "")
+                    
+                    if exp != type:
+                        print(exp)
+                        print(type)
+                        raise TypeError(f"expressao atribuida a {name} nao é valida")
+                    if ctx.get_type(name)[1] == assinatura[1]:
+                        #o tipo e igual
+                        assinatura = ctx.get_type(name)
+                        ctx.set_type(name, assinatura)
+                    elif ctx.get_type(name)[1] != assinatura[1]:
+                        #o tipo é diferente
+                        raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
+                else:
+                    for char in "[]":
+                        type = type.replace(char, "")
+                        exp = exp.replace(char, "")
+                    if exp != type:
+                        print(exp)
+                        print(type)
+                        raise TypeError(f"expressao atribuida a {name} nao é valida")
+                    if ctx.get_type(name)[1] == assinatura[1]:
+                        #o tipo e igual
+                        assinatura = ctx.get_type(name)
+                        ctx.set_type(name, assinatura)
+                    elif ctx.get_type(name)[1] != assinatura[1]:
+                        #o tipo é diferente
+                        raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
                 
-                for char in "[]":
-                    type = type.replace(char, "")
                 
                 
-                if verify(ctx, node["expression"]) != type:
-                    raise TypeError(f"expressao atribuida a {name} nao é valida")
-                if ctx.get_type(name)[1] == assinatura[1]:
-                    #o tipo e igual
-                    assinatura = ctx.get_type(name)
-                    ctx.set_type(name, assinatura)
-                elif ctx.get_type(name)[1] != assinatura[1]:
-                    #o tipo é diferente
-                    raise TypeError(f"definição da variavel {name} tem tipo diferente da declaraçao")
             elif 'array_decl_statment' in ctx.get_type(name)[0] and 'array_assign_statment' in ctx.get_type(name)[0]:
                 #declarada e definida
                 raise TypeError(f"Array {name} ja esta declarada e definida no contexto")

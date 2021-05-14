@@ -54,6 +54,7 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "definition":
         name = node["name"]
+        emitter.set_type(name, node["type"])
         funtype = get_type(node["type"], "fun")
         emitter.set_type("RETURN_TYPE", node["type"])
         aligntype = get_align(node["type"])
@@ -90,6 +91,8 @@ def compilador(node, emitter=None):
         emitter << "}"
 
     elif node["nt"] == "declaration":
+        name = node["name"]
+        emitter.set_type(name, node["type"])
         pass
 
     elif node["nt"] == "array_declaration":
@@ -170,7 +173,17 @@ def compilador(node, emitter=None):
         value = var[0]
         exptype = var[1]
         aligntype = var[2]
-        emitter << f"store {exptype} {value}, {exptype}* {pointer}, {aligntype}"
+        if exptype == "i8":
+            #é boolean
+            trunc = f"%trunc_{emitter.get_id()}"
+            zext = f"%zext_{emitter.get_id()}"
+            emitter << f"{trunc} = trunc i8 {value} to i1"
+            emitter << f"{zext} = zext i1 {trunc} to i8"
+            emitter << f"store {exptype} {zext}, {exptype}* {pointer}, {aligntype}"
+            #emitter << f"store {storetype} {zext}, {storetype}* {getelem}, align 1"
+            
+        else:
+            emitter << f"store {exptype} {value}, {exptype}* {pointer}, {aligntype}"
         
     elif node["nt"] == "return_statement":
         exp = compilador(node["expression"], emitter)
@@ -198,7 +211,11 @@ def compilador(node, emitter=None):
         labelelse = f"else_{emitter.get_id()}"
         labelcont = f"cont_{emitter.get_id()}"
         trunc = f"%trunc_{emitter.get_id()}"
-        emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
+        
+        if exp[1] != "i1":
+            emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
+        else:
+            trunc = exp[0]
         
         if var["nt"] == "nuo_expression":
             if exp[3] == False:
@@ -430,15 +447,11 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "name_expression":
         name = node["name"]
-        if "[" in emitter.get_type(name):
-            #se for um array
-            pass
-        else:
-            exptype = get_type(emitter.get_type(name), "var") 
-            aligntype = get_align(emitter.get_type(name))
-            loadpointer = f"%load_{emitter.get_id()}_{name}"
-            emitter << f"{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {aligntype}"
-            return [loadpointer, exptype, aligntype]
+        exptype = get_type(emitter.get_type(name), "var") 
+        aligntype = get_align(emitter.get_type(name))
+        loadpointer = f"%load_{emitter.get_id()}_{name}"
+        emitter << f"{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {aligntype}"
+        return [loadpointer, exptype, aligntype]
     
     elif node["nt"] == "string_expression":
         vartype = "i8*"
@@ -484,24 +497,89 @@ def compilador(node, emitter=None):
         index = node["index"]["value"]
         pointer = emitter.get_pointer_name(node['name'])
         exptype = emitter.get_type(node['name'])
+        
         var = compilador(node["expression"], emitter)
         getelem = f"%getelem_{emitter.get_id()}"
         value = var[0]
         storetype = var[1]
         aligntype = var[2]
+        print(var)
         
-        emitter << f"{getelem} = getelementptr inbounds {exptype}, {exptype}* {pointer}, i64 0, i64 {index}"
-        
-        emitter << f"store {storetype} {value}, {storetype}* {getelem}, align 8"
+        if storetype == "i8":
+            #é boolean
+            loadpointer = f"%load_{emitter.get_id()}"
+            trunc = f"%trunc_{emitter.get_id()}"
+            zext = f"%zext_{emitter.get_id()}"
+            #%4 = alloca [10 x i8], align 1
+            #%5 = alloca i8, align 1
+            #%6 = load i8, i8* %5, align 1, !dbg !23
+            trunc = f"%trunc_{emitter.get_id()}"
+            zext = f"%zext_{emitter.get_id()}"
+            emitter << f"{trunc} = trunc i8 {value} to i1"
+            emitter << f"{getelem} = getelementptr inbounds {exptype}, {exptype}* {pointer}, i64 0, i64 {index}"
+            emitter << f"{zext} = zext i1 {trunc} to i8"
+            emitter << f"store i8 {zext}, i8* {getelem}, {aligntype}"
+            
+        else:
+            emitter << f"{getelem} = getelementptr inbounds {exptype}, {exptype}* {pointer}, i64 0, i64 {index}"
+            emitter << f"store {storetype} {value}, {storetype}* {getelem}, align 8"
 
     elif node["nt"] == "array_expression":
-        pass
-
+        name = node["name"]
+        pointer = emitter.get_pointer_name(name)
+        type = emitter.get_type(name) 
+        exptype = "i8"
+        aligntype = "align 1"
+        index = node["index"]["value"]
+        loadpointer = f"%load_{emitter.get_id()}_{name}"
+        getelem = f"%getelem_{emitter.get_id()}_{name}"
+        
+        emitter << f"{getelem} = getelementptr inbounds {type}, {type}* {pointer}, i64 0, i64 8"
+        emitter << f"{loadpointer} = load {exptype}, {exptype}* {getelem}, {aligntype}"
+        return [loadpointer, exptype, aligntype]
+        
     elif node["nt"] == "expression_index_fun":
         pass
 
     elif node["nt"] == "expression_fun_invoc":
-        pass
+        name = node["name"]
+        type = emitter.get_type(name)
+        aligntype = get_align(type)
+        args = node["argument"]
+        call = f"%call_{emitter.get_id()}_{name}"
+        arguments = ""
+        if args != "empty":
+            for arg in args:
+                argid = compilador(arg, emitter)
+                argvalue = argid[0]
+                argtype = argid[1]
+                if len(arguments) == 0:
+                    #primeiro argumentos a ser adicionado
+                    arguments += argtype + " " + argvalue
+                else:
+                    #resto dos argumentos depois do primeiro
+                    arguments += ", " + argtype + " " + argvalue
+                
+            if type != "Void":
+                type = get_type(type, "var")
+                emitter << f"{call} = call {type} @{name}({arguments})"
+                    #%3 = call i32 @fun(i32 3)
+                    
+            else:
+                #call void @fun(i32 3)
+                type = get_type(type)
+                emitter << f"call void @{name}({arguments})"
+                pass
+        else:
+            if type != "Void":
+                type = get_type(type, "var")
+                emitter << f"{call} = call {type} @{name}()"
+                
+            else:
+                type = get_type(type)
+                emitter << f"call void @{name}()"
+        return [call, type, aligntype]
+        
     
     else:
         t = node["nt"]
