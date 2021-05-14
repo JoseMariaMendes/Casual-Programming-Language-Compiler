@@ -16,7 +16,13 @@ def fun(a:Float, c:Float):Float{
 	return a;
 }
 
-def main():Float{
+
+def dun():Int{
+
+	return 9;
+}
+
+def main():Int{
 	
 
 	maria:String = "maria\n";
@@ -26,12 +32,7 @@ def main():Float{
 	
 	c:[Int] = 100;
 
-	c[0] = 0;
+	c[0] = 3;
 	
- 	return d;
-}
-
-def dun():Int{
-
-	return 9;
+ 	return c[0];
 }

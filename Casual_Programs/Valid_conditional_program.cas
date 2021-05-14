@@ -14,4 +14,9 @@ def div_mult (bool:Boolean, num1:Int, num2:Int):Float{
         }
         return 3.3;
     }
+    return 0.0;
+}
+
+def main():Int{
+    return 0;
 }

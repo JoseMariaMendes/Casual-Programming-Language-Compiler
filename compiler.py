@@ -205,13 +205,11 @@ def compilador(node, emitter=None):
         var = node["expression"]
         while var["nt"] == "group_expression":
             var = var["expression"]
-        
         exp = compilador(var, emitter)
         labelif = f"if_{emitter.get_id()}"
         labelelse = f"else_{emitter.get_id()}"
         labelcont = f"cont_{emitter.get_id()}"
         trunc = f"%trunc_{emitter.get_id()}"
-        
         if exp[1] != "i1":
             emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
         else:
@@ -263,7 +261,10 @@ def compilador(node, emitter=None):
         emitter << ""
         emitter << f"{labelwhile}:"
         
-        emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
+        if exp[1] != "i1":
+            emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
+        else:
+            trunc = exp[0]
         if var["nt"] == "nuo_expression":
             if exp[3] == False:
                 #trocar
@@ -377,6 +378,7 @@ def compilador(node, emitter=None):
                 emitter << f"{temp1} = trunc {exptype} {tran} to i1"
                 emitter << f"{temp2} = zext i1 {temp1} to i32"
                 emitter << f"{value} = icmp eq i32 {temp2}, {other}"
+                return[value, "i1", aligntype]
         elif oper == "!=":
             if er[1]  == "i32": 
                 emitter << f"{value} = icmp ne {exptype} {el[0]}, {er[0]}"
@@ -398,6 +400,7 @@ def compilador(node, emitter=None):
                 emitter << f"{temp1} = trunc {exptype} {tran} to i1"
                 emitter << f"{temp2} = zext i1 {temp1} to i32"
                 emitter << f"{value} = icmp ne i32 {temp2}, {other}"
+                return[value, "i1", aligntype]
                 
         #elif oper == "&&":
         #elif oper == "||":
@@ -487,7 +490,7 @@ def compilador(node, emitter=None):
             typealign = "align 4"
         else:
             typealign = "align 16"
-        
+        print(vartype)
         a_type = f"[{size} x {vartype}]"    
         emitter << f"{pointer} = alloca {a_type}, {typealign}"        
         emitter.set_type(node['name'], a_type)
@@ -528,7 +531,14 @@ def compilador(node, emitter=None):
         name = node["name"]
         pointer = emitter.get_pointer_name(name)
         type = emitter.get_type(name) 
-        exptype = "i8"
+        
+        if "i32" in type:
+            exptype = "i32"
+        elif "float" in type:
+            exptype = "float"
+        else:
+            exptype = "i8"
+            
         aligntype = "align 1"
         index = node["index"]["value"]
         loadpointer = f"%load_{emitter.get_id()}_{name}"
@@ -580,7 +590,6 @@ def compilador(node, emitter=None):
                 emitter << f"call void @{name}()"
         return [call, type, aligntype]
         
-    
     else:
         t = node["nt"]
         print(f"E preciso tratar do node {t}")
