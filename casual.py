@@ -27,7 +27,8 @@ tokens = (
 
 #Variables
 t_NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_STRING = r'"[a-zA-Z0-9\\]*"'
+t_STRING = r'"[ a-zA-Z0-9%\\]*"'
+
 
 
 #Binary operators
@@ -383,10 +384,13 @@ def p_argument(t):
     elif len(t) == 4:
         t[0] = [t[1], t[3]]
 
-#def p_print(t):
-#    '''print : PRINT LPAR expression RPAR 
-#    '''
-#    pass
+def p_print(t):
+    '''statement : PRINT LPAR STRING COMMA argument RPAR SEMICOLON
+                | PRINT LPAR STRING RPAR SEMICOLON'''
+    if len(t) == 8:
+        t[0] = {'nt': 'print', 'string': t[3], 'arguments': list(list_helper(t[5]))}
+    elif len(t) == 6:
+        t[0] = {'nt': 'print', 'string': t[3], 'arguments': 'empty'}
         
 ##################################################################################################################
 def find_column(input, token):
@@ -417,7 +421,7 @@ try:
 
         # /usr/local/opt/llvm/bin/lli code.ll
         r = subprocess.call(
-            "/usr/bin/llc code.ll && clang code.s -o code && ./code",
+            "/usr/bin/llc code.ll && clang code.s -fPIE -o code && ./code",
             shell=True,
         )
         print("Return code", r)

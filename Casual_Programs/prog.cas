@@ -2,12 +2,18 @@ def fun(y:[Int]):Boolean{
 	t:[Boolean] = 10;
 	b:[Boolean] = 10;
 	o:Boolean = True;
+	j:Int = 2;
+	z:Float = 3.3;
+	ja:[Int] = 10;
+	fa:[String] = 10;
+	za:[Float] = 10;
 
-	
+
+	print("%d%f%s", ja[0], za[2], fa[9]);
 
 	o = b[3];
 
-	return o;
+	return True;
 }
 
 decl gun(s:Int):Int
@@ -18,14 +24,7 @@ def main():Int{
 }
 
 def gun(s:Int):Int{
-	s = 3;
-	r:Int = 2;
-	if (s == r){
-		return 0;
-	}
-	else{
-		return 1;
-	}
-	return 0;
+	
+	return 4;
 
 }

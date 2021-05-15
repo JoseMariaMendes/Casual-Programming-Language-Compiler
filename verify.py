@@ -632,8 +632,51 @@ def verify(ctx:Context, node):
 
     elif node["nt"] == "expression_index_fun":
         if verify(ctx, node["expression"]) != "Int":
-            TypeError(f"expressao get_array, não tem um tamanho valido")
+            raise TypeError(f"expressao get_array, não tem um tamanho valido")
             
+    elif node["nt"] == "print":
+        #   %d %f %s  
+        
+        args = node["arguments"]
+        string = node["string"]
+        argtypes = []
+        arglist = []
+        nargs = 0
+        
+        
+        for char in '"':
+            string = string.replace(char, "")
+            
+        cont = 0
+        for char in string:
+            if char == "%":
+                type = f"{string[cont]}{string[cont+1]}"
+                print(type)
+                if type == f"%d":
+                    argtypes.append("Int")
+                elif type == f"%f":
+                    argtypes.append("Float")
+                elif type == f"%s":
+                    argtypes.append("String")
+                else:
+                    raise TypeError(f"tipo de argumento '{type}' no print é inválido")
+            else:
+                pass
+            cont += 1
+        
+        if args != "empty":
+            for arg in args:
+                arglist.append(arg)
+
+            print(arglist)
+            print(argtypes)
+            
+            if len(arglist) != len(argtypes):
+                raise TypeError(f"Numero de argumentos no print é invalido")
+            
+        else:
+            pass
+
     else:
         t = node["nt"]
         print(f"E preciso tratar do node {t}")
