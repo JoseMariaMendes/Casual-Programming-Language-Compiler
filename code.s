@@ -6,18 +6,8 @@
 fun:                                    # @fun
 	.cfi_startproc
 # %bb.0:
-	subq	$120, %rsp
-	.cfi_def_cfa_offset 128
-	movq	%rdi, -104(%rsp)
-	movl	$2, -116(%rsp)
-	movl	$1079194419, -120(%rsp) # imm = 0x40533333
-	movq	$.L.casual_str_cas_1, -112(%rsp)
-	movb	-88(%rsp), %al
-	andb	$1, %al
-	movb	%al, -121(%rsp)
+	movq	%rdi, -8(%rsp)
 	movb	$1, %al
-	addq	$120, %rsp
-	.cfi_def_cfa_offset 8
 	retq
 .Lfunc_end0:
 	.size	fun, .Lfunc_end0-fun
@@ -29,12 +19,18 @@ fun:                                    # @fun
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:
-	pushq	%rax
-	.cfi_def_cfa_offset 16
-	movl	$9, 4(%rsp)
-	movl	$9, %edi
+	subq	$248, %rsp
+	.cfi_def_cfa_offset 256
+	movb	$1, 15(%rsp)
+	movl	$2, 16(%rsp)
+	movl	$1079194419, 20(%rsp)   # imm = 0x40533333
+	movq	$.L.casual_str_cas_2, 24(%rsp)
+	movl	$.L.casual_str_cas_3, %edi
+	xorl	%eax, %eax
+	callq	printf
+	movl	16(%rsp), %edi
 	callq	gun
-	popq	%rcx
+	addq	$248, %rsp
 	.cfi_def_cfa_offset 8
 	retq
 .Lfunc_end1:
@@ -54,10 +50,15 @@ gun:                                    # @gun
 	.size	gun, .Lfunc_end2-gun
 	.cfi_endproc
                                         # -- End function
-	.type	.L.casual_str_cas_1,@object # @.casual_str_cas_1
+	.type	.L.casual_str_cas_3,@object # @.casual_str_cas_3
 	.section	.rodata.str1.1,"aMS",@progbits,1
-.L.casual_str_cas_1:
+.L.casual_str_cas_3:
+	.asciz	"hello\n"
+	.size	.L.casual_str_cas_3, 7
+
+	.type	.L.casual_str_cas_2,@object # @.casual_str_cas_2
+.L.casual_str_cas_2:
 	.asciz	"asdasd"
-	.size	.L.casual_str_cas_1, 7
+	.size	.L.casual_str_cas_2, 7
 
 	.section	".note.GNU-stack","",@progbits

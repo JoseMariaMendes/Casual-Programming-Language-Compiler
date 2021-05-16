@@ -428,30 +428,40 @@ def verify(ctx:Context, node):
         op = node['oper']
         el = node['expression_left']
         er = node['expression_right']
-        #print(verify(ctx, er))
-        #print(verify(ctx, el))
+        vel = verify(ctx, el)
+        ver = verify(ctx, er)
+        print(vel)
+        print(ver)
+        if isinstance(ver, tuple):
+            ver = ver[1]
+            for char in "[]":
+                ver = ver.replace(char, "")
+        else:
+            if "[" in ver:
+                raise TypeError(f"A expressão direita da operação '{op}' nao é válida")
+        
+        if isinstance(vel, tuple):
+            vel = vel[1]
+            for char in "[]":
+                vel = vel.replace(char, "")
+        else:
+            if "[" in vel:
+                raise TypeError(f"A expressão esquerda da operação '{op}' nao é válida")
+            
+            
         if op == '+' or op == '-' or op == '*' or op == '/' :
             #print( er)
             #print( el)
             #print(ctx.get_type(er["name"]))
-            if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
+            if ver == "Int" and vel == "Int":
                 return "Int"
-            elif verify(ctx, er) == "Float" and verify(ctx, el) == "Float":
-                return "Float"
-            elif verify(ctx, er)[1] == "Int" and verify(ctx, el)[1] == "Int":
-                return "Int"
-            elif verify(ctx, er)[1] == "Float" and verify(ctx, el)[1] == "Float":
+            elif ver == "Float" and vel == "Float":
                 return "Float"
             else:
                 raise TypeError(f"As expressoes {op} nao sao inteiros nem float")
 
         elif op == '%':
-            if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
-                #if isinstance(el%er, int):
-                #    return "Int"
-                #if isinstance(el%er, float):
-                    return "Float"
-            if verify(ctx, er)[1] == "Int" and verify(ctx, el)[1] == "Int":
+            if ver == "Int" and vel == "Int":
                 #if isinstance(el%er, int):
                 #    return "Int"
                 #if isinstance(el%er, float):
@@ -461,34 +471,26 @@ def verify(ctx:Context, node):
 
         elif op == '>=' or op == '>' or op == '<=' or op == '<':
             
-            if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
+            if ver == "Int" and vel == "Int":
                 return "Boolean"
-            elif verify(ctx, er) == "Float" and verify(ctx, el) == "Float":
+            elif ver == "Float" and vel == "Float":
                 return "Boolean"
             else:
                 raise TypeError(f"As expressoes {op} nao sao inteiros nem float")
 
         elif op == '==' or op == '!=':
 
-            if verify(ctx, er) == "Int" and verify(ctx, el) == "Int":
+            if ver == "Int" and vel == "Int":
                 return "Boolean"
-            elif verify(ctx, er) == "Float" and verify(ctx, el) == "Float":
+            elif ver == "Float" and vel == "Float":
                 return "Boolean"
-            elif verify(ctx, er) == "Boolean" and verify(ctx, el) == "Boolean":
-                return "Boolean"
-            if verify(ctx, er)[1] == "Int" and verify(ctx, el)[1] == "Int":
-                return "Boolean"
-            elif verify(ctx, er)[1] == "Float" and verify(ctx, el)[1] == "Float":
-                return "Boolean"
-            elif verify(ctx, er)[1] == "Boolean" and verify(ctx, el)[1] == "Boolean":
+            elif ver == "Boolean" and vel == "Boolean":
                 return "Boolean"
             else:
                 raise TypeError(f"As expressoes {op} nao sao inteiros nem float nem booleanos")
 
         elif op == '&&' or op == '||':
-            if verify(ctx, el) == "Boolean" and verify(ctx, er) == "Boolean":
-                return "Boolean"
-            if verify(ctx, el)[1] == "Boolean" and verify(ctx, er[1]) == "Boolean":
+            if vel == "Boolean" and ver == "Boolean":
                 return "Boolean"
             else:
                 raise TypeError(f"As expressoes {op} nao sao booleanas")
@@ -522,27 +524,29 @@ def verify(ctx:Context, node):
         name = node["name"]
         if not ctx.has_var(name):
             raise TypeError(f"funçao {name} nao esta declarada antes do main")
-        if ctx.get_type(name)[3] == "function":    
-            if len(node["argument"]) == len(ctx.get_type(name)[2][1]):         
-                (lista, tipo, argumentos, string) = ctx.get_type(node["name"])
-                ass = list((lista, tipo, argumentos, string))
-                ass.remove(lista)
-                ass.remove(string)
-                (expected_return, parameter_types) = tuple(ass)
-                if parameter_types != "empty":
-                    for (i, (arg, par_t)) in enumerate(zip(node["argument"], parameter_types[1])):
-                        arg_t = verify(ctx, arg)
-                        if arg_t != par_t:
-                            index = i+1
-                            raise TypeError(f"Argumento {name} esperava {par_t} mas recebe {arg_t}") 
-                    return expected_return
+        if ctx.get_type(name)[3] == "function":
+            if node["argument"] != "empty":
+                if len(node["argument"]) == len(ctx.get_type(name)[2][1]):         
+                    (lista, tipo, argumentos, string) = ctx.get_type(node["name"])
+                    ass = list((lista, tipo, argumentos, string))
+                    ass.remove(lista)
+                    ass.remove(string)
+                    (expected_return, parameter_types) = tuple(ass)
+                    if parameter_types != "empty":
+                        for (i, (arg, par_t)) in enumerate(zip(node["argument"], parameter_types[1])):
+                            arg_t = verify(ctx, arg)
+                            if arg_t != par_t:
+                                index = i+1
+                                raise TypeError(f"Argumento {name} esperava {par_t} mas recebe {arg_t}") 
+                        return expected_return
+                    else:
+                        #se funçao nao tem parametros
+                        print("ahhhhhhhhhhhhh")
                 else:
-                    #se funçao nao tem parametros
-                    print("ahhhhhhhhhhhhh")
-            else:
-                raise TypeError(f"Função {name} não tem o numero certo de argumentos")
+                    raise TypeError(f"Função {name} não tem o numero certo de argumentos")
         else:
             raise TypeError(f"expressao {name}, não é uma funçao")
+        return ctx.get_type(name)
     
     elif node["nt"] == "array_decl_statment":
         name = node['name']

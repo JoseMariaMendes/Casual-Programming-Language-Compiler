@@ -1,4 +1,14 @@
 def fun(y:[Int]):Boolean{
+	
+	#print("s\n%d%f%s", j, z, p);
+
+	return True;
+}
+
+decl gun(s:Int):Int
+
+def main():Int{
+	
 	t:[Boolean] = 10;
 	b:[Boolean] = 10;
 	o:Boolean = True;
@@ -9,19 +19,14 @@ def fun(y:[Int]):Boolean{
 	za:[Float] = 10;
 	p:String = "asdasd";
 
+	if (ja[0] >= ja[2] && za[2] != za[4]){
+		return 1;
+	}else{
+		return 2;
+	}
 
-	print("s");
-
-	o = b[3];
-
-	return True;
-}
-
-decl gun(s:Int):Int
-
-def main():Int{
-	r:Int = 9;
- 	return gun(r);
+	print("hello\n");
+ 	return gun(j);
 }
 
 def gun(s:Int):Int{

@@ -43,10 +43,10 @@ def float_to_hex(f):
     return hex(struct.unpack('<Q', struct.pack('<d', unpack))[0])
 
 def compilador(node, emitter=None):
-    
     if node["nt"] == "programb":
         print("-------------------")
         emitter = Emitter()
+        emitter.lines.insert(0, f"declare i32 @printf(i8*, ...)")
         for decl_def in node["program"]:
             compilador(decl_def, emitter)
         
@@ -402,8 +402,10 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = icmp ne i32 {temp2}, {other}"
                 return[value, "i1", aligntype]
                 
-        #elif oper == "&&":
-        #elif oper == "||":
+        elif oper == "&&":
+            print("fasdfasdf")
+        elif oper == "||":
+            print("fasdfasdf")
 
     elif node["nt"] == "nuo_expression":
         nnuo = 1
@@ -591,20 +593,34 @@ def compilador(node, emitter=None):
         return [call, type, aligntype]
        
     elif node["nt"] == "print":
+        vartype = "i8*"
+        align = get_align('String')
+        value = node["string"]
+        size = len(value)-1
+        nn = value.count("\\n")
+        arguments = ""
+        size -= nn
+        value = value.replace('"', '')
+        value = value.replace("\\n", "\\0A")
+        value = f'"{value}\\00"'
+        id = emitter.get_id()
+        str_name = f"@.casual_str_{id}"
+        str_decl = f"""{str_name} = private unnamed_addr constant [{size} x i8] c{value}, align 1"""
+        emitter.lines.insert(0, str_decl)
+        value = f"getelementptr inbounds ([{size} x i8], [{size} x i8]* {str_name}, i64 0, i64 0)"
+        
+        print(value)
+        
         if node["arguments"] != "empty":
-            #%5 = load i32, i32* %3, align 4, !dbg !21
-            #%6 = load float, float* %4, align 4, !dbg !22
-            #%7 = fpext float %6 to double, !dbg !22
-            #%8 = load i8*, i8** %2, align 8, !dbg !23
-            #%9 = call i32 (i8*, i32, double, i8*, ...) bitcast (i32 (...)* @pritn to i32 (i8*, i32, double, i8*, ...)*)(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.1, i64 0, i64 0), i32 %5, double %7, i8* %8), !dbg !24
-
+            for arg in node["arguments"]:
+                var = compilador(arg, emitter)
+                arguments += f", {var[1]} {var[0]}"
+            emitter << f"%print_{emitter.get_id()}= call i32 ({vartype}, ...) @printf({vartype} {value}{arguments})"
             pass
         else:
-            #@.str = private unnamed_addr constant [7 x i8] c"sdfasd\00", align 1
-            #%3 = call i32 (i8*, ...) bitcast (i32 (...)* @pritn to i32 (i8*, ...)*)(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.1, i64 0, i64 0)), !dbg !16
-            pass
-        print(node)
-        pass 
+            emitter << f"%print_{emitter.get_id()} = call i32 ({vartype}, ...) @printf (i8* {value})"
+            pass 
+        
     else:
         t = node["nt"]
         print(f"E preciso tratar do node {t}")

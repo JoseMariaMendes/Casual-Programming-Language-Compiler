@@ -6,5 +6,6 @@ def main():Int{
 	
 	hello();
 
+	print("%s", hello());
  	return 0;
 }
