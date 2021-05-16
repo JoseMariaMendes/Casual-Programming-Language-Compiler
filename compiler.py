@@ -43,6 +43,7 @@ def float_to_hex(f):
     return hex(struct.unpack('<Q', struct.pack('<d', unpack))[0])
 
 def compilador(node, emitter=None):
+    
     if node["nt"] == "programb":
         print("-------------------")
         emitter = Emitter()
