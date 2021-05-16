@@ -589,7 +589,22 @@ def compilador(node, emitter=None):
                 type = get_type(type)
                 emitter << f"call void @{name}()"
         return [call, type, aligntype]
-        
+       
+    elif node["nt"] == "print":
+        if node["arguments"] != "empty":
+            #%5 = load i32, i32* %3, align 4, !dbg !21
+            #%6 = load float, float* %4, align 4, !dbg !22
+            #%7 = fpext float %6 to double, !dbg !22
+            #%8 = load i8*, i8** %2, align 8, !dbg !23
+            #%9 = call i32 (i8*, i32, double, i8*, ...) bitcast (i32 (...)* @pritn to i32 (i8*, i32, double, i8*, ...)*)(i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.1, i64 0, i64 0), i32 %5, double %7, i8* %8), !dbg !24
+
+            pass
+        else:
+            #@.str = private unnamed_addr constant [7 x i8] c"sdfasd\00", align 1
+            #%3 = call i32 (i8*, ...) bitcast (i32 (...)* @pritn to i32 (i8*, ...)*)(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.1, i64 0, i64 0)), !dbg !16
+            pass
+        print(node)
+        pass 
     else:
         t = node["nt"]
         print(f"E preciso tratar do node {t}")
