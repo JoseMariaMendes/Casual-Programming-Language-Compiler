@@ -421,7 +421,7 @@ try:
 
         # /usr/local/opt/llvm/bin/lli code.ll
         r = subprocess.call(
-            "/usr/bin/llc code.ll && clang code.s -fPIE -o code && ./code",
+            "/usr/bin/llc code.ll && clang code.s -o code -no-pie && ./code",
             shell=True,
         )
         print("Return code", r)

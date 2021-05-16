@@ -641,7 +641,6 @@ def verify(ctx:Context, node):
         string = node["string"]
         argtypes = []
         arglist = []
-        nargs = 0
         
         
         for char in '"':
@@ -651,7 +650,6 @@ def verify(ctx:Context, node):
         for char in string:
             if char == "%":
                 type = f"{string[cont]}{string[cont+1]}"
-                print(type)
                 if type == f"%d":
                     argtypes.append("Int")
                 elif type == f"%f":
@@ -666,16 +664,41 @@ def verify(ctx:Context, node):
         
         if args != "empty":
             for arg in args:
-                arglist.append(arg)
+                v = verify(ctx, arg)
+                if isinstance(v, tuple):
+                    v = v[1]
+                    for char in "[]":
+                        v = v.replace(char, "")
+                    arglist.append(v)
+                else:
+                    for char in v:
+                        if char == "[":
+                            raise TypeError(f"argumento '{arg['name']}' no print é inválido")
+                    arglist.append(v)
 
-            print(arglist)
-            print(argtypes)
-            
             if len(arglist) != len(argtypes):
                 raise TypeError(f"Numero de argumentos no print é invalido")
             
+            
+            for i in range(len(arglist)):
+                if arglist[i] != argtypes[i]:
+                    raise TypeError(f"{arglist[i]} no print não é do tipo certo")
         else:
-            pass
+            cont = 0
+            for char in string:
+                if char == "%":
+                    type = f"{string[cont]}{string[cont+1]}"
+                    if type == f"%d":
+                        raise TypeError(f"{type}' não tem nenhum argumento desigado")
+                    elif type == f"%f":
+                        raise TypeError(f"{type}' não tem nenhum argumento desigado")
+                    elif type == f"%s":
+                        raise TypeError(f"{type}' não tem nenhum argumento desigado")
+                    else:
+                        raise TypeError(f"tipo de argumento '{type}' no print é inválido")
+                else:
+                    pass
+                cont += 1
 
     else:
         t = node["nt"]

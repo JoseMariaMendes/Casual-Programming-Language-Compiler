@@ -7,9 +7,10 @@ def fun(y:[Int]):Boolean{
 	ja:[Int] = 10;
 	fa:[String] = 10;
 	za:[Float] = 10;
+	p:String = "asdasd";
 
 
-	print("%d%f%s", ja[0], za[2], fa[9]);
+	print("df");
 
 	o = b[3];
 

@@ -1,6 +1,6 @@
 	.text
 	.file	"code.ll"
-	.globl	fun                             # -- Begin function fun
+	.globl	fun                     # -- Begin function fun
 	.p2align	4, 0x90
 	.type	fun,@function
 fun:                                    # @fun
@@ -9,11 +9,12 @@ fun:                                    # @fun
 	subq	$120, %rsp
 	.cfi_def_cfa_offset 128
 	movq	%rdi, -104(%rsp)
-	movl	$2, -108(%rsp)
-	movl	$1079194419, -112(%rsp)         # imm = 0x40533333
+	movl	$2, -116(%rsp)
+	movl	$1079194419, -120(%rsp) # imm = 0x40533333
+	movq	$.L.casual_str_cas_1, -112(%rsp)
 	movb	-88(%rsp), %al
 	andb	$1, %al
-	movb	%al, -113(%rsp)
+	movb	%al, -121(%rsp)
 	movb	$1, %al
 	addq	$120, %rsp
 	.cfi_def_cfa_offset 8
@@ -22,7 +23,7 @@ fun:                                    # @fun
 	.size	fun, .Lfunc_end0-fun
 	.cfi_endproc
                                         # -- End function
-	.globl	main                            # -- Begin function main
+	.globl	main                    # -- Begin function main
 	.p2align	4, 0x90
 	.type	main,@function
 main:                                   # @main
@@ -40,7 +41,7 @@ main:                                   # @main
 	.size	main, .Lfunc_end1-main
 	.cfi_endproc
                                         # -- End function
-	.globl	gun                             # -- Begin function gun
+	.globl	gun                     # -- Begin function gun
 	.p2align	4, 0x90
 	.type	gun,@function
 gun:                                    # @gun
@@ -53,4 +54,10 @@ gun:                                    # @gun
 	.size	gun, .Lfunc_end2-gun
 	.cfi_endproc
                                         # -- End function
+	.type	.L.casual_str_cas_1,@object # @.casual_str_cas_1
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.L.casual_str_cas_1:
+	.asciz	"asdasd"
+	.size	.L.casual_str_cas_1, 7
+
 	.section	".note.GNU-stack","",@progbits
