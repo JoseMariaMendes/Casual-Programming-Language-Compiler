@@ -19,7 +19,7 @@ def main():Int{
 	za:[Float] = 10;
 	p:String = "asdasd";
 
-	if (ja[0] >= ja[2] && za[2] != za[4]){
+	if (ja[0] >= ja[2]){
 		return 1;
 	}else{
 		return 2;

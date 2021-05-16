@@ -19,18 +19,24 @@ fun:                                    # @fun
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:
-	subq	$248, %rsp
-	.cfi_def_cfa_offset 256
-	movb	$1, 15(%rsp)
-	movl	$2, 16(%rsp)
-	movl	$1079194419, 20(%rsp)   # imm = 0x40533333
-	movq	$.L.casual_str_cas_2, 24(%rsp)
-	movl	$.L.casual_str_cas_3, %edi
+	subq	$120, %rsp
+	.cfi_def_cfa_offset 128
+	movb	$1, -113(%rsp)
+	movl	$2, -108(%rsp)
+	movl	$1079194419, -112(%rsp) # imm = 0x40533333
+	movq	$.L.casual_str_cas_2, -104(%rsp)
 	xorl	%eax, %eax
-	callq	printf
-	movl	16(%rsp), %edi
-	callq	gun
-	addq	$248, %rsp
+	testb	%al, %al
+	jne	.LBB1_2
+# %bb.1:                                # %if_cas_8
+	movl	$1, %eax
+	addq	$120, %rsp
+	.cfi_def_cfa_offset 8
+	retq
+.LBB1_2:                                # %else_cas_9
+	.cfi_def_cfa_offset 128
+	movl	$2, %eax
+	addq	$120, %rsp
 	.cfi_def_cfa_offset 8
 	retq
 .Lfunc_end1:
@@ -50,11 +56,11 @@ gun:                                    # @gun
 	.size	gun, .Lfunc_end2-gun
 	.cfi_endproc
                                         # -- End function
-	.type	.L.casual_str_cas_3,@object # @.casual_str_cas_3
+	.type	.L.casual_str_cas_12,@object # @.casual_str_cas_12
 	.section	.rodata.str1.1,"aMS",@progbits,1
-.L.casual_str_cas_3:
+.L.casual_str_cas_12:
 	.asciz	"hello\n"
-	.size	.L.casual_str_cas_3, 7
+	.size	.L.casual_str_cas_12, 7
 
 	.type	.L.casual_str_cas_2,@object # @.casual_str_cas_2
 .L.casual_str_cas_2:

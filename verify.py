@@ -430,8 +430,6 @@ def verify(ctx:Context, node):
         er = node['expression_right']
         vel = verify(ctx, el)
         ver = verify(ctx, er)
-        print(vel)
-        print(ver)
         if isinstance(ver, tuple):
             ver = ver[1]
             for char in "[]":
