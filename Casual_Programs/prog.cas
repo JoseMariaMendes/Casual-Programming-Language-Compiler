@@ -10,7 +10,7 @@ def fun(y:[Int]):Boolean{
 	p:String = "asdasd";
 
 
-	print("df");
+	print("s");
 
 	o = b[3];
 
