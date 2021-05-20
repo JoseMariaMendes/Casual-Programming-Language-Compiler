@@ -1,14 +1,13 @@
 def fun(y:[Int]):Boolean{
 	
 	#print("s\n%d%f%s", j, z, p);
-
+	bring:Int = 0;
 	return True;
 }
 
 decl gun(s:Int):Int
 
 def main():Int{
-	
 	t:[Boolean] = 10;
 	b:[Boolean] = 10;
 	o:Boolean = True;
@@ -19,11 +18,18 @@ def main():Int{
 	za:[Float] = 10;
 	p:String = "asdasd";
 
+	lam = (y:[Int], ala:String):Int -> {
+			y[3] + 3
+		};
+
+
 	if (ja[0] >= ja[2]){
+		jake:Int = 8;
 		return 1;
 	}else{
 		return 2;
 	}
+
 
 	print("hello\n");
  	return gun(j);

@@ -4,6 +4,8 @@ declare i32 @printf(i8*, ...)
 define zeroext i1 @fun(i32* %y) #0 {
 %pont_y = alloca i32*, align 8
 store i32* %y, i32** %pont_y, align 8
+%pont_bring = alloca i32, align 4
+store i32 0, i32* %pont_bring, align 4
 %cas_1 = trunc i8 1 to i1
 ret i1 %cas_1
 }
@@ -29,6 +31,8 @@ store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.casual_str_cas_2, i64 0,
 br i1 %cas_3_binopexp, label %if_cas_8, label %else_cas_9
 
 if_cas_8:
+%pont_jake = alloca i32, align 4
+store i32 8, i32* %pont_jake, align 4
 ret i32 1
 br label %cont_cas_10
 

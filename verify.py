@@ -311,6 +311,7 @@ def verify(ctx:Context, node):
 
     elif node["nt"] == "return_statement":
         expression = node['expression']
+        print(node)
         if expression != 'empty':
             if "[" in verify(ctx, node['expression'])[1]:
                 #return é um array
@@ -571,7 +572,7 @@ def verify(ctx:Context, node):
         type = ctx.get_type(name)[1]
         if verify(ctx, node["index"]) != "Int":
             raise TypeError(f"Index do array {name} nao é inteiro")
-        if ctx.has_var_in_current_scope(name):
+        if ctx.has_var(name):
             if 'array_decl_statment' in ctx.get_type(name)[0] and 'array_assign_statment' not in ctx.get_type(name)[0]:
                 #declarada mas nao definida
                 assinatura = ctx.get_type(name)
@@ -702,6 +703,53 @@ def verify(ctx:Context, node):
                     pass
                 cont += 1
 
+    elif node["nt"] == "lambda_expression":
+        
+        name = node["name"]
+        if node['darguments'] != "empty":
+                #funçao tem argumentos
+                
+                ctx.set_type("RETURN_CODE_lambda", node["rtype"])
+                assinatura = ([node['nt']],  node["rtype"], [[name["name"] for name in node['darguments']],  
+                                                            [arg["type"] for arg in node['darguments']]], "function")
+                ctx.set_type(name, assinatura)
+                inlam = 1
+                ctx.enter_scope()
+                
+                #adicionar argumentos ao contexto
+                for arg in node["darguments"]:
+                    if arg["nt"] == "dargument":
+                        assinatura = (["var_decl_statment"],  arg["type"], "argumento")
+                        ctx.set_type(arg["name"], assinatura)
+                        
+                    elif arg["nt"] == "array_dargument":
+                        
+                        assinatura = (['array_decl_statment'],  arg["type"], "argumento")
+                        ctx.set_type(arg["name"], assinatura)
+
+        else:
+            #funçao nao tem argumentos
+            ctx.set_type("RETURN_CODE_lambda", node["rtype"])
+            assinatura = ([node['nt']],  node["rtype"], "empty", "function")
+            ctx.set_type(name, assinatura)
+            ctx.enter_scope()
+
+        
+        print(node)
+        if node['block_lam']['block_content_lam'] != "empty":
+            verify(ctx, node['block_lam'])
+        #else:
+            #raise TypeError(f"lambda {name} está vazia")
+        
+        ctx.exit_scope()
+        inlam = 0
+    elif node["nt"] == "block_lam":
+        for statment in node['block_content_lam']:
+            verify(ctx, statment) 
+
+    elif node["nt"] == "block_content_lam":
+        pass
+    
     else:
         t = node["nt"]
         print(f"E preciso tratar do node {t}")

@@ -22,7 +22,7 @@ tokens = (
     'HIGHER', 'LOWER', 'SUM', 'SUB', 'MULTIPLY', 'DIVIDE', 
     'RESTOF', 'DECLARATION', 'DEFINITION', 
     'RETURN', 'IF', 'ELSE', 'WHILE', 'LCURLY', 'RCURLY', 'LPAR',
-    'RPAR', 'TRUE', 'FALSE', 'SEMICOLON', 'COLON', 'QMARK', 'DIFFER', 'PRINT', 'GETARRAY',  
+    'RPAR', 'TRUE', 'FALSE', 'SEMICOLON', 'COLON', 'QMARK', 'DIFFER', 'PRINT', 'GETARRAY',  'LAMBDA',
     )
 
 #Variables
@@ -68,6 +68,10 @@ def t_INT(t):
 
 def t_PRINT(t):
     r'print'
+    return t
+
+def t_LAMBDA(t):
+    r'\-\>'
     return t
 
 def t_GETARRAY(t):
@@ -264,6 +268,22 @@ def p_block_content(t):
         t[0] = [t[1]]
     elif len(t) == 3:
         t[0] = [t[1],t[2]]
+        
+def p_block_lam(t):
+    '''block_lam : LCURLY RCURLY
+            | LCURLY block_content_lam RCURLY'''
+    if len(t) == 4:
+        t[0] = {'nt': 'block_lam', 'block_content_lam': list(list_helper(t[2]))}
+    if len(t) == 3:
+        t[0] = {'nt': 'block_lam', 'block_content_lam': "empty"}
+
+def p_block_content_lam(t):
+    '''block_content_lam : expression  
+                    | expression block_content_lam '''
+    if len(t) == 2:
+        t[0] = [t[1]]
+    elif len(t) == 3:
+        t[0] = [t[1],t[2]]
 
 def p_return_statement(t):
     '''statement : RETURN SEMICOLON 
@@ -284,7 +304,7 @@ def p_ifelse_statement(t):
 def p_while_statement(t):
     '''statement : WHILE expression block'''
     t[0] = {'nt': 'while_statement', 'expression': t[2], 'block': t[3]}
-
+    
 def p_var_decl_statment(t):
     '''statement : NAME COLON types EQUALS expression SEMICOLON
                 | NAME COLON types SEMICOLON'''
@@ -299,12 +319,20 @@ def p_var_assign_statment(t):
     
 def p_array_decl_statment(t):
     '''statement : NAME COLON LBRACK types RBRACK EQUALS NUMBER SEMICOLON'''
-    t[0] = {'nt': 'array_decl_statment', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}", 'size': t[7]}     
+    t[0] = {'nt': 'array_decl_statment', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}", 'size': t[7]}
 
 def p_array_assign_statment(t):
     '''statement : NAME LBRACK expression RBRACK EQUALS expression SEMICOLON'''
     t[0] = {'nt': 'array_assign_statment', 'index': t[3], 'name': t[1], 'expression': t[6]}
-
+    
+def p_lambda_expression(t):
+    '''statement : NAME EQUALS LPAR dargument RPAR COLON types LAMBDA block_lam SEMICOLON
+                | NAME EQUALS LPAR RPAR COLON types LAMBDA block_lam SEMICOLON'''
+    if len(t) == 11:
+        t[0] = {'nt': 'lambda_expression', 'name': t[1], 'darguments': list(list_helper(t[4])), 'rtype': t[7], 'block_lam': t[9]}
+    elif len(t) == 10:
+        t[0] = {'nt': 'lambda_expression', 'name': t[1], 'darguments': 'empty', 'rtype': t[6], 'block_lam': t[8]}
+        
 def p_expression_array(t):
     'expression : NAME LBRACK expression RBRACK'
     t[0] = {'nt': 'array_expression', 'name': t[1], 'index': t[3]}

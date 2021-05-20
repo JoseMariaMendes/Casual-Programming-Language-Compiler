@@ -7,6 +7,7 @@ fun:                                    # @fun
 	.cfi_startproc
 # %bb.0:
 	movq	%rdi, -8(%rsp)
+	movl	$0, -12(%rsp)
 	movb	$1, %al
 	retq
 .Lfunc_end0:
@@ -19,25 +20,31 @@ fun:                                    # @fun
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:
-	subq	$120, %rsp
-	.cfi_def_cfa_offset 128
-	movb	$1, -113(%rsp)
-	movl	$2, -108(%rsp)
-	movl	$1079194419, -112(%rsp) # imm = 0x40533333
-	movq	$.L.casual_str_cas_2, -104(%rsp)
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register %rbp
+	subq	$224, %rsp
+	movb	$1, -1(%rbp)
+	movl	$2, -12(%rbp)
+	movl	$1079194419, -8(%rbp)   # imm = 0x40533333
+	movq	$.L.casual_str_cas_2, -24(%rbp)
 	xorl	%eax, %eax
 	testb	%al, %al
 	jne	.LBB1_2
 # %bb.1:                                # %if_cas_8
+	movq	%rsp, %rax
+	leaq	-16(%rax), %rsp
+	movl	$8, -16(%rax)
 	movl	$1, %eax
-	addq	$120, %rsp
-	.cfi_def_cfa_offset 8
-	retq
+	jmp	.LBB1_3
 .LBB1_2:                                # %else_cas_9
-	.cfi_def_cfa_offset 128
 	movl	$2, %eax
-	addq	$120, %rsp
-	.cfi_def_cfa_offset 8
+.LBB1_3:                                # %else_cas_9
+	movq	%rbp, %rsp
+	popq	%rbp
+	.cfi_def_cfa %rsp, 8
 	retq
 .Lfunc_end1:
 	.size	main, .Lfunc_end1-main
