@@ -1,0 +1,11 @@
+def fun(i1:Int, i2:Int, i3:Int, i4:Int):Int{
+    if (i1 > i2 && i3 < i4 || i3 >= i1){
+
+    }
+
+    return i2;
+}
+
+def main():Int{
+ 	return 0;
+}
