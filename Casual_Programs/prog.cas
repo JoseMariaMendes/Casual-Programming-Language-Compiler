@@ -3,23 +3,20 @@ decl gun(s:Int):Int
 def main():Int{
 	u:Int = 9;
 	y:[Int] = 10;
-	y[5] = 0;
-	
+	y[u] = 3;
+
 	j:Int = y[u] + 9;
 
 	#lam = (f:Int):Int -> {
 	#		f + 3
 	#	};
 
- 	return gun(5);
+ 	return gun(j);
 }
 
 def gun(s:Int):Int{
 	
-	f:Int = 6;
 
-	r:Int = s + 5;
-
-	return 4;
+	return s +3;
 
 }

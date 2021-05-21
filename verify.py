@@ -533,6 +533,11 @@ def verify(ctx:Context, node):
                     if parameter_types != "empty":
                         for (i, (arg, par_t)) in enumerate(zip(node["argument"], parameter_types[1])):
                             arg_t = verify(ctx, arg)
+                            if not isinstance(arg_t, str):
+                                arg_t = arg_t[1]
+                                for char in "[]":
+                                    arg_t = arg_t.replace(char, "")
+                                    
                             if arg_t != par_t:
                                 index = i+1
                                 raise TypeError(f"Argumento {name} esperava {par_t} mas recebe {arg_t}") 

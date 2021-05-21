@@ -9,11 +9,9 @@ main:                                   # @main
 	subq	$56, %rsp
 	.cfi_def_cfa_offset 64
 	movl	$9, 12(%rsp)
-	movl	$0, 36(%rsp)
-	movl	52(%rsp), %eax
-	addl	$9, %eax
-	movl	%eax, 8(%rsp)
-	movl	$5, %edi
+	movl	$3, 52(%rsp)
+	movl	$12, 8(%rsp)
+	movl	$12, %edi
 	callq	gun
 	addq	$56, %rsp
 	.cfi_def_cfa_offset 8
@@ -28,11 +26,9 @@ main:                                   # @main
 gun:                                    # @gun
 	.cfi_startproc
 # %bb.0:
+                                        # kill: def $edi killed $edi def $rdi
 	movl	%edi, -4(%rsp)
-	movl	$6, -8(%rsp)
-	addl	$5, %edi
-	movl	%edi, -12(%rsp)
-	movl	$4, %eax
+	leal	3(%rdi), %eax
 	retq
 .Lfunc_end1:
 	.size	gun, .Lfunc_end1-gun
