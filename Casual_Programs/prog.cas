@@ -7,9 +7,9 @@ def main():Int{
 
 	j:Int = y[u] + 9;
 
-	#lam = (f:Int):Int -> {
-	#		f + 3
-	#	};
+	lam = (f:Int):Int -> {
+			f + 3
+		};
 
  	return gun(j);
 }

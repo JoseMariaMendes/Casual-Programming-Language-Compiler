@@ -754,6 +754,10 @@ def verify(ctx:Context, node):
         ctx.exit_scope()
         inlam = 0
     elif node["nt"] == "block_lam":
+        if len(node['block_content_lam']) < 1:
+            raise TypeError(f"Um lambda tem que ter pelo menos uma expressão")
+        elif len(node['block_content_lam']) > 1:
+            raise TypeError(f"Um lambda só pode ter uma expressão")
         for statment in node['block_content_lam']:
             verify(ctx, statment) 
 

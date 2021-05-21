@@ -666,6 +666,8 @@ def compilador(node, emitter=None):
         
     elif node["nt"] == "lambda_expression":
         emitter.linestemp = emitter.lines
+        returntype = get_type(node['rtype'], "var")
+        funtype = get_type(node['rtype'], "fun")
         name = node["name"]
         arguments = ""
         cont = 0
@@ -686,7 +688,7 @@ def compilador(node, emitter=None):
             
             
         emitter.lines = []
-        emitter << f"define void @{name}({arguments}) #0 {'{'}"
+        emitter << f"define {funtype} @{name}({arguments}) #0 {'{'}"
         if node["darguments"] != "empty":
             for arg in node["darguments"]:
                 emitter.set_type(arg["name"], arg["type"])
@@ -702,6 +704,15 @@ def compilador(node, emitter=None):
 
         compilador(node["block_lam"], emitter)
         
+        
+        binopexp = emitter.lines[len(emitter.lines)-1]
+        retexp = ""
+        for char in binopexp:
+            if char == "=":
+                break
+            retexp += char
+        
+        emitter << f"ret {returntype} {retexp}"
         emitter << "}"
         
         for line in emitter.lines:
