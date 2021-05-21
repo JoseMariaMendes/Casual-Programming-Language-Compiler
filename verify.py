@@ -98,7 +98,7 @@ def verify(ctx:Context, node):
                                 assinatura = (["var_decl_statment"],  arg["type"], "argumento")
                                 ctx.set_type(arg["name"], assinatura)
                             elif arg["nt"] == "array_dargument":
-                                assinatura = (['array_decl_statment'],  arg["type"], "argumento")
+                                assinatura = (['array_decl_statment'],  arg["type"], "array")
                                 ctx.set_type(arg["name"], assinatura)
 
                     elif ctx.get_type(name)[1] != assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
@@ -106,6 +106,8 @@ def verify(ctx:Context, node):
                         raise TypeError(f"definição da funcao {name} tem tipo diferente")
                     elif ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] != assinatura[2]:
                         #o tipo é igual e os argumentos diferentes
+                        print(ctx.get_type(name))
+                        print(assinatura)
                         raise TypeError(f"definição da funcao {name} tem argumentos diferente")
                 else:
                     assinatura = ([node['nt']],  node["type"], "empty", "function")
@@ -139,7 +141,7 @@ def verify(ctx:Context, node):
                         ctx.set_type(arg["name"], assinatura)
                     elif arg["nt"] == "array_dargument":
                         
-                        assinatura = (['array_decl_statment'],  arg["type"], "argumento")
+                        assinatura = (['array_decl_statment'],  arg["type"], "array")
                         ctx.set_type(arg["name"], assinatura)
 
             else:
@@ -158,153 +160,11 @@ def verify(ctx:Context, node):
         
         ctx.exit_scope()
     
-    elif node["nt"] == "array_declaration":
-        name = node['name']
-        if ctx.has_var(name):
-            if 'declaration' in ctx.get_type(name)[0] and 'definition' not in ctx.get_type(name)[0]:
-                #declarada mas nao definida
-                raise TypeError(f"Funcao {name} ja esta declarada no contexto")
-            elif 'declaration' in ctx.get_type(name)[0] and 'definition' in ctx.get_type(name)[0]:
-                #declarada e definida
-                raise TypeError(f"Funcao {name} ja esta declarada e definidano contexto")
-            elif 'declaration' not in ctx.get_type(name)[0] and 'definition' in ctx.get_type(name)[0]:
-                #não declarada mas definida
-                if len(node['darguments']) > 0:
-                    assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
-                                                                [arg["type"] for arg in node['darguments']]], "function")
-
-                    if ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
-                        #o tipo e os argumentos sao iguais
-                        assinatura = ctx.get_type(name)
-                        assinatura[0].append("declaration")
-                        ctx.set_type(name, assinatura)
-                    elif ctx.get_type(name)[1] != assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
-                        #o tipo é diferente e os argumentos iguais
-                        raise TypeError(f"declaração da funcao {name} tem tipo diferente")
-                    elif ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] != assinatura[2]:
-                        #o tipo é igual e os argumentos diferentes
-                        raise TypeError(f"declaração da funcao {name} tem argumentos diferente")
-                else:
-                    #nao tem argumentos
-                    assinatura = ([node['nt']],  node["type"], "empty", "function")
-
-                    if ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
-                        #o tipo e os argumentos sao iguais
-                        assinatura = ctx.get_type(name)
-                        assinatura[0].append("declaration")
-                        ctx.set_type(name, assinatura)
-                    elif ctx.get_type(name)[1] != assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
-                        #o tipo é diferente e os argumentos iguais
-                        raise TypeError(f"declaração da funcao {name} tem tipo diferente da definição")
-                    elif ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] != assinatura[2]:
-                        #o tipo é igual e os argumentos diferentes
-                        raise TypeError(f"declaração da funcao {name} tem argumentos diferente da definição")
-        else:       
-            if node['darguments'] != "empty":
-                #não existe o nome
-                ctx.set_type("RETURN_CODE", node["type"])
-
-                assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
-                                                            [arg["type"] for arg in node['darguments']]], "function")
-                ctx.set_type(name, assinatura)
-            else:
-                ctx.set_type("RETURN_CODE", node["type"])
-                assinatura = ([node['nt']],  node["type"], "empty", "function")
-                ctx.set_type(name, assinatura)
-        
-    elif node["nt"] == "array_definition":
-        name = node['name']
-        if ctx.has_var(name):
-            if 'declaration' not in ctx.get_type(name)[0] and 'definition' in ctx.get_type(name)[0]:
-                #não declarada mas definida~
-                raise TypeError(f"Funcao {name} ja esta definida no contexto")
-            elif 'declaration' in ctx.get_type(name)[0] and 'definition' in ctx.get_type(name)[0]:
-                #declarada e definida
-                raise TypeError(f"Funcao {name} ja esta declarada e definida no contexto")
-            elif 'declaration' in ctx.get_type(name)[0] and 'definition' not in ctx.get_type(name)[0]:
-                #declarada mas nao definida
-                if len(node['darguments']) > 0:
-                    
-                    assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
-                                                                [arg["type"] for arg in node['darguments']]], "function")
-                    
-                    if ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
-                        #o tipo e os argumentos sao iguais
-                        assinatura = ctx.get_type(name)
-                        assinatura[0].append("definition")
-                        ctx.set_type(name, assinatura)
-                        #adicionar argumentos ao contexto 
-                        ctx.enter_scope()
-                        for arg in node["darguments"]:
-                            if arg["nt"] == "dargument":
-                                assinatura = (["var_decl_statment"],  arg["type"], "argumento")
-                                ctx.set_type(arg["name"], assinatura)
-                            elif arg["nt"] == "array_dargument":
-                                assinatura = (['array_decl_statment'],  arg["type"], "argumento")
-                                ctx.set_type(arg["name"], assinatura)
-
-                    elif ctx.get_type(name)[1] != assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
-                        #o tipo é diferente e os argumentos iguais
-                        raise TypeError(f"definição da funcao {name} tem tipo diferente")
-                    elif ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] != assinatura[2]:
-                        #o tipo é igual e os argumentos diferentes
-                        raise TypeError(f"definição da funcao {name} tem argumentos diferente")
-                else:
-                    assinatura = ([node['nt']],  node["type"], "empty", "function")
-
-                    if ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
-                        #o tipo e os argumentos sao iguais
-                        assinatura = ctx.get_type(name)
-                        assinatura[0].append("definition")
-
-                        ctx.set_type(name, assinatura)
-                        ctx.enter_scope()
-                    elif ctx.get_type(name)[1] != assinatura[1] and ctx.get_type(name)[2] == assinatura[2]:
-                        #o tipo é diferente e os argumentos iguais
-                        raise TypeError(f"definição da funcao {name} tem tipo diferente da declaração")
-                    elif ctx.get_type(name)[1] == assinatura[1] and ctx.get_type(name)[2] != assinatura[2]:
-                        #o tipo é igual e os argumentos diferentes
-                        raise TypeError(f"definição da funcao {name} tem argumentos diferentes da declaração")
-        else:
-            #não declarada nem definida
-            if node['darguments'] != "empty":
-                #funçao tem argumentos
-                
-                ctx.set_type("RETURN_CODE", node["type"])
-                assinatura = ([node['nt']],  node["type"], [[name["name"] for name in node['darguments']],  
-                                                            [arg["type"] for arg in node['darguments']]], "function")
-                ctx.set_type(name, assinatura)
-                ctx.enter_scope()
-                #adicionar argumentos ao contexto
-                for arg in node["darguments"]:
-                    if arg["nt"] == "dargument":
-                        assinatura = (["var_decl_statment"],  arg["type"], "argumento")
-                        ctx.set_type(arg["name"], assinatura)
-                    elif arg["nt"] == "array_dargument":
-                        
-                        assinatura = (['array_decl_statment'],  arg["type"], "argumento")
-                        ctx.set_type(arg["name"], assinatura)
-
-            else:
-                #funçao nao tem argumentos
-                ctx.set_type("RETURN_CODE", node["type"])
-                assinatura = ([node['nt']],  node["type"], "empty", "function")
-                ctx.set_type(name, assinatura)
-                ctx.enter_scope()
-
-        
-        
-        
-        if node['block']['block_content'] != "empty":
-            verify(ctx, node['block'])
-        else:
-            raise TypeError(f"funcao {name} está vazia")
-        
-        ctx.exit_scope()
     
     elif node["nt"] == "block":
-        for statment in node['block_content']:
-            verify(ctx, statment) 
+        if node['block_content'] != "empty":
+            for statment in node['block_content']:
+                verify(ctx, statment) 
 
     elif node["nt"] == "block_content":
         pass
@@ -533,10 +393,11 @@ def verify(ctx:Context, node):
                     if parameter_types != "empty":
                         for (i, (arg, par_t)) in enumerate(zip(node["argument"], parameter_types[1])):
                             arg_t = verify(ctx, arg)
-                            if not isinstance(arg_t, str):
+                            if isinstance(arg_t, tuple):
                                 arg_t = arg_t[1]
-                                for char in "[]":
-                                    arg_t = arg_t.replace(char, "")
+                            for char in "[]":
+                                arg_t = arg_t.replace(char, "")
+                                par_t = par_t.replace(char, "")
                                     
                             if arg_t != par_t:
                                 index = i+1
@@ -588,8 +449,6 @@ def verify(ctx:Context, node):
                         exp = exp.replace(char, "")
                     
                     if exp != type:
-                        print(exp)
-                        print(type)
                         raise TypeError(f"expressao atribuida a {name} nao é valida")
                     if ctx.get_type(name)[1] == assinatura[1]:
                         #o tipo e igual
@@ -603,8 +462,6 @@ def verify(ctx:Context, node):
                         type = type.replace(char, "")
                         exp = exp.replace(char, "")
                     if exp != type:
-                        print(exp)
-                        print(type)
                         raise TypeError(f"expressao atribuida a {name} nao é valida")
                     if ctx.get_type(name)[1] == assinatura[1]:
                         #o tipo e igual
@@ -623,12 +480,11 @@ def verify(ctx:Context, node):
                 #não declarada mas definida
                 raise TypeError(f"Array {name} ja esta  definida no contexto")
             elif 'var_decl_statment' or 'var_assign_statment' in ctx.get_type(name)[0]:
-                raise TypeError(f"Variavel {name} ja esta declarada no contexto")
+                raise TypeError(f"Variavel {name} ja esta declnode['block_content']arada no contexto")
         else:
             raise TypeError(f"Array {name} nao esta declarado") 
     
     elif node["nt"] == "array_expression":
-        
         index = node['index']
         name = node['name']
         if ctx.get_type(name)[2] != "array":
@@ -730,12 +586,12 @@ def verify(ctx:Context, node):
             #adicionar argumentos ao contexto
             for arg in node["darguments"]:
                 if arg["nt"] == "dargument":
-                    assinatura = (["var_decl_statment"],  arg["type"], "argumento")
+                    assinatura = (["var_decl_statment"],  arg["type"], "var")
                     ctx.set_type(arg["name"], assinatura)
                     
                 elif arg["nt"] == "array_dargument":
                     
-                    assinatura = (['array_decl_statment'],  arg["type"], "argumento")
+                    assinatura = (['array_decl_statment'],  arg["type"], "array")
                     ctx.set_type(arg["name"], assinatura)
 
         else:

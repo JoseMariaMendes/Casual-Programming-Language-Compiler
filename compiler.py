@@ -43,11 +43,11 @@ def float_to_hex(f):
     return hex(struct.unpack('<Q', struct.pack('<d', unpack))[0])
 
 def compilador(node, emitter=None):
-    
+    bprint = False
     if node["nt"] == "programb":
         print("-------------------")
         emitter = Emitter()
-        emitter.lines.insert(0, f"declare i32 @printf(i8*, ...)")
+        
         for decl_def in node["program"]:
             compilador(decl_def, emitter)
         
@@ -204,45 +204,54 @@ def compilador(node, emitter=None):
     
     elif node["nt"] == "ifelse_statement":
         var = node["expression"]
-        while var["nt"] == "group_expression":
-            var = var["expression"]
-        exp = compilador(var, emitter)
         labelif = f"if_{emitter.get_id()}"
         labelelse = f"else_{emitter.get_id()}"
         labelcont = f"cont_{emitter.get_id()}"
         trunc = f"%trunc_{emitter.get_id()}"
-        if exp[1] != "i1":
-            emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
-        else:
-            trunc = exp[0]
         
-        if var["nt"] == "nuo_expression":
-            if exp[3] == False:
-                emitter << f"br i1 {trunc}, label %{labelelse}, label %{labelif}"
+        while var["nt"] == "group_expression":
+            var = var["expression"]
+        if var['oper'] == "&&":
+            pass
+        elif var['oper'] == "||":
+            pass
+        
+        
+        
+        else:
+            exp = compilador(var, emitter)
+            if exp[1] != "i1":
+                emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
+            else:
+                trunc = exp[0]
+            
+            if var["nt"] == "nuo_expression":
+                if exp[3] == False:
+                    emitter << f"br i1 {trunc}, label %{labelelse}, label %{labelif}"
+                else:
+                    emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
             else:
                 emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
-        else:
-            emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
-        
-        
-        if len(node["block"]) == 2:
-            emitter <<""
-            emitter << f"{labelif}:"
-            compilador(node["block"][0], emitter)
-            emitter << f"br label %{labelcont}"
-            emitter << ""
-            emitter << f"{labelelse}:"
-            compilador(node["block"][1], emitter)
-            emitter << f"br label %{labelcont}"
-            emitter << ""
-            emitter << f"{labelcont}:"
-        else:
-            emitter <<""
-            emitter << f"{labelif}:"
-            compilador(node["block"][0], emitter)
-            emitter << f"br label %{labelelse}"
-            emitter << ""
-            emitter << f"{labelelse}:"
+            
+            
+            if len(node["block"]) == 2:
+                emitter <<""
+                emitter << f"{labelif}:"
+                compilador(node["block"][0], emitter)
+                emitter << f"br label %{labelcont}"
+                emitter << ""
+                emitter << f"{labelelse}:"
+                compilador(node["block"][1], emitter)
+                emitter << f"br label %{labelcont}"
+                emitter << ""
+                emitter << f"{labelcont}:"
+            else:
+                emitter <<""
+                emitter << f"{labelif}:"
+                compilador(node["block"][0], emitter)
+                emitter << f"br label %{labelelse}"
+                emitter << ""
+                emitter << f"{labelelse}:"
 
     elif node["nt"] == "while_statement":
         var = node["expression"]
@@ -453,11 +462,28 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "name_expression":
         name = node["name"]
-        exptype = get_type(emitter.get_type(name), "var") 
-        aligntype = get_align(emitter.get_type(name))
-        loadpointer = f"%load_{emitter.get_id()}_{name}"
-        emitter << f"{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {aligntype}"
-        return [loadpointer, exptype, aligntype]
+        gettype = emitter.get_type(name)
+        if "[" and "]" and "x" not in gettype:
+            exptype = get_type(emitter.get_type(name), "var") 
+            aligntype = get_align(emitter.get_type(name))
+            loadpointer = f"%load_{emitter.get_id()}_{name}"
+            emitter << f"{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {aligntype}"
+            return [loadpointer, exptype, aligntype]
+        else:
+            exptype = gettype 
+            aligntype = get_align(emitter.get_type(name))
+            loadpointer = f"%load_{emitter.get_id()}_{name}"
+            emitter << f"{loadpointer} = getelementptr inbounds {exptype}, {exptype}* {emitter.get_pointer_name(name)}, i64 0, i64 0"
+            if "i32" in exptype:
+                exptype = "i32*"
+            elif "float" in exptype:
+                exptype = "float*"
+            elif "i8*" in exptype:
+                exptype = "i8**"
+            else:
+                exptype = "i8*"
+                
+            return [loadpointer, exptype, aligntype]
     
     elif node["nt"] == "string_expression":
         vartype = "i8*"
@@ -549,47 +575,55 @@ def compilador(node, emitter=None):
             emitter << f"store {storetype} {value}, {storetype}* {getelem}, align 8"
 
     elif node["nt"] == "array_expression":
+        
         name = node["name"]
         indexvar = compilador(node["index"], emitter)
-        print(indexvar)
+        aligntype = "align 1"
+        loadpointer = f"%load_{emitter.get_id()}_{name}"
+        getelem = f"%getelem_{emitter.get_id()}_{name}"
         index = indexvar[0]
         indextype = indexvar[1]
         pointer = emitter.get_pointer_name(node['name'])
         a_type = emitter.get_type(name)
         size =  ""
         
-        for char in a_type:
-            if char == "x":
-                break
-            if char != "[":
-                size += char 
-        #print(size)
-        size = int(size)
-        if isinstance(index, int):
-            if index > size:
-                raise TypeError(f"index de {node['name']} não suportado")
+        if "x" in a_type:
+            for char in a_type:
+                if char == "x":
+                    break
+                if char != "[":
+                    size += char 
+            size = int(size)
+            if isinstance(index, int):
+                if index > size:
+                    raise TypeError(f"index de {node['name']} não suportado")
+            else:
+                sext = f"%sext_{emitter.get_id()}"
+                emitter << f"{sext} = sext {indextype} {index} to i64"
+                index = sext
+    
+            pointer = emitter.get_pointer_name(name)
+            type = emitter.get_type(name) 
+            
+            if "i32" in type:
+                exptype = "i32"
+            elif "float" in type:
+                exptype = "float"
+            else:
+                exptype = "i8"
+        
+            emitter << f"{getelem} = getelementptr inbounds {a_type}, {a_type}* {pointer}, i64 0, i64 {index}"
+            emitter << f"{loadpointer} = load {exptype}, {exptype}* {getelem}, {aligntype}"
         else:
-            sext = f"%sext_{emitter.get_id()}"
-            emitter << f"{sext} = sext {indextype} {index} to i64"
-            index = sext
-        
-        
-        pointer = emitter.get_pointer_name(name)
-        type = emitter.get_type(name) 
-        
-        if "i32" in type:
-            exptype = "i32"
-        elif "float" in type:
-            exptype = "float"
-        else:
-            exptype = "i8"
-        
-        aligntype = "align 1"
-        loadpointer = f"%load_{emitter.get_id()}_{name}"
-        getelem = f"%getelem_{emitter.get_id()}_{name}"
-        
-        emitter << f"{getelem} = getelementptr inbounds {a_type}, {a_type}* {pointer}, i64 0, i64 {index}"
-        emitter << f"{loadpointer} = load {exptype}, {exptype}* {getelem}, {aligntype}"
+            loadarr = get_type(a_type, "var")
+            for char in "[]":
+                a_type = a_type.replace(char, "")
+            exptype = get_type(a_type, "var")
+            load = f"%load_{emitter.get_id()}"
+            emitter << f"{load} = load {loadarr}, {loadarr}* {pointer}, align 8"
+            emitter << f"{getelem} = getelementptr inbounds {exptype}, {exptype}* {load}, i64 {index}"
+            emitter << f"{loadpointer} = load {exptype}, {exptype}* {getelem}, {aligntype}"
+            pass
         return [loadpointer, exptype, aligntype]
         
     elif node["nt"] == "expression_index_fun":
@@ -605,7 +639,7 @@ def compilador(node, emitter=None):
         if args != "empty":
             for arg in args:
                 argid = compilador(arg, emitter)
-                #print(argid)
+                
                 argvalue = argid[0]
                 argtype = argid[1]
                 #print(arguments)
@@ -637,6 +671,9 @@ def compilador(node, emitter=None):
         return [call, type, aligntype]
        
     elif node["nt"] == "print":
+        if bprint == False:
+            emitter.lines.insert(0, f"declare i32 @printf(i8*, ...)")
+            bprint= True
         vartype = "i8*"
         align = get_align('String')
         value = node["string"]
@@ -702,7 +739,8 @@ def compilador(node, emitter=None):
                     emitter << f"{emitter.get_pointer_name(arg['name'])} = alloca {get_type(arg['type'], 'var')}, {get_align(arg['type'])}"
                     emitter << f"store {get_type(arg['type'], 'var')} %{arg['name']}, {get_type(arg['type'], 'var')}* {emitter.get_pointer_name(arg['name'])}, {get_align(arg['type'])}"
 
-        compilador(node["block_lam"], emitter)
+        for exp in node["block_lam"]['block_content_lam']:
+            compilador(exp, emitter)
         
         
         binopexp = emitter.lines[len(emitter.lines)-1]

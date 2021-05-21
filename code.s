@@ -1,14 +1,19 @@
 	.text
 	.file	"code.ll"
-	.globl	lam                     # -- Begin function lam
+	.section	.rodata.cst4,"aM",@progbits,4
+	.p2align	2               # -- Begin function lam
+.LCPI0_0:
+	.long	1079194419              # float 3.29999995
+	.text
+	.globl	lam
 	.p2align	4, 0x90
 	.type	lam,@function
 lam:                                    # @lam
 	.cfi_startproc
 # %bb.0:
-                                        # kill: def $edi killed $edi def $rdi
-	movl	%edi, -4(%rsp)
-	leal	3(%rdi), %eax
+	movq	%rdi, -8(%rsp)
+	movss	4(%rdi), %xmm0          # xmm0 = mem[0],zero,zero,zero
+	addss	.LCPI0_0(%rip), %xmm0
 	retq
 .Lfunc_end0:
 	.size	lam, .Lfunc_end0-lam
@@ -24,8 +29,8 @@ main:                                   # @main
 	.cfi_def_cfa_offset 64
 	movl	$9, 12(%rsp)
 	movl	$3, 52(%rsp)
-	movl	$12, 8(%rsp)
-	movl	$12, %edi
+	movl	$0, 36(%rsp)
+	xorl	%edi, %edi
 	callq	gun
 	addq	$56, %rsp
 	.cfi_def_cfa_offset 8
@@ -42,7 +47,7 @@ gun:                                    # @gun
 # %bb.0:
                                         # kill: def $edi killed $edi def $rdi
 	movl	%edi, -4(%rsp)
-	leal	3(%rdi), %eax
+	leal	6(%rdi), %eax
 	retq
 .Lfunc_end2:
 	.size	gun, .Lfunc_end2-gun

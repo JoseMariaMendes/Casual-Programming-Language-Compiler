@@ -5,18 +5,20 @@ def main():Int{
 	y:[Int] = 10;
 	y[u] = 3;
 
-	j:Int = y[u] + 9;
+	#j:Int = y[u] + 9;
+	y[5] = 0;
+	
 
-	lam = (f:Int):Int -> {
-			f + 3
+	lam = (f:[Int]):Int -> {
+			f[1] + u
 		};
 
- 	return gun(j);
+ 	return gun(y[5]);
 }
 
 def gun(s:Int):Int{
 	
 
-	return s +3;
+	return s + 6;
 
 }
