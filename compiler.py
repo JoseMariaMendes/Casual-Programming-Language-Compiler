@@ -493,23 +493,41 @@ def compilador(node, emitter=None):
             typealign = "align 4"
         else:
             typealign = "align 16"
-        print(vartype)
         a_type = f"[{size} x {vartype}]"    
         emitter << f"{pointer} = alloca {a_type}, {typealign}"        
         emitter.set_type(node['name'], a_type)
         currentvar = [node['type'], pointer]
 
     elif node["nt"] == "array_assign_statment":
-        index = node["index"]["value"]
+        indexvar = compilador(node["index"], emitter)
+        index = indexvar[0]
+        indextype = indexvar[1]
         pointer = emitter.get_pointer_name(node['name'])
+        
         exptype = emitter.get_type(node['name'])
+        
+        size = ""
+        
+        for char in exptype:
+            if char == "x":
+                break
+            if char != "[":
+                size += char 
+    
+        size = int(size)
+        if isinstance(index, int):
+            if index > size:
+                raise TypeError(f"index de {node['name']} não suportado")
+        else:
+            sext = f"%sext_{emitter.get_id()}"
+            emitter << f"{sext} = sext {indextype} {index} to i64"
+            index = sext
         
         var = compilador(node["expression"], emitter)
         getelem = f"%getelem_{emitter.get_id()}"
         value = var[0]
         storetype = var[1]
         aligntype = var[2]
-        print(var)
         
         if storetype == "i8":
             #é boolean
@@ -532,6 +550,30 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "array_expression":
         name = node["name"]
+        indexvar = compilador(node["index"], emitter)
+        print(indexvar)
+        index = indexvar[0]
+        indextype = indexvar[1]
+        pointer = emitter.get_pointer_name(node['name'])
+        a_type = emitter.get_type(name)
+        size =  ""
+        
+        for char in a_type:
+            if char == "x":
+                break
+            if char != "[":
+                size += char 
+        #print(size)
+        size = int(size)
+        if isinstance(index, int):
+            if index > size:
+                raise TypeError(f"index de {node['name']} não suportado")
+        else:
+            sext = f"%sext_{emitter.get_id()}"
+            emitter << f"{sext} = sext {indextype} {index} to i64"
+            index = sext
+        
+        
         pointer = emitter.get_pointer_name(name)
         type = emitter.get_type(name) 
         
@@ -541,13 +583,12 @@ def compilador(node, emitter=None):
             exptype = "float"
         else:
             exptype = "i8"
-            
+        
         aligntype = "align 1"
-        index = node["index"]["value"]
         loadpointer = f"%load_{emitter.get_id()}_{name}"
         getelem = f"%getelem_{emitter.get_id()}_{name}"
         
-        emitter << f"{getelem} = getelementptr inbounds {type}, {type}* {pointer}, i64 0, i64 8"
+        emitter << f"{getelem} = getelementptr inbounds {a_type}, {a_type}* {pointer}, i64 0, i64 {index}"
         emitter << f"{loadpointer} = load {exptype}, {exptype}* {getelem}, {aligntype}"
         return [loadpointer, exptype, aligntype]
         
@@ -564,14 +605,16 @@ def compilador(node, emitter=None):
         if args != "empty":
             for arg in args:
                 argid = compilador(arg, emitter)
+                #print(argid)
                 argvalue = argid[0]
                 argtype = argid[1]
+                #print(arguments)
                 if len(arguments) == 0:
                     #primeiro argumentos a ser adicionado
-                    arguments += argtype + " " + argvalue
+                    arguments += f"{argtype} {argvalue}"
                 else:
                     #resto dos argumentos depois do primeiro
-                    arguments += ", " + argtype + " " + argvalue
+                    arguments += f", {argtype} {argvalue}"
                 
             if type != "Void":
                 type = get_type(type, "var")
@@ -610,7 +653,6 @@ def compilador(node, emitter=None):
         emitter.lines.insert(0, str_decl)
         value = f"getelementptr inbounds ([{size} x i8], [{size} x i8]* {str_name}, i64 0, i64 0)"
         
-        print(value)
         
         if node["arguments"] != "empty":
             for arg in node["arguments"]:
@@ -621,6 +663,55 @@ def compilador(node, emitter=None):
         else:
             emitter << f"%print_{emitter.get_id()} = call i32 ({vartype}, ...) @printf (i8* {value})"
             pass 
+        
+    elif node["nt"] == "lambda_expression":
+        emitter.linestemp = emitter.lines
+        name = node["name"]
+        arguments = ""
+        cont = 0
+        currentfun = ""
+        for arg in node["darguments"]:
+            if len(arguments) == 0:
+                #primeiro argumentos a ser adicionado
+                
+                arguments += get_type(arg["type"], "funarg") + " %" + arg["name"]
+            else:
+                #resto dos argumentos depois do primeiro
+                arguments += ", " + get_type(arg["type"], "funarg") + " %" + arg["name"]
+        
+        for line in emitter.lines:
+            if "define" in line:
+                currentfunindex = cont
+            cont += 1
+            
+            
+        emitter.lines = []
+        emitter << f"define void @{name}({arguments}) #0 {'{'}"
+        if node["darguments"] != "empty":
+            for arg in node["darguments"]:
+                emitter.set_type(arg["name"], arg["type"])
+                if arg["type"] == "Boolean":
+                    pont = f"%{emitter.get_id()}"
+                    name = emitter.get_pointer_name(arg['name'])
+                    emitter << f"{name} = alloca i8, align 1"
+                    emitter << f"{pont} = zext i1 %{arg['name']} to i8"
+                    emitter << f"store i8 {pont}, i8* {name}, align 1"
+                else:
+                    emitter << f"{emitter.get_pointer_name(arg['name'])} = alloca {get_type(arg['type'], 'var')}, {get_align(arg['type'])}"
+                    emitter << f"store {get_type(arg['type'], 'var')} %{arg['name']}, {get_type(arg['type'], 'var')}* {emitter.get_pointer_name(arg['name'])}, {get_align(arg['type'])}"
+
+        compilador(node["block_lam"], emitter)
+        
+        emitter << "}"
+        
+        for line in emitter.lines:
+            emitter.linestemp.insert(currentfunindex, line)
+            currentfunindex += 1
+        emitter.lines = emitter.linestemp
+        
+    elif node["nt"] == "block_lam":
+        for exp in node['block_content_lam']:
+            compilador(exp, emitter)
         
     else:
         t = node["nt"]

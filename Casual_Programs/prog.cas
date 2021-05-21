@@ -1,42 +1,25 @@
-def fun(y:[Int]):Boolean{
-	
-	#print("s\n%d%f%s", j, z, p);
-	bring:Int = 0;
-	return True;
-}
-
 decl gun(s:Int):Int
 
 def main():Int{
-	t:[Boolean] = 10;
-	b:[Boolean] = 10;
-	o:Boolean = True;
-	j:Int = 2;
-	z:Float = 3.3;
-	ja:[Int] = 10;
-	fa:[String] = 10;
-	za:[Float] = 10;
-	p:String = "asdasd";
+	u:Int = 9;
+	y:[Int] = 10;
+	y[5] = 0;
+	
+	j:Int = y[u] + 9;
 
-	lam = (y:[Int], ala:String):Int -> {
-			y[3] + 3
-		};
+	#lam = (f:Int):Int -> {
+	#		f + 3
+	#	};
 
-
-	if (ja[0] >= ja[2]){
-		jake:Int = 8;
-		return 1;
-	}else{
-		return 2;
-	}
-
-
-	print("hello\n");
- 	return gun(j);
+ 	return gun(5);
 }
 
 def gun(s:Int):Int{
 	
+	f:Int = 6;
+
+	r:Int = s + 5;
+
 	return 4;
 
 }

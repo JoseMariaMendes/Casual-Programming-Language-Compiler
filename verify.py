@@ -311,7 +311,6 @@ def verify(ctx:Context, node):
 
     elif node["nt"] == "return_statement":
         expression = node['expression']
-        print(node)
         if expression != 'empty':
             if "[" in verify(ctx, node['expression'])[1]:
                 #return é um array
@@ -624,8 +623,12 @@ def verify(ctx:Context, node):
             raise TypeError(f"Array {name} nao esta declarado") 
     
     elif node["nt"] == "array_expression":
+        
         index = node['index']
         name = node['name']
+        if ctx.get_type(name)[2] != "array":
+            raise TypeError(f"{name} não é um array")
+            
         if verify(ctx, node['index']) != "Int":
             raise TypeError(f"index de {name} errado")
         return ctx.get_type(name)
@@ -704,28 +707,31 @@ def verify(ctx:Context, node):
                 cont += 1
 
     elif node["nt"] == "lambda_expression":
-        
+        for arg in node["darguments"]:
+            if ctx.has_var_in_current_scope(arg["name"]):
+                raise TypeError (f"variavel {arg['name']} no lambda ja existe no contexto.")
+            pass
         name = node["name"]
         if node['darguments'] != "empty":
-                #funçao tem argumentos
-                
-                ctx.set_type("RETURN_CODE_lambda", node["rtype"])
-                assinatura = ([node['nt']],  node["rtype"], [[name["name"] for name in node['darguments']],  
-                                                            [arg["type"] for arg in node['darguments']]], "function")
-                ctx.set_type(name, assinatura)
-                inlam = 1
-                ctx.enter_scope()
-                
-                #adicionar argumentos ao contexto
-                for arg in node["darguments"]:
-                    if arg["nt"] == "dargument":
-                        assinatura = (["var_decl_statment"],  arg["type"], "argumento")
-                        ctx.set_type(arg["name"], assinatura)
-                        
-                    elif arg["nt"] == "array_dargument":
-                        
-                        assinatura = (['array_decl_statment'],  arg["type"], "argumento")
-                        ctx.set_type(arg["name"], assinatura)
+            #funçao tem argumentos
+            
+            ctx.set_type("RETURN_CODE_lambda", node["rtype"])
+            assinatura = ([node['nt']],  node["rtype"], [[name["name"] for name in node['darguments']],  
+                                                        [arg["type"] for arg in node['darguments']]], "function")
+            ctx.set_type(name, assinatura)
+            inlam = 1
+            ctx.enter_scope()
+            
+            #adicionar argumentos ao contexto
+            for arg in node["darguments"]:
+                if arg["nt"] == "dargument":
+                    assinatura = (["var_decl_statment"],  arg["type"], "argumento")
+                    ctx.set_type(arg["name"], assinatura)
+                    
+                elif arg["nt"] == "array_dargument":
+                    
+                    assinatura = (['array_decl_statment'],  arg["type"], "argumento")
+                    ctx.set_type(arg["name"], assinatura)
 
         else:
             #funçao nao tem argumentos
@@ -735,7 +741,6 @@ def verify(ctx:Context, node):
             ctx.enter_scope()
 
         
-        print(node)
         if node['block_lam']['block_content_lam'] != "empty":
             verify(ctx, node['block_lam'])
         #else:

@@ -240,13 +240,13 @@ def p_d_argument(t):
     elif len(t) == 6:
         t[0] = [{'nt': 'dargument', 'name': t[1], 'type': t[3]}, t[5]]
 
-def p_array_d_argument(t):
-    '''dargument : NAME COLON LBRACK types RBRACK
-                  | NAME COLON LBRACK types RBRACK COMMA dargument'''
-    if len(t) == 6:
-        t[0] = [{'nt': 'array_dargument', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}"}]
-    elif len(t) == 8:
-        t[0] = [{'nt': 'array_dargument', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}"}, t[7]]
+#def p_array_d_argument(t):
+#    '''dargument : NAME COLON LBRACK types RBRACK
+#                  | NAME COLON LBRACK types RBRACK COMMA dargument'''
+#    if len(t) == 6:
+#        t[0] = [{'nt': 'array_dargument', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}"}]
+#    elif len(t) == 8:
+#        t[0] = [{'nt': 'array_dargument', 'name': t[1], 'type': f"{t[3]}{t[4]}{t[5]}"}, t[7]]
 
 
                   

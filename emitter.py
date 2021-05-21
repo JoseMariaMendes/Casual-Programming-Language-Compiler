@@ -2,6 +2,7 @@ class Emitter(object):
     def __init__(self):
         self.count = 0
         self.lines = []
+        self.linestemp = []
         self.stack = [{}]
 
     def get_count(self):
