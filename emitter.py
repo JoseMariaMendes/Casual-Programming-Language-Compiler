@@ -4,6 +4,7 @@ class Emitter(object):
         self.lines = []
         self.linestemp = []
         self.stack = [{}]
+        self.value = [{}]
 
     def get_count(self):
         self.count += 1
@@ -30,4 +31,14 @@ class Emitter(object):
     
     def set_type(self, name, value):
         scope = self.stack[0]
+        scope[name] = value
+    
+    def get_value(self, name):
+        for scope in self.value:
+            if name in scope:
+                return scope[name]
+        raise TypeError(f"Variavel {name} nao esta no contexto")
+    
+    def set_value(self, name, value):
+        scope = self.value[0]
         scope[name] = value

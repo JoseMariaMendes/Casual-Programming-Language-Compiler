@@ -3,7 +3,7 @@
 	.section	.rodata.cst4,"aM",@progbits,4
 	.p2align	2               # -- Begin function lam
 .LCPI0_0:
-	.long	1079194419              # float 3.29999995
+	.long	1091882189              # float 9.30000019
 	.text
 	.globl	lam
 	.p2align	4, 0x90
@@ -12,6 +12,7 @@ lam:                                    # @lam
 	.cfi_startproc
 # %bb.0:
 	movq	%rdi, -8(%rsp)
+	movl	$1091882189, -12(%rsp)  # imm = 0x4114CCCD
 	movss	4(%rdi), %xmm0          # xmm0 = mem[0],zero,zero,zero
 	addss	.LCPI0_0(%rip), %xmm0
 	retq
@@ -27,9 +28,8 @@ main:                                   # @main
 # %bb.0:
 	subq	$56, %rsp
 	.cfi_def_cfa_offset 64
-	movl	$9, 12(%rsp)
-	movl	$3, 52(%rsp)
-	movl	$0, 36(%rsp)
+	movl	$1091882189, 12(%rsp)   # imm = 0x4114CCCD
+	movq	$3, 32(%rsp)
 	xorl	%edi, %edi
 	callq	gun
 	addq	$56, %rsp
