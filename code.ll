@@ -16,17 +16,21 @@ store float 0x40229999a0000000, float* %pont_u, align 4
 %pont_y = alloca [10 x i32], align 16
 %getelem_cas_1 = getelementptr inbounds [10 x i32], [10 x i32]* %pont_y, i64 0, i64 4
 store i32 3, i32* %getelem_cas_1, align 8
+%pont_john = alloca [10 x float], align 16
 %getelem_cas_2 = getelementptr inbounds [10 x i32], [10 x i32]* %pont_y, i64 0, i64 5
 store i32 0, i32* %getelem_cas_2, align 8
-%getelem_cas_10_y = getelementptr inbounds [10 x i32], [10 x i32]* %pont_y, i64 0, i64 5
-%load_cas_9_y = load i32, i32* %getelem_cas_10_y, align 1
-%call_cas_8_gun = call i32 @gun(i32 %load_cas_9_y)
-ret i32 %call_cas_8_gun
+%load_cas_9_john = getelementptr inbounds [10 x float], [10 x float]* %pont_john, i64 0, i64 0
+%call_cas_8_lam = call float @lam(float* %load_cas_9_john)
+store float %call_cas_8_lam, float* %pont_u, align 4
+%getelem_cas_12_y = getelementptr inbounds [10 x i32], [10 x i32]* %pont_y, i64 0, i64 5
+%load_cas_11_y = load i32, i32* %getelem_cas_12_y, align 1
+%call_cas_10_gun = call i32 @gun(i32 %load_cas_11_y)
+ret i32 %call_cas_10_gun
 }
 define i32 @gun(i32 %s) #0 {
 %pont_s = alloca i32, align 4
 store i32 %s, i32* %pont_s, align 4
-%load_cas_12_s = load i32, i32* %pont_s, align 4
-%cas_11_binopexp = add nsw i32 %load_cas_12_s, 6
-ret i32 %cas_11_binopexp
+%load_cas_14_s = load i32, i32* %pont_s, align 4
+%cas_13_binopexp = add nsw i32 %load_cas_14_s, 6
+ret i32 %cas_13_binopexp
 }

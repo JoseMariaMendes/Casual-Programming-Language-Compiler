@@ -26,13 +26,16 @@ lam:                                    # @lam
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:
-	subq	$56, %rsp
-	.cfi_def_cfa_offset 64
+	subq	$104, %rsp
+	.cfi_def_cfa_offset 112
 	movl	$1091882189, 12(%rsp)   # imm = 0x4114CCCD
 	movq	$3, 32(%rsp)
-	xorl	%edi, %edi
+	leaq	64(%rsp), %rdi
+	callq	lam
+	movss	%xmm0, 12(%rsp)
+	movl	36(%rsp), %edi
 	callq	gun
-	addq	$56, %rsp
+	addq	$104, %rsp
 	.cfi_def_cfa_offset 8
 	retq
 .Lfunc_end1:

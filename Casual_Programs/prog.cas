@@ -4,7 +4,7 @@ def main():Int{
 	u:Float = 9.3;
 	y:[Int] = 10;
 	y[4] = 3;
-
+	john:[Float] = 10;
 	#j:Int = y[u] + 9;
 	y[5] = 0;
 	
@@ -13,6 +13,8 @@ def main():Int{
 			f[1] + u
 		};
 
+	u = lam(john);
+	
  	return gun(y[5]);
 }
 

@@ -179,7 +179,7 @@ def compilador(node, emitter=None):
         exptype = var[1]
         aligntype = var[2]
         
-        emitter.set_value(node['name'], node['type'])
+        emitter.set_value(node['name'], value)
         if exptype == "i8":
             #é boolean
             trunc = f"%trunc_{emitter.get_id()}"
@@ -723,6 +723,7 @@ def compilador(node, emitter=None):
         returntype = get_type(node['rtype'], "var")
         funtype = get_type(node['rtype'], "fun")
         name = node["name"]
+        emitter.set_type(name, node['rtype'])
         arguments = ""
         cont = 0
         currentfun = ""
