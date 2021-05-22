@@ -1,26 +1,25 @@
 decl gun(s:Int):Int
 
 def main():Int{
-	u:Float = 9.3;
+	u:Int = 9;
 	y:[Int] = 10;
 	y[4] = 3;
 	john:[Float] = 10;
 	#j:Int = y[u] + 9;
-	y[5] = 0;
+	y[5] = 6;
 	
 
-	lam = (f:[Float]):Float -> {
-			f[1] + u
+	lam = (f:[Int]):Int -> {
+			f[5] + u
 		};
 
-	u = lam(john);
+	u = lam(y);
 	
- 	return gun(y[5]);
+ 	return u;
 }
 
 def gun(s:Int):Int{
 	
-
 	return s + 6;
 
 }

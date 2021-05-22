@@ -202,7 +202,7 @@ def verify(ctx:Context, node):
 
     elif node["nt"] == "var_decl_statment":
         name = node['name']
-        if ctx.has_var_in_current_scope(name):
+        if ctx.has_var(name):
             if 'var_decl_statment' in ctx.get_type(name)[0] and 'var_assign_statment' not in ctx.get_type(name)[0]:
                 #declarada mas nao definida
                 raise TypeError(f"variavel {name} ja esta declarada no contexto")
@@ -223,7 +223,7 @@ def verify(ctx:Context, node):
             else:
                 #assinatura = ([node['nt']],  node["type"], "argumento")
                 #ctx.set_type(name, assinatura)
-                raise TypeError(f"{name} tamanho determinado")
+                raise TypeError(f"{name} não tem valor inicial")
         #return verify(ctx, node['type'])
     
     elif node["nt"] == "var_assign_statment":
@@ -571,11 +571,14 @@ def verify(ctx:Context, node):
         for arg in node["darguments"]:
             if ctx.has_var_in_current_scope(arg["name"]):
                 raise TypeError (f"variavel {arg['name']} no lambda ja existe no contexto.")
-            pass
+            if arg["type"] != "[Int]" and "[Float]" and "Int" and "Float":
+                raise TypeError (f"lambda so recebe Float e Int")
+                
+        
         name = node["name"]
         if node['darguments'] != "empty":
             #funçao tem argumentos
-            
+        
             ctx.set_type("RETURN_CODE_lambda", node["rtype"])
             assinatura = ([node['nt']],  node["rtype"], [[name["name"] for name in node['darguments']],  
                                                         [arg["type"] for arg in node['darguments']]], "function")

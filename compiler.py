@@ -146,6 +146,7 @@ def compilador(node, emitter=None):
         compilador(node["expression"], emitter)
    
     elif node["nt"] == "var_decl_statment":
+        
         pointer = emitter.get_pointer_name(node['name'])
         vartype = get_type(node['type'], "var")
         typealign = get_align(node['type'])
@@ -310,6 +311,9 @@ def compilador(node, emitter=None):
         exptype = er[1]
         aligntype = er[2]
         oper = node["oper"]
+        if emitter.get_type("inlambda") == "true":
+            if oper != "+" and "-" and "/" and "*" and "%":
+                raise TypeError(f"o lambda so aceita expressões +, -, *, / e %")
 
         if oper == "+":
             if er[1]  == "i32": 

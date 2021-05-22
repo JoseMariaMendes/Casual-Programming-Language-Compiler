@@ -4,3 +4,8 @@ def sum (a:Int, b:Int):Int{
 }
 
 decl sum (a:Int, b:Int):Int
+
+def main():Int{
+
+    return sum(3, 5);
+}
