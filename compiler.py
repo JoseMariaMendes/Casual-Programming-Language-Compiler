@@ -42,11 +42,13 @@ def float_to_hex(f):
     unpack = struct.unpack('f', struct.pack('f', f))[0]
     return hex(struct.unpack('<Q', struct.pack('<d', unpack))[0])
 
+
 def compilador(node, emitter=None):
-    bprint = False
     if node["nt"] == "programb":
         print("-------------------")
         emitter = Emitter()
+        emitter.set_type("inlambda", "false")
+        emitter.set_type("bprint", "false")
         
         for decl_def in node["program"]:
             compilador(decl_def, emitter)
@@ -159,6 +161,8 @@ def compilador(node, emitter=None):
                 value = var[0]
                 exptype = var[1]
                 aligntype = var[2]
+                
+                emitter.set_value(node['name'], value)
                 emitter << f"store {exptype} {value}, {exptype}* {pointer}, {aligntype}"
             else:
                 pass
@@ -174,6 +178,8 @@ def compilador(node, emitter=None):
         value = var[0]
         exptype = var[1]
         aligntype = var[2]
+        
+        emitter.set_value(node['name'], node['type'])
         if exptype == "i8":
             #é boolean
             trunc = f"%trunc_{emitter.get_id()}"
@@ -462,12 +468,23 @@ def compilador(node, emitter=None):
 
     elif node["nt"] == "name_expression":
         name = node["name"]
+        if emitter.get_type("inlambda") == "true":
+            pointer = emitter.get_pointer_name(name)
+            vartype = get_type(emitter.get_type(name), "var")
+            typealign = get_align(emitter.get_type(name))
+            emitter << f"{pointer} = alloca {vartype}, {typealign}"
+            value = emitter.get_value(name)
+            exptype = get_type(emitter.get_type(name), "var")
+            aligntype = get_align(emitter.get_type(name))
+            emitter << f"store {exptype} {value}, {exptype}* {pointer}, {aligntype}"
+                
         gettype = emitter.get_type(name)
         if "[" and "]" and "x" not in gettype:
             exptype = get_type(emitter.get_type(name), "var") 
             aligntype = get_align(emitter.get_type(name))
             loadpointer = f"%load_{emitter.get_id()}_{name}"
             emitter << f"{loadpointer} = load {exptype}, {exptype}* {emitter.get_pointer_name(name)}, {aligntype}"
+            
             return [loadpointer, exptype, aligntype]
         else:
             exptype = gettype 
@@ -482,9 +499,8 @@ def compilador(node, emitter=None):
                 exptype = "i8**"
             else:
                 exptype = "i8*"
-                
             return [loadpointer, exptype, aligntype]
-    
+        
     elif node["nt"] == "string_expression":
         vartype = "i8*"
         align = get_align('String')
@@ -671,9 +687,9 @@ def compilador(node, emitter=None):
         return [call, type, aligntype]
        
     elif node["nt"] == "print":
-        if bprint == False:
+        if emitter.get_type("bprint") == "false":
             emitter.lines.insert(0, f"declare i32 @printf(i8*, ...)")
-            bprint= True
+            emitter.set_type("bprint", "true")
         vartype = "i8*"
         align = get_align('String')
         value = node["string"]
@@ -702,6 +718,7 @@ def compilador(node, emitter=None):
             pass 
         
     elif node["nt"] == "lambda_expression":
+        emitter.set_type("inlambda", "true")
         emitter.linestemp = emitter.lines
         returntype = get_type(node['rtype'], "var")
         funtype = get_type(node['rtype'], "fun")
@@ -740,16 +757,11 @@ def compilador(node, emitter=None):
                     emitter << f"store {get_type(arg['type'], 'var')} %{arg['name']}, {get_type(arg['type'], 'var')}* {emitter.get_pointer_name(arg['name'])}, {get_align(arg['type'])}"
 
         for exp in node["block_lam"]['block_content_lam']:
-            compilador(exp, emitter)
+            print(exp)
+            som = compilador(exp, emitter)
+            print(som)
         
-        
-        binopexp = emitter.lines[len(emitter.lines)-1]
-        retexp = ""
-        for char in binopexp:
-            if char == "=":
-                break
-            retexp += char
-        
+        retexp = som[0]
         emitter << f"ret {returntype} {retexp}"
         emitter << "}"
         
@@ -757,6 +769,8 @@ def compilador(node, emitter=None):
             emitter.linestemp.insert(currentfunindex, line)
             currentfunindex += 1
         emitter.lines = emitter.linestemp
+        
+        emitter.set_type("inlambda", "false")
         
     elif node["nt"] == "block_lam":
         for exp in node['block_content_lam']:
