@@ -170,7 +170,8 @@ t_ignore =" \t" #space, tab and enter
 lexer = lex.lex()
 
 precedence = (
-    ('left', 'AND', 'OR'),
+    ('right', 'AND', 'OR'),
+    ('nonassoc', 'SAMEAS', 'DIFFER'),
     ('nonassoc', 'LOWER', 'HIGHER', 'HEQUAL', 'LEQUAL', 'NEQUAL', 'SAMEAS', 'DIFFER'),
     ('left','SUM','SUB'),
     ('left','MULTIPLY','DIVIDE', 'RESTOF'),
@@ -278,8 +279,7 @@ def p_block_lam(t):
         t[0] = {'nt': 'block_lam', 'block_content_lam': "empty"}
 
 def p_block_content_lam(t):
-    '''block_content_lam : expression  
-                    | expression block_content_lam '''
+    '''block_content_lam : expression  '''
     if len(t) == 2:
         t[0] = [t[1]]
     elif len(t) == 3:

@@ -1,6 +1,6 @@
 def fun(i1:Int, i2:Int, i3:Int, i4:Int):Int{
-    if (i1 > i2 && i3 < i4 || i3 >= i1){
-
+    if (i1 < i2 && i3 < i4 && i3 >= i1 && i2 == 6){
+        return 0;
     }
 
     return i2;

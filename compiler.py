@@ -210,6 +210,7 @@ def compilador(node, emitter=None):
         pass
     
     elif node["nt"] == "ifelse_statement":
+        #print(node)
         var = node["expression"]
         labelif = f"if_{emitter.get_id()}"
         labelelse = f"else_{emitter.get_id()}"
@@ -218,15 +219,10 @@ def compilador(node, emitter=None):
         
         while var["nt"] == "group_expression":
             var = var["expression"]
+            
         if var['oper'] == "&&":
-            pass
-        elif var['oper'] == "||":
-            pass
-        
-        
-        
-        else:
-            exp = compilador(var, emitter)
+            exp = compilador(var["expression_left"], emitter)
+            
             if exp[1] != "i1":
                 emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
             else:
@@ -240,25 +236,46 @@ def compilador(node, emitter=None):
             else:
                 emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
             
+            label = compilador(var["expression_right"], emitter)
+            emitter << f"br i1 {label}, label %{labelif}, label %{labelelse}"
             
-            if len(node["block"]) == 2:
-                emitter <<""
-                emitter << f"{labelif}:"
-                compilador(node["block"][0], emitter)
-                emitter << f"br label %{labelcont}"
-                emitter << ""
-                emitter << f"{labelelse}:"
-                compilador(node["block"][1], emitter)
-                emitter << f"br label %{labelcont}"
-                emitter << ""
-                emitter << f"{labelcont}:"
+        elif var['oper'] == "||":
+            pass
+        else:
+            exp = compilador(var, emitter)
+            
+            if exp[1] != "i1":
+                emitter << f"{trunc} = trunc {exp[1]} {exp[0]} to i1"
             else:
-                emitter <<""
-                emitter << f"{labelif}:"
-                compilador(node["block"][0], emitter)
-                emitter << f"br label %{labelelse}"
-                emitter << ""
-                emitter << f"{labelelse}:"
+                trunc = exp[0]
+            
+            if var["nt"] == "nuo_expression":
+                if exp[3] == False:
+                    emitter << f"br i1 {trunc}, label %{labelelse}, label %{labelif}"
+                else:
+                    emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
+            else:
+                emitter << f"br i1 {trunc}, label %{labelif}, label %{labelelse}"
+        
+        
+        if len(node["block"]) == 2:
+            emitter <<""
+            emitter << f"{labelif}:"
+            compilador(node["block"][0], emitter)
+            emitter << f"br label %{labelcont}"
+            emitter << ""
+            emitter << f"{labelelse}:"
+            compilador(node["block"][1], emitter)
+            emitter << f"br label %{labelcont}"
+            emitter << ""
+            emitter << f"{labelcont}:"
+        else:
+            emitter <<""
+            emitter << f"{labelif}:"
+            compilador(node["block"][0], emitter)
+            emitter << f"br label %{labelelse}"
+            emitter << ""
+            emitter << f"{labelelse}:"
 
     elif node["nt"] == "while_statement":
         var = node["expression"]
@@ -306,16 +323,18 @@ def compilador(node, emitter=None):
         value = f"%{emitter.get_id()}_binopexp"
         ernt = node["expression_right"]["nt"]
         elnt = node["expression_left"]["nt"]
-        er = compilador(node["expression_right"], emitter)
-        el = compilador(node["expression_left"], emitter)
-        exptype = er[1]
-        aligntype = er[2]
+        
+
         oper = node["oper"]
         if emitter.get_type("inlambda") == "true":
             if oper != "+" and "-" and "/" and "*" and "%":
                 raise TypeError(f"o lambda so aceita expressões +, -, *, / e %")
 
         if oper == "+":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = add nsw {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
@@ -323,6 +342,10 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = fadd {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
         elif oper == "-":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = sub nsw {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
@@ -330,6 +353,10 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = fsub {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
         elif oper == "*":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = mul nsw {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
@@ -337,6 +364,10 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = fmul {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
         elif oper == "/":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = sdiv {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
@@ -344,10 +375,18 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = fdiv {exptype} {el[0]}, {er[0]}"
                 return[value, exptype, aligntype]
         elif oper == "%":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             emitter << f"{value} = srem {exptype} {el[0]}, {er[0]}"
             return[value, exptype, aligntype]
         ########################################################################
         elif oper == "<=":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = icmp sle {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
@@ -355,6 +394,10 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = fcmp ole {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
         elif oper == ">":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = icmp sgt {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
@@ -362,6 +405,10 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = fcmp ogt {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
         elif oper == "<":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = icmp slt {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
@@ -369,6 +416,10 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = fcmp olt {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
         elif oper == ">=":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = icmp sge {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
@@ -378,6 +429,10 @@ def compilador(node, emitter=None):
             
         ##############################################################################
         elif oper == "==":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = icmp eq {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
@@ -400,6 +455,10 @@ def compilador(node, emitter=None):
                 emitter << f"{value} = icmp eq i32 {temp2}, {other}"
                 return[value, "i1", aligntype]
         elif oper == "!=":
+            el = compilador(node["expression_left"], emitter)
+            er = compilador(node["expression_right"], emitter)
+            exptype = er[1]
+            aligntype = er[2]
             if er[1]  == "i32": 
                 emitter << f"{value} = icmp ne {exptype} {el[0]}, {er[0]}"
                 return[value, "i1", aligntype]
@@ -423,9 +482,26 @@ def compilador(node, emitter=None):
                 return[value, "i1", aligntype]
                 
         elif oper == "&&":
-            print("fasdfasdf")
+            label = f"&&_{emitter.get_id()}:"
+            emitter << ""
+            emitter << f"{label}"
+            el = compilador(node["expression_left"], emitter)
+            emitter << f"br {el[0]}, label "
+            
+            if node["expression_right"]["nt"] == 'binop_expression' and node["expression_right"]["oper"] == '&&':
+                compilador(node["expression_right"], emitter)
+            else:
+                #ultimo
+                label = f"&&_{emitter.get_id()}:"
+                emitter << ""
+                emitter << f"{label}"
+                er = compilador(node["expression_right"], emitter)
+                return er
+            
         elif oper == "||":
-            print("fasdfasdf")
+            #print(node["expression_right"])
+            #print(node["expression_left"])
+            pass
 
     elif node["nt"] == "nuo_expression":
         nnuo = 1
@@ -522,7 +598,7 @@ def compilador(node, emitter=None):
         value = f"getelementptr inbounds ([{size} x i8], [{size} x i8]* {str_name}, i64 0, i64 0)"
         return [value, vartype, align]
 
-    elif node["nt"] == "group_expression":
+    elif node["nt"] == "group_expression":            
         return compilador(node["expression"], emitter)
     
     elif node["nt"] == "array_decl_statment":

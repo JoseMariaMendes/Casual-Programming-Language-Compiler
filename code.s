@@ -1,18 +1,25 @@
 	.text
 	.file	"code.ll"
-	.globl	lam                     # -- Begin function lam
+	.globl	fun                     # -- Begin function fun
 	.p2align	4, 0x90
-	.type	lam,@function
-lam:                                    # @lam
+	.type	fun,@function
+fun:                                    # @fun
 	.cfi_startproc
 # %bb.0:
-	movq	%rdi, -8(%rsp)
-	movl	$9, -12(%rsp)
-	movl	20(%rdi), %eax
-	addl	$9, %eax
+	movl	%edi, -4(%rsp)
+	movl	%esi, -16(%rsp)
+	movl	%edx, -8(%rsp)
+	movl	%ecx, -12(%rsp)
+	cmpl	%esi, %edi
+	jge	.LBB0_2
+# %bb.1:                                # %if_cas_1
+	xorl	%eax, %eax
+	retq
+.LBB0_2:                                # %else_cas_2
+	movl	-16(%rsp), %eax
 	retq
 .Lfunc_end0:
-	.size	lam, .Lfunc_end0-lam
+	.size	fun, .Lfunc_end0-fun
 	.cfi_endproc
                                         # -- End function
 	.globl	main                    # -- Begin function main
@@ -21,33 +28,10 @@ lam:                                    # @lam
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:
-	subq	$104, %rsp
-	.cfi_def_cfa_offset 112
-	movl	$9, 12(%rsp)
-	movabsq	$25769803779, %rax      # imm = 0x600000003
-	movq	%rax, 32(%rsp)
-	leaq	16(%rsp), %rdi
-	callq	lam
-	movl	%eax, 12(%rsp)
-	addq	$104, %rsp
-	.cfi_def_cfa_offset 8
+	xorl	%eax, %eax
 	retq
 .Lfunc_end1:
 	.size	main, .Lfunc_end1-main
-	.cfi_endproc
-                                        # -- End function
-	.globl	gun                     # -- Begin function gun
-	.p2align	4, 0x90
-	.type	gun,@function
-gun:                                    # @gun
-	.cfi_startproc
-# %bb.0:
-                                        # kill: def $edi killed $edi def $rdi
-	movl	%edi, -4(%rsp)
-	leal	6(%rdi), %eax
-	retq
-.Lfunc_end2:
-	.size	gun, .Lfunc_end2-gun
 	.cfi_endproc
                                         # -- End function
 	.section	".note.GNU-stack","",@progbits
