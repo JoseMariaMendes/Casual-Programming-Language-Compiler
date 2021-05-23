@@ -22,7 +22,7 @@ tokens = (
     'HIGHER', 'LOWER', 'SUM', 'SUB', 'MULTIPLY', 'DIVIDE', 
     'RESTOF', 'DECLARATION', 'DEFINITION', 
     'RETURN', 'IF', 'ELSE', 'WHILE', 'LCURLY', 'RCURLY', 'LPAR',
-    'RPAR', 'TRUE', 'FALSE', 'SEMICOLON', 'COLON', 'QMARK', 'DIFFER', 'PRINT', 'GETARRAY',  'LAMBDA',
+    'RPAR', 'TRUE', 'FALSE', 'SEMICOLON', 'COLON',  'DIFFER', 'PRINT', 'GETARRAY',  'LAMBDA',
     )
 
 #Variables
@@ -54,7 +54,6 @@ t_LPAR = r'\('
 t_RPAR = r'\)'
 t_LBRACK = r"\["
 t_RBRACK = r']'
-t_QMARK = r'"'
 
 #Punctuation
 t_SEMICOLON = r';'
@@ -278,8 +277,7 @@ def p_block_lam(t):
         t[0] = {'nt': 'block_lam', 'block_content_lam': "empty"}
 
 def p_block_content_lam(t):
-    '''block_content_lam : expression  
-                    | expression block_content_lam '''
+    '''block_content_lam : expression  '''
     if len(t) == 2:
         t[0] = [t[1]]
     elif len(t) == 3:
@@ -337,21 +335,7 @@ def p_expression_array(t):
     'expression : NAME LBRACK expression RBRACK'
     t[0] = {'nt': 'array_expression', 'name': t[1], 'index': t[3]}
 
-def p_expression_index_fun(t):
-    '''expression :  GETARRAY LPAR RPAR LBRACK expression RBRACK
-                    | GETARRAY LPAR argument RPAR LBRACK expression RBRACK '''
-    if len(t) == 7:
-        t[0] = {"nt": 'expression_index_fun', 'argument': 'empty', 'expression': t[5]}
-    elif len(t) == 8:
-        t[0] = {"nt": 'expression_index_fun', 'argument': list(list_helper(t[3])), 'expression': t[6]}
 
-def p_expression_fun_invoc(t):
-    '''expression : NAME LPAR RPAR
-                    | NAME LPAR argument RPAR'''
-    if len(t) == 5:
-        t[0] = {"nt": 'expression_fun_invoc','name': t[1], 'argument': list(list_helper(t[3]))}
-    elif len(t) == 4:
-        t[0] = {"nt": 'expression_fun_invoc','name': t[1], 'argument': "empty"}
         
 ############################################################################################################
 
@@ -419,6 +403,22 @@ def p_print(t):
         t[0] = {'nt': 'print', 'string': t[3], 'arguments': list(list_helper(t[5]))}
     elif len(t) == 6:
         t[0] = {'nt': 'print', 'string': t[3], 'arguments': 'empty'}
+        
+def p_expression_index_fun(t):
+    '''expression :  GETARRAY LPAR RPAR LBRACK expression RBRACK
+                    | GETARRAY LPAR argument RPAR LBRACK expression RBRACK '''
+    if len(t) == 7:
+        t[0] = {"nt": 'expression_index_fun', 'argument': 'empty', 'expression': t[5]}
+    elif len(t) == 8:
+        t[0] = {"nt": 'expression_index_fun', 'argument': list(list_helper(t[3])), 'expression': t[6]}
+
+def p_expression_fun_invoc(t):
+    '''expression : NAME LPAR RPAR
+                    | NAME LPAR argument RPAR'''
+    if len(t) == 5:
+        t[0] = {"nt": 'expression_fun_invoc','name': t[1], 'argument': list(list_helper(t[3]))}
+    elif len(t) == 4:
+        t[0] = {"nt": 'expression_fun_invoc','name': t[1], 'argument': "empty"}
         
 ##################################################################################################################
 def find_column(input, token):
