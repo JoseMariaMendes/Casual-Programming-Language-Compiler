@@ -215,7 +215,15 @@ def verify(ctx:Context, node):
         else:
             #não existe o nome
             if node["expression"] != "empty":
-                if verify(ctx, node['expression']) == node['type']:
+                print(verify(ctx, node['expression']))
+                print(node['type'])
+                vartype = verify(ctx, node['expression'])
+                if isinstance(vartype, tuple) :
+                    vartype = vartype[1]
+                    for char in "[]":
+                        vartype = vartype.replace(char, "")
+                    
+                if vartype == node['type']:
                     assinatura = ([node['nt']],  node["type"], "argumento")
                     ctx.set_type(name, assinatura)
                 else:

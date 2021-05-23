@@ -622,6 +622,7 @@ def compilador(node, emitter=None):
         currentvar = [node['type'], pointer]
 
     elif node["nt"] == "array_assign_statment":
+        
         indexvar = compilador(node["index"], emitter)
         index = indexvar[0]
         indextype = indexvar[1]
@@ -708,7 +709,7 @@ def compilador(node, emitter=None):
                 exptype = "float"
             else:
                 exptype = "i8"
-        
+
             emitter << f"{getelem} = getelementptr inbounds {a_type}, {a_type}* {pointer}, i64 0, i64 {index}"
             emitter << f"{loadpointer} = load {exptype}, {exptype}* {getelem}, {aligntype}"
         else:
@@ -799,11 +800,15 @@ def compilador(node, emitter=None):
             pass 
         
     elif node["nt"] == "lambda_expression":
+        exp = node["block_lam"]["block_content_lam"]
+        #print(exp)
+        #print(emitter.stack)
         emitter.set_type("inlambda", "true")
         emitter.linestemp = emitter.lines
         returntype = get_type(node['rtype'], "var")
         funtype = get_type(node['rtype'], "fun")
         name = node["name"]
+        
         emitter.set_type(name, node['rtype'])
         arguments = ""
         cont = 0
@@ -816,7 +821,7 @@ def compilador(node, emitter=None):
             else:
                 #resto dos argumentos depois do primeiro
                 arguments += ", " + get_type(arg["type"], "funarg") + " %" + arg["name"]
-        
+                
         for line in emitter.lines:
             if "define" in line:
                 currentfunindex = cont
@@ -839,7 +844,7 @@ def compilador(node, emitter=None):
                     emitter << f"store {get_type(arg['type'], 'var')} %{arg['name']}, {get_type(arg['type'], 'var')}* {emitter.get_pointer_name(arg['name'])}, {get_align(arg['type'])}"
 
         for exp in node["block_lam"]['block_content_lam']:
-            print(exp)
+            #print(exp)
             som = compilador(exp, emitter)
             print(som)
         

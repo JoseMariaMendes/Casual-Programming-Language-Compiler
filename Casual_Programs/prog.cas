@@ -1,9 +1,10 @@
 decl gun(s:Int):Int
 
 def main():Int{
-	u:Int = 9;
+	
 	y:[Int] = 10;
 	y[4] = 3;
+	u:Int = 5;
 	john:[Float] = 10;
 	#j:Int = y[u] + 9;
 	y[5] = 6;
