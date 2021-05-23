@@ -1,8 +1,10 @@
 class Emitter(object):
     def __init__(self):
         self.count = 0
+        self.labelcount = 0
         self.lines = []
         self.linestemp = []
+        self.andor = []
         self.stack = [{}]
         self.value = [{}]
 
@@ -14,6 +16,14 @@ class Emitter(object):
         id = self.get_count()
         return f"cas_{id}"
 
+    def get_labelcount(self):
+        self.labelcount += 1
+        return self.labelcount
+
+    def get_labelid(self):
+        id = self.get_labelcount()
+        return f"{id}"
+    
     def __lshift__(self, v):
         self.lines.append(v)
 
