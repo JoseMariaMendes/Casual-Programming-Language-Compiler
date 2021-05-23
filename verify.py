@@ -215,8 +215,6 @@ def verify(ctx:Context, node):
         else:
             #não existe o nome
             if node["expression"] != "empty":
-                print(verify(ctx, node['expression']))
-                print(node['type'])
                 vartype = verify(ctx, node['expression'])
                 if isinstance(vartype, tuple) :
                     vartype = vartype[1]

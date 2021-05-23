@@ -8,8 +8,8 @@ lam:                                    # @lam
 # %bb.0:
 	movq	%rdi, -8(%rsp)
 	movl	20(%rdi), %eax
-	movl	$5, -12(%rsp)
-	addl	$5, %eax
+	movl	$6, -12(%rsp)
+	addl	$6, %eax
 	retq
 .Lfunc_end0:
 	.size	lam, .Lfunc_end0-lam
@@ -25,10 +25,11 @@ main:                                   # @main
 	.cfi_def_cfa_offset 112
 	movabsq	$25769803779, %rax      # imm = 0x600000003
 	movq	%rax, 32(%rsp)
-	movl	$5, 12(%rsp)
+	movl	$6, 12(%rsp)
+	movl	$6, 8(%rsp)
 	leaq	16(%rsp), %rdi
 	callq	lam
-	movl	%eax, 12(%rsp)
+	movl	%eax, 8(%rsp)
 	addq	$104, %rsp
 	.cfi_def_cfa_offset 8
 	retq

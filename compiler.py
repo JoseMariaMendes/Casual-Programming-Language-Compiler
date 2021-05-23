@@ -801,8 +801,9 @@ def compilador(node, emitter=None):
         
     elif node["nt"] == "lambda_expression":
         exp = node["block_lam"]["block_content_lam"]
-        #print(exp)
+        print(exp)
         #print(emitter.stack)
+        lambargs = f"%lambda_args_{emitter.get_id()}"
         emitter.set_type("inlambda", "true")
         emitter.linestemp = emitter.lines
         returntype = get_type(node['rtype'], "var")
@@ -822,6 +823,8 @@ def compilador(node, emitter=None):
                 #resto dos argumentos depois do primeiro
                 arguments += ", " + get_type(arg["type"], "funarg") + " %" + arg["name"]
                 
+                
+        
         for line in emitter.lines:
             if "define" in line:
                 currentfunindex = cont
@@ -846,7 +849,6 @@ def compilador(node, emitter=None):
         for exp in node["block_lam"]['block_content_lam']:
             #print(exp)
             som = compilador(exp, emitter)
-            print(som)
         
         retexp = som[0]
         emitter << f"ret {returntype} {retexp}"

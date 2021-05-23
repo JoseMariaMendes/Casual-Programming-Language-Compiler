@@ -4,7 +4,8 @@ def main():Int{
 	
 	y:[Int] = 10;
 	y[4] = 3;
-	u:Int = 5;
+	p:Int = 6;
+	u:Int = 6;
 	john:[Float] = 10;
 	#j:Int = y[u] + 9;
 	y[5] = 6;
