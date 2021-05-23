@@ -493,11 +493,12 @@ def compilador(node, emitter=None):
             else:
                 #ultimo
                 label = f"&&_{emitter.get_id()}:"
+                print(label)
                 emitter << ""
                 emitter << f"{label}"
                 er = compilador(node["expression_right"], emitter)
                 return er
-            
+        
         elif oper == "||":
             #print(node["expression_right"])
             #print(node["expression_left"])
